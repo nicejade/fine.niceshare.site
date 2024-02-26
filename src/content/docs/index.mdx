@@ -1,36 +1,43 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: 应无所住，而生其心
+description: 吾生有涯，而知无涯；缘知而往，随心以行；上下求索，探寻真谛；
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: 吾生有涯，而知无涯；缘知而往，随心以行；上下求索，探寻真谛
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Example Guide
+    - text: 一探究竟
       link: /guides/example/
       icon: right-arrow
       variant: primary
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: 发现更多
+      link: https://nicelinks.site/friends
       icon: external
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-## Next steps
+## 更多作品
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+	<LinkCard title="素问智聊斋" href="https://chatgpt.nicelinks.site/"
+	 description="非官方 ChatGPT 在线客户端，旨在提供更便捷的 ChatGPT、Gemini 访问体验；无需账号，零配置，即可与最先进 AI 畅聊。">
+	</LinkCard>
+	<LinkCard title="倾城之链" link="https://nicelinks.site"
+	description="开放型新一代导航平台，旨在云集全球优秀网站，探索互联网中更广阔的世界；以便您轻松发现、学习、分享更多有用或有趣的事物。">
+	</LinkCard>
+	<LinkCard title="曼妙句子" link="https://read.lovejade.cn/"
+	description="旨在云集世间摇曳生姿的文字，或情感、或唯美、或修身、或励志、或哲学、或娱乐，拳拳真情，精心择选，总有荡漾你心的那一言。">
+	</LinkCard>
+	<LinkCard title="晚晴幽草轩" href="https://www.jeffjade.com/" 
+	description="专注互联网开发（Web 大前端、快应用、小程序），以及分享优质网站、AI 应用、效率工具、心得感悟等内容。">
+	</LinkCard>
+	<LinkCard title="玉桃文飨轩" href="https://share.lovejade.cn/"
+	description="简单好用的在线文本分享工具；支持将 Markdown、Rich Text 等格式内容，快速转化为 png、html 等文件。">
+	</LinkCard>
+	<LinkCard title="悠然宜想亭" href="https://forum.lovejade.cn/"
+	description="旨在营造温润、宽厚、互助的现代化社区；您可以在这里探讨技术、寻求创意、分享美食、聊聊工作、发布科普等等">
+	</LinkCard>
 </CardGrid>
+
