@@ -1,0 +1,10 @@
+:root {
+  --sl-text-5xl: 2rem;
+  --sl-text-4xl: 1.8rem;
+  --sl-text-3xl: 1.6rem;
+  --sl-text-2xl: 1.4rem;
+}
+
+select {
+  outline: none;
+}
