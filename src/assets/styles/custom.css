@@ -3,8 +3,19 @@
   --sl-text-4xl: 1.8rem;
   --sl-text-3xl: 1.6rem;
   --sl-text-2xl: 1.4rem;
+  --sl-color-text-accent: #fe0;
+  --sl-color-accent: #f04b22 !important;
 }
 
 select {
   outline: none;
+}
+
+.main-pane li {
+  margin-left: 2rem;
+  list-style-type: initial;
+}
+
+.main-pane li li {
+  list-style-type: circle;
 }

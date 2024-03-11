@@ -33,9 +33,9 @@ export default defineConfig({
 				},
 			},
 			customCss: [
+				'./src/assets/styles/tailwind.css',
 				// 你的自定义 CSS 文件的相对路径
 				'./src/assets/styles/custom.css',
-				'./src/assets/styles/tailwind.css',
 			],
 			head: [
 				{
@@ -91,15 +91,17 @@ export default defineConfig({
 			],
 			sidebar: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', link: '/guides/example/' },
-					],
+					label: '探索',
+					tableOfContents: false,
+					autogenerate: { directory: 'explore' },
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: '自部署',
+					autogenerate: { directory: 'self-hosted' },
+				},
+				{
+					label: '自动化',
+					autogenerate: { directory: 'automation' },
 				},
 			],
 		}),
