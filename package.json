@@ -1,7 +1,7 @@
 {
   "name": "fine-niceshare-site",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -16,6 +16,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "astro": "^4.3.5",
     "hint.css": "^3.0.0",
+    "medium-zoom": "^1.1.0",
     "sharp": "^0.33.2",
     "starlight-links-validator": "^0.6.0",
     "svelte": "^4.2.12",

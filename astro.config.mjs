@@ -21,6 +21,10 @@ export default defineConfig({
 				mastodon: 'https://mastodon.social/@nicejade',
 				'x.com': 'https://x.com/nicejadeyang',
 			},
+			components: {
+        // Override the default `MarkdownContent` component.
+        MarkdownContent: './src/components/MarkdownContent.astro',
+      },
 			logo: {
 				src: './src/assets/images/logo.svg',
 			},
@@ -91,7 +95,7 @@ export default defineConfig({
 			],
 			sidebar: [
 				{
-					label: '探索',
+					label: '自探索',
 					tableOfContents: false,
 					autogenerate: { directory: 'explore' },
 				},

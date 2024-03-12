@@ -3,8 +3,13 @@
   --sl-text-4xl: 1.8rem;
   --sl-text-3xl: 1.6rem;
   --sl-text-2xl: 1.4rem;
-  --sl-color-text-accent: #fe0;
+  --sl-text-xl: 1.25rem;
+  --sl-text-lg: 1.125rem;
   --sl-color-accent: #f04b22 !important;
+}
+
+.link-title {
+  font-size: var(--sl-text-base);
 }
 
 select {
