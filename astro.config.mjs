@@ -107,6 +107,10 @@ export default defineConfig({
 					label: '自动化',
 					autogenerate: { directory: 'automation' },
 				},
+				{
+					label: '个人作品',
+					autogenerate: { directory: 'projects' },
+				},
 			],
 		}),
 		tailwind(),
