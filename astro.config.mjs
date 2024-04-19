@@ -108,7 +108,7 @@ export default defineConfig({
 					autogenerate: { directory: 'automation' },
 				},
 				{
-					label: '个人作品',
+					label: '作品集',
 					autogenerate: { directory: 'projects' },
 				},
 			],
