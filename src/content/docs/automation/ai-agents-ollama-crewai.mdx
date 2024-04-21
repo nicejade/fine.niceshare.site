@@ -1,0 +1,100 @@
+---
+title: 基于 CrewAI、Ollama 构建本地 AI 代理
+description: 随着人工智能（AI）的快速发展，越来越多的人开始关注如何将 AI 技术应用于实际生活中。CrewAI 和 Ollama 是两个领先的人工智能平台，它们提供了强大的 AI 能力和开发工具。本文将探讨如何基于 CrewAI 和 Ollama 构建本地 AI 代理，以实现更高效、个性化的 AI 服务。
+---
+
+随着人工智能（AI）的快速发展，越来越多的人开始关注如何将 AI 技术应用于实际生活中。CrewAI 和 Ollama 是两个领先的人工智能平台，它们提供了强大的 AI 能力和开发工具。本文将探讨如何基于 CrewAI 和 Ollama 构建本地 AI 代理，以实现更高效、个性化的 AI 服务。
+
+## CrewAI、Ollama 是什么？
+
+### CrewAI 简介
+
+[CrewAI](https://github.com/joaomdmoura/crewAI)：用于编排角色扮演、自主人工智能代理的框架。通过促进协作智能，CrewAI 使代理能够无缝协作，处理复杂的任务。
+
+### 为什么选择 CrewAI？
+
+人工智能协作的力量实在是太多了。 CrewAI 旨在使人工智能代理能够承担角色、分享目标并在一个有凝聚力的单元中运作——就像一个运转良好的团队。无论您是要构建智能助理平台、自动化客户服务整体还是多代理研究团队，CrewAI 都可以为复杂的多代理交互提供支柱。
+
+人工智能的最新进展之一是使用多代理（multi-agent）架构，在这种方法中，多个智能代理可以自主运行，同时协作实现共同目标。该技术通过复制通常表征人类智能的复杂思维和决策过程，超越了传统的单模型人工智能方法。存在多种解决方案，目前最引人注目的是：来自微软的 [AutoGen](https://github.com/Significant-Gravitas/AutoGPT) 和 [CrewAI](https://www.crewai.com/)，由于它基于 [LangChain](https://www.langchain.com/) 框架，因此更易于使用。
+
+CrewAI 与 LangChain 的集成，使其能够从 [Ollama](https://ollama.com/) 所有开源模型的合并中受益，并且可以在本地计算机上非常简单地操作它们。此外，它简化了不同角色和代理之间交互的模拟。
+
+### Ollama 简介
+
+[Ollama](https://github.com/ollama/ollama) **是一个开源的机器学习模型部署工具，旨在帮助开发者快速、便捷地将机器学习模型部署到本地环境**。 它提供了丰富的功能，如模型管理、版本控制、性能监控等，使得模型部署变得更加简单、高效。2023 年中开源，截止 2024 年 04 月 21 日，Ollama 已经有 57.3K+ Star，4k+ Fork，其受欢迎程度可见一斑。
+
+### 为什么选择 Ollama？
+
+1. **简单易用**：Ollama 提供了友好的用户界面和丰富的文档，使得开发者可以轻松地部署和管理模型。
+2. **高效性能**：Ollama 基于高性能的分布式架构，可以确保模型在部署后的性能表现。
+3. **灵活可扩展**：Ollama 支持多种模型格式和部署方式，可以灵活地适应不同的需求。
+
+## 基于 CrewAI、Ollama 构建本地 AI 代理
+
+因为 CrewAI 和 Ollama 都是开源的，所以你可以很容易地在本地计算机上搭建一个 AI 代理。下面是一个基于 CrewAI 和 Ollama 的示例代码，用于构建一个 AI 代理，实现自动化的任务处理。
+
+### 安装 [Ollama](https://ollama.com/)
+
+直接前往 [Ollama](https://ollama.com/) 官网下载安装包，适用于 macOS、Linux 和 Windows（预览版），然后安装即可。
+
+### 下载运行模型
+
+强烈推荐使用 Meta 于 2024 年 4 月 18 日 开源的 [Llama 3](https://llama.meta.com/llama3/)，现在提供 8B 和 70B 预训练和指令调整版本，以支持广泛的应用；官方提到：无论您是开发代理还是其他人工智能驱动的应用程序，8B 和 70B 中的 Llama 3 都将提供您开发想法所需的功能和灵活性。
+
+实际体验 Llama 3（8B），其表现令人颇为满意。在个人 MacBook Pro（Apple M1 Pro， 16GB 内存） 上运行 8B 版本时，也毫无压力；但联合 CrewAI 运行如下示例脚本，会导致电脑出现发烫；如果有条件，建议购买更高配置设备。当然，您也可以选择其他版本的模型，如 GPT-3、GPT-4 等，无需借助 Ollama，流程更为简单。
+
+```bash
+# ollama download & run llama3:8b
+ollama run llama3:8b
+```
+
+### 安装 CrewAI
+
+```bash
+pip install crewai langchain_community
+```
+
+### 示例代码
+
+```python
+from crewai import Agent, Task, Crew, Process
+from langchain_community.llms import Ollama
+
+ollama_model = Ollama(model="llama3:8b")
+
+# Define your agents with roles and goals
+researcher = Agent(
+  role='Researcher',
+  goal='Discover new insights',
+  backstory="You're a world class researcher working on a major data science company",
+  verbose=True,
+  allow_delegation=False,
+  llm=ollama_model,
+  # llm=OpenAI(temperature=0.7, model_name="gpt-4"). It uses langchain.chat_models, default is GPT4 ### OPENAI VERSION!!
+)
+
+writer = Agent(
+  role='Writer',
+  goal='Create engaging content',
+  backstory="You're a famous technical writer, specialized on writing data related content",
+  verbose=True,
+  allow_delegation=False,
+  llm=ollama_model
+)
+
+# Create tasks for your agents
+task1 = Task(description='Investigate the latest AI trends', agent=researcher, expected_output="Full analysis report in bullet points",)
+task2 = Task(description='Write a blog post on AI advancements', agent=writer, expected_output="Full analysis report in bullet points",)
+
+# Instantiate your crew with a sequential process - TWO AGENTS!
+crew = Crew(
+  agents=[researcher, writer],
+  tasks=[task1, task2],
+  llm=ollama_model,
+  verbose=2, # Crew verbose more will let you know what tasks are being worked on, you can set it to 1 or 2 to different logging levels
+  process=Process.sequential # Sequential process will have tasks executed one after the other and the outcome of the previous one is passed as extra content into this next.
+)
+
+# Get your crew to work!
+result = crew.kickoff()
+```
