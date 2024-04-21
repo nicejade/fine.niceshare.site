@@ -56,6 +56,23 @@ pip install crewai langchain_community
 
 ### 示例代码
 
+```bash
+OPENAI_API_BASE='http://localhost:11434/v1'
+OPENAI_MODEL_NAME='openhermes'  # Adjust based on available model
+OPENAI_API_KEY=''
+```
+
+CrewAI README 或者 [CrewAI 文档](https://docs.crewai.com/how-to/LLM-Connections/#ollama-integration)，所推荐的 Ollama 与 CrewAI 集成方式（上述代码），在部分机器上并不能正常工作；因此，建议参考如下示例代码，以确保正常运行。此外，最新版本的 CrewAI，Task 必须携带 [expected_output](https://docs.crewai.com/core-concepts/Tasks/#task-attributes) 属性（否则会报如下错误，致使程序无法运行下去），并应该根据实际情况进行调整。
+
+> expected_output： 任务完成情况的详细说明（A detailed description of what the task's completion looks like）。
+
+```
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Task
+expected_output
+  Field required [type=missing, input_value={'description': 'Write a ...writing about AI tpics)}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.6/v/missing
+```
+
 ```python
 from crewai import Agent, Task, Crew, Process
 from langchain_community.llms import Ollama
@@ -98,3 +115,174 @@ crew = Crew(
 # Get your crew to work!
 result = crew.kickoff()
 ```
+
+## 基于 CrewAI、GPT3.5 构建本地 AI 代理
+
+CrewAI 默认使用 GPT-4 模型，就目前而言价格略贵；基于 Ollama 使用 llama3 模型，需要性能较好的机器；因此，基于 CrewAI 和 GPT3.5 构建本地 AI 代理，实现自动化的任务处理，于个人而言，或许是最适宜的选择（您可以根据自身条件加以选择、定制）。下面是基于 CrewAI 和 GPT3.5 的示例代码，用于构建一个 AI 代理，实现自动化的任务（ 研究最新 AI 见解 => 撰写关于人工智能趋势的引人入胜的博客文章 => 翻译成中文）处理。
+
+```bash
+# Install CrewAI
+pip install crewai
+
+# Set your OpenAI API Key
+export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
+```
+
+### 实现 AI 研究员代理
+
+
+```bash
+from crewai import Agent, Task, Crew, Process
+import os
+
+os.environ["OPENAI_MODEL_NAME"] ='gpt-3.5-turbo-0125'
+os.environ['OPENAI_API_KEY'] = os.environ.get("OPENAI_API_KEY")
+
+# Researcher Agent
+researcher = Agent(
+  role='Researcher',
+  goal='Research new AI Insights',
+  backstory='You are an AI research assistant',
+  verbose=True,
+  allow_delegation=False
+)
+
+# Writer Agent
+writer = Agent(
+  role='Writer',
+  goal='write compelling and engaging blog posts about AI trends',
+  backstory='You are an AI blog post writer who specializes in writing about AI tpics',
+  verbose=True,
+  process=Process.sequential,
+  allow_delegation=False
+)
+
+translator = Agent(
+  role='Translator',
+  goal='Translate English content into Chinese',
+  backstory='You are a translator, translating content into authentic Chinese',
+  verbose=True,
+  allow_delegation=False
+)
+
+# Create Researcher Task
+researcher_task = Task(
+  description='Investigate latest AI trends',
+  expected_output="Full analysis report in bullet points",
+  agent=researcher
+)
+
+# Create Writer Task 
+writer_task = Task(
+  description='Write a blog post on latest AI trends',
+  expected_output="Full analysis report in bullet points",
+  agent=writer
+)
+
+# Create Translator Task
+translator_task = Task(
+  description='Translate English content into Chinese',
+  expected_output="Full analysis report in bullet points",
+  agent=translator
+)
+
+# Instantiate your crew with a sequential process
+crew = Crew(
+  agents=[researcher, writer, translator],
+  tasks=[researcher_task, writer_task, translator_task],
+  verbose=False, # You can set it to 1 or 2 to different logging levels
+)
+
+result = crew.kickoff()
+
+print(result)
+```
+
+### 研究员代理运行结果
+
+
+> Entering new CrewAgentExecutor chain...
+I now can give a great answer
+
+Final Answer: 
+
+- Increased adoption of AI in various industries such as healthcare, finance, and retail
+- Emphasis on ethical AI development and the need for regulations to ensure responsible AI use
+- Rise of AI-powered automation in business processes, leading to increased efficiency and cost savings
+- Advancements in natural language processing and computer vision technologies
+- Growing interest in explainable AI to improve transparency and accountability in AI decision-making
+- Continued research and development in reinforcement learning and self-learning AI systems
+- Integration of AI with Internet of Things (IoT) devices for smart homes and cities
+- Collaboration between academia, industry, and government to advance AI research and innovation
+- Concerns about AI bias and the need for diverse and inclusive datasets to train AI models
+- Focus on AI safety and robustness to prevent unintended consequences of AI systems
+
+> Finished chain.
+
+
+> Entering new CrewAgentExecutor chain...
+I now can give a great answer
+
+Final Answer: 
+
+Title: The Latest AI Trends Shaping Industries and Society
+
+In today's rapidly evolving technological landscape, artificial intelligence (AI) continues to make significant strides, reshaping various industries and influencing societal norms. Let's delve into the latest AI trends that are driving innovation and transformation across different sectors:
+
+- Increased Adoption of AI: Industries such as healthcare, finance, and retail are embracing AI technologies to streamline operations, enhance customer experiences, and drive business growth. From predictive analytics in healthcare to personalized recommendations in retail, AI is revolutionizing how companies operate and interact with their customers.
+
+- Ethical AI Development: With the growing importance of ethical AI development, there is a pressing need for regulations to ensure responsible AI use. Stakeholders are increasingly calling for transparency, fairness, and accountability in AI systems to mitigate potential risks and biases.
+
+- AI-Powered Automation: Businesses are leveraging AI-powered automation to streamline workflows, improve efficiency, and achieve cost savings. From chatbots in customer service to robotic process automation in manufacturing, AI is transforming how organizations operate and deliver value to their stakeholders.
+
+- Advancements in NLP and Computer Vision: The advancements in natural language processing (NLP) and computer vision technologies are enabling AI systems to understand and interpret human language and visuals with unprecedented accuracy and speed. This has opened up new possibilities in areas such as virtual assistants, image recognition, and autonomous vehicles.
+
+- Explainable AI: The growing interest in explainable AI is driving efforts to enhance transparency and accountability in AI decision-making processes. By making AI systems more interpretable and understandable, stakeholders can gain insights into how AI arrives at its conclusions and ensure that decisions are fair and unbiased.
+
+- Reinforcement Learning and Self-Learning AI Systems: Continued research and development in reinforcement learning and self-learning AI systems are paving the way for autonomous agents that can adapt and improve their performance over time. These AI systems are capable of learning from experience and refining their strategies to achieve optimal outcomes in dynamic environments.
+
+- Integration of AI with IoT Devices: The integration of AI with Internet of Things (IoT) devices is creating smart homes and cities that are interconnected and intelligent. From smart thermostats to automated lighting systems, AI is enhancing the functionality and convenience of IoT devices, making our living spaces more efficient and responsive to our needs.
+
+- Collaboration for AI Research and Innovation: Academia, industry, and government are joining forces to advance AI research and innovation. Collaborative efforts are driving breakthroughs in AI technologies, fostering knowledge exchange, and accelerating the development and deployment of cutting-edge AI solutions.
+
+- Addressing AI Bias and Dataset Diversity: Concerns about AI bias are prompting the need for diverse and inclusive datasets to train AI models. By incorporating diverse perspectives and sources of data, stakeholders can mitigate bias and ensure that AI systems are fair, accurate, and representative of diverse populations.
+
+- Focus on AI Safety and Robustness: The focus on AI safety and robustness is crucial to prevent unintended consequences of AI systems. Stakeholders are actively working to build safeguards and fail-safes into AI systems to minimize risks and ensure that AI technologies operate reliably and ethically.
+
+As AI continues to evolve and permeate various aspects of our lives, staying informed about the latest trends and developments is essential for navigating the complex and rapidly changing AI landscape. By understanding these trends and their implications, stakeholders can harness the power of AI to drive innovation, create value, and shape a more sustainable and inclusive future for all.
+
+> Finished chain.
+
+
+> Entering new CrewAgentExecutor chain...
+I now can give a great answer
+
+Final Answer: 
+- AI趋势对行业和社会的影响
+  - AI的广泛应用：医疗保健、金融和零售等行业正在采用AI技术来简化操作、增强客户体验并推动业务增长。从医疗保健中的预测分析到零售中的个性化推荐，AI正在彻底改变企业的运营方式和与客户的互动方式。
+  - 道德AI发展：随着道德AI发展的重要性日益增长，迫切需要立法规定确保负责任的AI使用。利益相关者越来越呼吁AI系统的透明度、公平性和责任制，以减少潜在风险和偏见。
+  - AI驱动的自动化：企业正在利用AI驱动的自动化来简化工作流程、提高效率并实现成本节约。从客户服务中的聊天机器人到制造业中的机器人流程自动化，AI正在改变组织的运营方式并为利益相关者提供价值。
+  - NLP和计算机视觉的进展：自然语言处理（NLP）和计算机视觉技术的进步使得AI系统能够以前所未有的准确度和速度理解和解释人类语言和视觉。这在虚拟助手、图像识别和自动驾驶等领域开辟了新的可能性。
+  - 可解释AI：对可解释AI的日益关注推动了增强AI决策过程的透明度和责任制的努力。通过使AI系统更具解释性和可理解性，利益相关者可以了解AI是如何得出结论的，并确保决策公平和无偏见。
+  - 强化学习和自学习AI系统：在强化学习和自学习AI系统的持续研究和开发正在为能够自适应并改善其性能的自主代理铺平道路。这些AI系统能够从经验中学习并完善其策略，以在动态环境中实现最佳结果。
+  - 将AI与物联网设备集成：将AI与物联网（IoT）设备集成正在打造互联智能的智能家居和城市。从智能恒温器到自动照明系统，AI正提升物联网设备的功能和便利性，使我们的生活空间更加高效和响应我们的需求。
+  - 为AI研究和创新合作：学术界、行业界和政府正在联手推动AI研究和创新。合作努力正在推动AI技术的突破，促进知识交流，并加速先进AI解决方案的开发和部署。
+  - 解决AI偏见和数据集多样性：对AI偏见的担忧促使需要多样化和包容性数据集来训练AI模型。通过融入多元化的观点和数据来源，利益相关者可以减少偏见，并确保AI系统公平、准确，并代表各种人群。
+  - 关注AI安全和稳健性：关注AI安全和稳健性对防止AI系统的意外后果至关重要。利益相关者正在积极努力在AI系统中建立保障措施和故障保险，以最大限度地降低风险，并确保AI技术可靠、道德地运行。
+
+随着AI不断发展并渗透到我们生活的各个方面，了解最新趋势和发展对于在复杂且快速变化的AI领域中导航至关重要。通过理解这些趋势及其影响，利益相关者可以利用AI的力量推动创新、创造价值，并塑造一个更可持续和包容的未来。
+
+> Finished chain.
+- AI趋势对行业和社会的影响
+  - AI的广泛应用：医疗保健、金融和零售等行业正在采用AI技术来简化操作、增强客户体验并推动业务增长。从医疗保健中的预测分析到零售中的个性化推荐，AI正在彻底改变企业的运营方式和与客户的互动方式。
+  - 道德AI发展：随着道德AI发展的重要性日益增长，迫切需要立法规定确保负责任的AI使用。利益相关者越来越呼吁AI系统的透明度、公平性和责任制，以减少潜在风险和偏见。
+  - AI驱动的自动化：企业正在利用AI驱动的自动化来简化工作流程、提高效率并实现成本节约。从客户服务中的聊天机器人到制造业中的机器人流程自动化，AI正在改变组织的运营方式并为利益相关者提供价值。
+  - NLP和计算机视觉的进展：自然语言处理（NLP）和计算机视觉技术的进步使得AI系统能够以前所未有的准确度和速度理解和解释人类语言和视觉。这在虚拟助手、图像识别和自动驾驶等领域开辟了新的可能性。
+  - 可解释AI：对可解释AI的日益关注推动了增强AI决策过程的透明度和责任制的努力。通过使AI系统更具解释性和可理解性，利益相关者可以了解AI是如何得出结论的，并确保决策公平和无偏见。
+  - 强化学习和自学习AI系统：在强化学习和自学习AI系统的持续研究和开发正在为能够自适应并改善其性能的自主代理铺平道路。这些AI系统能够从经验中学习并完善其策略，以在动态环境中实现最佳结果。
+  - 将AI与物联网设备集成：将AI与物联网（IoT）设备集成正在打造互联智能的智能家居和城市。从智能恒温器到自动照明系统，AI正提升物联网设备的功能和便利性，使我们的生活空间更加高效和响应我们的需求。
+  - 为AI研究和创新合作：学术界、行业界和政府正在联手推动AI研究和创新。合作努力正在推动AI技术的突破，促进知识交流，并加速先进AI解决方案的开发和部署。
+  - 解决AI偏见和数据集多样性：对AI偏见的担忧促使需要多样化和包容性数据集来训练AI模型。通过融入多元化的观点和数据来源，利益相关者可以减少偏见，并确保AI系统公平、准确，并代表各种人群。
+  - 关注AI安全和稳健性：关注AI安全和稳健性对防止AI系统的意外后果至关重要。利益相关者正在积极努力在AI系统中建立保障措施和故障保险，以最大限度地降低风险，并确保AI技术可靠、道德地运行。
+
+随着AI不断发展并渗透到我们生活的各个方面，了解最新趋势和发展对于在复杂且快速变化的AI领域中导航至关重要。通过理解这些趋势及其影响，利益相关者可以利用AI的力量推动创新、创造价值，并塑造一个更可持续和包容的未来。
