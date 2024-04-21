@@ -91,7 +91,14 @@ export default defineConfig({
 				{
           tag: 'script',
 					content: "window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-7NRFYFR8BE');"
-        },
+				},
+				{
+					tag: 'script',
+					attrs: {
+            src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758',
+            defer: true,
+					},
+				},
 			],
 			sidebar: [
 				{
