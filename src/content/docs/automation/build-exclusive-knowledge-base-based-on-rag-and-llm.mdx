@@ -207,7 +207,6 @@ Naive RAG 具有精度低（检索到的块未对齐）和召回率低（无法�
   - [Langchain 父文档](https://python.langchain.com/docs/modules/data_connection/retrievers/parent_document_retriever/)
 - 句子窗口
   - [LlamaIndex 句子窗口](https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/MetadataReplacementDemo/)
-  - Langchain 暂未找到句子窗口的用法
 
 #### 长文本检索
 
@@ -225,8 +224,7 @@ Naive RAG 具有精度低（检索到的块未对齐）和召回率低（无法�
 - [Pinecone 混合检索](https://python.langchain.com/docs/integrations/retrievers/pinecone_hybrid_search/)
 - [Weaviate 混合检索](https://python.langchain.com/docs/integrations/retrievers/weaviate-hybrid/)
 - Chroma 暂时不支持混合检索
-  - [可以使用 EnsembleRetriver，将 Chroma 的向量检索和关键字检索（如 BM25Retriever）组合起来](https://medium.aiplanet.com/evaluating-naive-rag-and-advanced-rag-pipeline-using-langchain-v-0-1-0-and-ragas-17d24e74e5cf)
-  - [EnsembleRetriever](https://python.langchain.com/docs/modules/data_connection/retrievers/ensemble/)
+  - [EnsembleRetriever](https://python.langchain.com/docs/modules/data_connection/retrievers/ensemble/)：通过利用不同算法的优势，EnsembleRetriever可以获得比任何单一算法更好的性能。最常见的模式是将稀疏检索器（如 BM25）与密集检索器（如嵌入相似性）相结合，因为它们的优势是互补的。它也被称为“混合搜索”。稀疏检索器擅长根据关键词查找相关文档，而密集检索器擅长根据语义相似度查找相关文档（效果改善：⭐️⭐️⭐️⭐️）。相关文章：[Evaluating Naive RAG and Advanced RAG pipeline using langchain v.0.1.0 and RAGAS](https://medium.aiplanet.com/evaluating-naive-rag-and-advanced-rag-pipeline-using-langchain-v-0-1-0-and-ragas-17d24e74e5cf)。
 
 #### 相似关键词检索
 
@@ -262,7 +260,7 @@ FLARE 是一种高级检索技术，它结合了检索和生成。LLMs 它通过
 
 #### 长上下文重新排序
 
-- [Langchain | Long-Context Reorder](https://python.langchain.com/docs/modules/data_connection/retrievers/long_context_reorder/)
+- [Langchain | Long-Context Reorder](https://python.langchain.com/docs/modules/data_connection/retrievers/long_context_reorder/)：研究人员分析了语言模型在需要识别输入上下文中的相关信息的两项任务上的性能：多文档问答和键值检索。他们发现，当改变相关信息的位置时，性能会显着下降，这表明当前的语言模型不能稳健地利用长输入上下文中的信息。特别是，我们观察到，当相关信息出现在输入上下文的开头或结尾时，性能通常最高，而当模型必须在长上下文中间访问相关信息时，即使对于明确的长上下文模型，性能也会显着下降。我们的分析可以更好地理解语言模型如何使用其输入上下文，并为未来的长上下文语言模型提供新的评估协议——[Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172) （效果改善：⭐️⭐️⭐️）。
 
 ### RAG 评估
 
@@ -301,5 +299,15 @@ FLARE 是一种高级检索技术，它结合了检索和生成。LLMs 它通过
 - **使用适当的文本摘要方法**：在生成阶段，使用适当的文本摘要方法将篇章内容进行压缩和概括，以生成简洁而信息丰富的回答。
 - **持续基准测试**：在手动标记的测试样本和定量指标上迭代测量 RAG 性能。监控准确性是关键。
 - **评估和迭代改进**：持续评估 RAG 实施的性能，并根据反馈进行改进。使用合适的评估指标和人工评估来衡量模型的质量，并根据评估结果进行调整和优化。
+
+## 优质开源的 RAG 项目
+
+- [Quivr](https://github.com/QuivrHQ/quivr) ：您的 GenAI 第二大脑 🧠 个人生产力助手 （RAG） ⚡️🤖 与您的文档聊天 （PDF， CSV， ...） & 使用 Langchain、GPT 3.5 / 4 turbo、Private、Anthropic、VertexAI、Ollama、LLMsGroq 与应用程序聊天，您可以与用户分享！OpenAI GPT 和 ChatGPT 的本地和私人替代方案，由检索增强生成提供支持。
+- [AnythingLLM](https://github.com/Mintplex-Labs/anything-llm) ：具有完整 RAG 和 AI 代理功能的一体化桌面和 Docker AI 应用程序；使您能够将任何文档、资源或内容转换为上下文，任何人都 LLM 可以在聊天期间用作参考。此应用程序允许您选择要使用的矢量数据库 LLM 或矢量数据库，并支持多用户管理和权限。
+- [RAGFlow](https://github.com/infiniflow/ragflow) ：一个基于深度文档理解的开源 RAG（检索增强生成）引擎。它为任何规模的企业提供简化的 RAG 工作流程，结合 LLM（大型语言模型）以提供真实的问答功能，并以来自各种复杂格式数据的有根据的引用为后盾。
+- [Danswer](https://github.com/danswer-ai/danswer) ：连接到您公司的文档、应用程序和人员的 AI 助手。 Danswer 提供聊天界面并插入您选择的任何法学硕士。 Danswer 可以部署在任何地方、任何规模 - 笔记本电脑上、本地部署或云端。由于您拥有部署，因此您的用户数据和聊天完全由您自己控制。
+- [Verba](https://github.com/weaviate/Verba) ： The Golden RAGtriever，这是一款开源应用程序，旨在为开箱即用的检索增强生成 （RAG） 提供端到端、简化和用户友好的界面。只需几个简单的步骤，即可在本地或通过 LLM OpenAI、Cohere 和 HuggingFace 等提供商轻松探索您的数据集并提取见解。
+- [Reor](https://github.com/reorproject/reor) ：一款 AI 驱动的桌面笔记应用程序：它会自动链接相关笔记、回答笔记上的问题、提供语义搜索并可以生成 AI 抽认卡。所有内容都存储在本地，您可以使用类似 Obsidian 的 Markdown 编辑器编辑笔记。该项目的假设是，默认情况下，用于思考的人工智能工具应该在本地运行模型。Reor站在巨头Ollama，Transformers.js和LanceDB的肩膀上，使两者LLMs和嵌入模型都能在本地运行。还支持连接到 OpenAI 或 OpenAI 兼容的 API，如 Oobabooga。
+- [Cognita](https://github.com/truefoundry/cognita) ：RAG（Retrieval Augmented Generation）框架，用于构建模块化、开源应用程序，供 TrueFoundry 生产。
 
 2024 年 05 月 08 日写于〔深圳福田〕
