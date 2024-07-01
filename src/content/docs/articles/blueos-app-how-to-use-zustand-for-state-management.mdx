@@ -1,0 +1,390 @@
+---
+title: BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？
+description: BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多屏幕适配。同样，Tailwind CSS ── 这个以实用性为核心的 CSS 框架，也是借助媒体查询来定制不同屏幕尺寸下的用户界面。本文旨在探讨 BlueOS CSS 与标准 CSS 在处理媒体查询方面的异同，并指导如何通过调整 Tailwind CSS 的配置来实现对 BlueOS 的兼容。这样不仅能够进一步提高开发效率，还能为最终用户带来更加流畅和适应各种屏幕需求的界面体验。
+sidebar:
+  order: 3
+---
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。其目标是为用户提供一个更加智能、流畅且安全的使用体验。状态管理是组件间通信、数据流向、以及数据的持久化这些方面的核心；因此，它在应用扮演着重要角色；本教程将探讨如何使用 Zustand —— 一种轻量级状态管理库 —— 来简化 BlueOS 应用中的状态管理。
+
+## 什么是 Zustand？
+
+### Zustand 介绍
+
+[Zustand](https://github.com/pmndrs/zustand) 是一个轻量级且简单的状态管理库，用于在 React 应用中管理状态。与 Redux 或 MobX 等更复杂的状态管理解决方案相比，Zustand 提供了一个更为简洁和直观的 API，减少了模板代码并且易于上手。
+
+### Zustand 理念
+
+[Zustand](https://github.com/pmndrs/zustand) 的核心理念是创建一个存储全局状态的  `store`，不同组件可以直接订阅该  `store`  中的部分状态，并在状态变化时得到通知，进而引发组件的重新渲染。Zustand 并不强制使用 Redux 那样的 actions 和 reducers 模式，而是允许你直接在  `store`  中修改状态。
+
+### Zustand 特点
+
+- **简单易用**: API 简单清晰，不需要配置多个文件或遵循复杂的约定。
+- **钩子友好**: 使用钩子 (`useStore`) 来访问状态，在组件之间共享状态时非常直观高效。
+- **不可变更新**: Zustand 内部使用浅比较来检查状态的变更，确保性能优化。
+- **无需提供者**: 不需要像 Context API 那样在应用的最顶层包裹 Provider。
+- **中间件支持**: 支持添加中间件来增强 store，例如添加持久化、记录日志等功能。
+- **TypeScript 支持**: Zustand 是用 TypeScript 编写的，可以提供良好的类型支持。
+
+## 如何使用 Zustand？
+
+### 安装 Zustand
+
+```shell
+pnpm add zustand  # 或者 yarn add zustand 或者 npm install zustand
+```
+
+以下是 Zustand 的一个简单示例，展示了如何创建一个 store 以及如何在页面中使用该 store 的状态：
+
+### 创建一个 Zustand Store
+
+```js
+// src/stores/counter.js
+import { createStore } from 'zustand/vanilla'
+
+export const useCounter = createStore((set) => ({
+	count: 0,
+	increment: () => set((state) => ({ count: state.count + 1 })),
+	decrement: () => set((state) => ({ count: state.count - 1 })),
+}))
+```
+
+### 绑定到页面或组件
+
+```html
+<template>
+	<div class="flex-col items-center justify-center">
+		<text class="mb-6 text-blue-600">{{ title }}</text>
+		<div class="items-center justify-center">
+			<input type="button" value="-" @click="onDecrementClick" class="border border-gray-700 px-4 py-2 text-black" />
+			<text class="mx-6">{{ counter }}</text>
+			<input type="button" value="+" @click="onIncrementClick" class="border border-gray-700 px-4 py-2 text-black" />
+		</div>
+	</div>
+</template>
+
+<script>
+	import { useCounter } from './../../stores/counter'
+
+	export default {
+		data: {
+			title: '👏欢迎体验应用开发',
+			counter: 0,
+		},
+
+		onInit() {
+			useCounter.subscribe(() => {
+				this.counter = useCounter.getState().count
+			})
+		},
+
+		onIncrementClick() {
+			useCounter.getState().increment()
+		},
+
+		onDecrementClick() {
+			useCounter.getState().decrement()
+		},
+	}
+</script>
+
+<style>
+	@tailwind utilities;
+</style>
+```
+
+在这个例子中，`createStore`  函数用于初始化 store，传递给它的回调函数包含初始状态和改变状态的动作。页面中使用  `useCounter`  钩子来访问需要的状态片段，并可以调用定义好的方法来更新状态。
+
+### 订阅状态变化来更新界面
+
+上述例子只是为方便如何介绍使用 `Zustand`，在真实应用开发中，只需通过手动更新成员变量的值即可。将操作 `counter` 这段逻辑提取到一个组件，通过 `Zustand` 而不依赖 `props` 即可完成跨组件共享数据状态，如下代码示例：
+
+```html
+<!-- src/components/counter.ux -->
+<template>
+	<div class="items-center justify-center">
+		<input type="button" value="-" @click="onDecrementClick" class="border border-gray-700 px-4 py-2 text-black" />
+		<text class="mx-6">{{ counter }}</text>
+		<input type="button" value="+" @click="onIncrementClick" class="border border-gray-700 px-4 py-2 text-black" />
+	</div>
+</template>
+
+<script>
+	import { useCounter } from './../stores/counter'
+
+	export default {
+		data: {
+			counter: useCounter.getState().count,
+		},
+
+		onInit() {
+			useCounter.subscribe(() => {
+				this.counter = useCounter.getState().count
+			})
+		},
+
+		onIncrementClick() {
+			useCounter.getState().increment()
+		},
+
+		onDecrementClick() {
+			useCounter.getState().decrement()
+		},
+	}
+</script>
+
+<style>
+	@tailwind utilities;
+</style>
+```
+
+```html
+<template>
+	<div class="flex-col items-center justify-center">
+		<text class="mb-6 text-blue-600">{{ counter }}</text>
+		<counter />
+	</div>
+</template>
+
+<import name="counter" src="./../../components/counter.ux"></import>
+
+<script>
+	import { useCounter } from './../../stores/counter'
+
+	export default {
+		data: {
+			counter: useCounter.getState().count,
+		},
+
+		onInit() {
+			useCounter.subscribe(() => {
+				this.counter = useCounter.getState().count
+			})
+		},
+	}
+</script>
+
+<style>
+	@tailwind utilities;
+</style>
+```
+
+由此可见，在 BlueOS 集成 Zustand 非常简单，只需页面或组件的 `onShow` 或 `onInit` 的生命周期钩子中引入 store，并订阅状态变更。不过随着页面跳转，原有状态不会得到保存；解决之道也简单，初始化、更新数据状态时，与全局变量关联起来即可：
+
+```js
+import { createStore } from 'zustand/vanilla'
+
+export const useCounter = createStore((set) => ({
+	count: global.count || 0,
+	increment: () =>
+		set((state) => {
+			global.count = state.count + 1
+			return { count: state.count + 1 }
+		}),
+	decrement: () =>
+		set((state) => {
+			global.count = state.count - 1
+			return { count: state.count - 1 }
+		}),
+}))
+```
+
+如果想数据持久化存储，即便应用重启，也不影响数据状态，将全局变量替换为 `storage`（数据存储）即可：
+
+```js
+import { createStore } from 'zustand/vanilla'
+import storage from '@blueos.storage.storage'
+
+const updateStorage = (key, value) => {
+	storage.set({
+		key,
+		value,
+	})
+}
+
+export const COUNTER_KEY = 'COUNT'
+
+export const useCounter = createStore((set) => ({
+	// count: storage.getSync({ key: 'COUNT' }) || 0,
+	count: 0,
+	increment: () =>
+		set((state) => {
+			updateStorage(COUNTER_KEY, state.count + 1)
+			return { count: state.count + 1 }
+		}),
+	decrement: () =>
+		set((state) => {
+			updateStorage(COUNTER_KEY, state.count - 1)
+			return { count: state.count - 1 }
+		}),
+}))
+```
+
+需要指出的是，BlueOS Toolkit 在编译过程中会实施页面**预渲染**。这一步骤包括提取 data 中的初始数据，并基于这些数据把 style 预应用到模板（template）上，从而缩短页面加载的首屏时间。
+
+在此过程中，代码会在 Node.js 环境下执行，而此刻 BlueOS Feature API（例如  `storage.getSync`）并不可用。因此，若代码尝试调用这些 API，编译将无法成功完成。此情况与前端框架如  `SSG`（静态站点生成器）和  `SSR`（服务器端渲染）在类似阶段遇到的错误消息一脉相承：
+
+```bash
+ReferenceError: window is not defined
+```
+
+可选解决方案 ── 在 BlueOS 生命周期 `onInit` 或 `onShow` 回调内，获取 storage 数据，更新状态，以弥补编译预渲染限制，参考代码如下：
+
+```html
+<template>
+	<div class="flex-col items-center justify-center">
+		<text class="mb-6 text-blue-600">{{ counter }}</text>
+		<counter></counter>
+	</div>
+</template>
+
+<import name="counter" src="./../../components/counter.ux"></import>
+
+<script>
+	import storage from '@blueos.storage.storage'
+	import { useCounter, COUNTER_KEY } from './../../stores/counter'
+
+	export default {
+		data: {
+			counter: 0,
+		},
+
+		onInit() {
+			// 初始化时，获取 storage 数据，更新状态，弥补编译限制（storage.getSync）
+			this.counter = storage.getSync({ key: COUNTER_KEY })
+			useCounter.setState({ count: this.counter })
+
+			useCounter.subscribe(() => {
+				this.counter = useCounter.getState().count
+			})
+		},
+	}
+</script>
+
+<style>
+	@tailwind utilities;
+</style>
+```
+
+## 理解 Zustand 提供的 API
+
+Zustand 提供了一个易于理解和使用的 API，主要包括以下几个核心方法和概念：
+
+### create
+
+这是 Zustand 的主要入口点。`create`  函数用于创建一个新的 store。你需要提供一个设置函数(setter)和状态配置（通常是一个箭头函数），这个设置函数包含三个参数：`set`、`get`  和  `api`。
+
+```js
+import create from 'zustand'
+
+const useStore = create((set, get, api) => ({
+	// 初始化状态
+	count: 0,
+
+	// 定义改变状态的动作
+	increment: () => set((state) => ({ count: state.count + 1 })),
+	decrement: () => set((state) => ({ count: state.count - 1 })),
+	// 其他业务逻辑...
+	updateCount: (newCount) => set({ count: newCount }),
+	resetCount: () => set({ count: 0 }),
+}))
+```
+
+### set
+
+`set`  函数用于更新 store 中的状态。它可以接受一个新的状态对象或者一个接受旧状态并返回新状态的更新器函数。这个函数通常在 store 的 action 中被调用来更新状态。
+
+```js
+set({ count: 1 }) // 设置 `count` 状态为 1
+set((state) => ({ count: state.count + 1 })) // 将 `count` 状态增加 1
+```
+
+### get
+
+`get`  函数允许你获取 store 的当前状态。它通常在 action 中使用，当你需要访问当前状态来决定如何更新它时。
+
+```js
+const count = get().count // 获取当前的 `count` 状态
+```
+
+### api
+
+`api`  参数提供了对 store 的控制方法，例如，你可以通过它访问到  `dispatch`  或 store 的内部状态。
+
+### useStore (钩子)
+
+当你创建了一个 store 之后，Zustand 会为你返回一个用于订阅状态变化的钩子，这可以用来从组件中访问状态。
+
+```js
+const count = useStore((state) => state.count)
+```
+
+### getState
+
+`getState` 是一个方法，返回 store 的当前状态。这在需要直接访问 store 状态时非常有用，尤其是在非 React 环境中。
+
+### setState
+
+`setState` 是一个方法，用于更新 store 的状态。它接受一个函数，该函数接收当前状态作为参数，并返回新的状态。
+
+### subscribe
+
+`subscribe`  方法允许你监听状态的改变。你可以指定一个监听器函数，当状态发生改变时，这个监听器就会被调用。
+
+```js
+const unsubscribe = store.subscribe(console.log)
+// 稍后，如果您想取消订阅 store 更新
+unsubscribe()
+```
+
+### destroy
+
+如果需要的话，你可以调用 destroy 方法来清理 store。这在测试或其他需要完全重置状态的场景中特别有用。
+
+### createStore
+
+通过 `createStore` API，使用 Zustand 在非 React 环境中管理状态。`createStore` 允许你创建一个不依赖于 React 的 store。这个 store 可以在任何  `JavaScript`  环境中使用，包括服务端渲染、测试或其他框架。它不仅在 BlueOS 应用能够正常工作，而且相比 `create`，体积能从原来的 80KB+ 缩减至 3KB。强烈建议您使用 `createStore` API：
+
+```js
+import { createStore } from 'zustand/vanilla'
+
+const useStore = createStore((set) => ...)
+// const { getState, setState, subscribe, getInitialState, destroy } = useStore;
+export default useStore
+```
+
+## 高级用法和最佳实践
+
+### 拆分状态管理
+
+应用变得复杂时，拆分和组合 state 是非常重要的。通过创建多个 store 和将它们组合起来，可以更好地管理和维护状态。
+
+### 性能优化
+
+Zustand 允许使用选择器（`subscribeWithSelector`）和部分订阅来避免不必要的渲染。对于性能至关重要的快应用，这样的特性尤为有用。
+
+## 结语：为何推崇 Zustand
+
+`Zustand`  是针对现代 JavaScript 应用程序的一个轻量级状态管理解决方案，它展现出了显著的优势。用户可以享受到一个既简洁又充满弹性的方式来统一管理应用状态。
+
+在众多的状态管理方案中，例如 RxJS、Vuex、Pinia、Redux 和 MobX，`Zustand`  的设计宗旨是缩减繁冗的 API 和减少模板代码的使用。这一点体现在它如何允许开发者创建一个全局状态库，并在应用的任何位置流畅地访问与修改状态，这一点无需借助 Redux 那样复杂的 action 创建器和 reducers 结构。
+
+随着对  `Zustand`  深入了解，你将会明白它如何在项目中发挥极致效率。虽然 [Vuex](https://quickapp.lovejade.cn/how-to-use-vuex-for-state-management-in-quickapp-development/)、[RxJS](https://quickapp.lovejade.cn/how-to-use-rxjs-for-state-management-in-quick-app-dev/) 或自定义的发布-订阅模式同样可以胜任 BlueOS 应用的状态管理工作，但如果您追求一种更轻量级、简便明了的状态管理方式，`Zustand`  无疑是一把锋利的工具，值得您优先考虑。
+
+--- 
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)

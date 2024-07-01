@@ -118,6 +118,10 @@ export default defineConfig({
 					label: '作品集',
 					autogenerate: { directory: 'projects' },
 				},
+				{
+					label: '新文章',
+					autogenerate: { directory: 'articles' },
+				},
 			],
 		}),
 		tailwind(),

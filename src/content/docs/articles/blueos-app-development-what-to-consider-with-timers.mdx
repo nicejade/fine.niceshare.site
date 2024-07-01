@@ -1,0 +1,109 @@
+---
+title: BlueOS 应用开发，定时器需要注意些什么？
+description: BlueOS Studio 是用于开发 BlueOS 应用的官方集成开发环境 (IDE)，基于 Visual Studio Code 构建，功能强大、使用简单。本文旨在介绍“定时器（setTimeout）使用及注意事项”。
+sidebar:
+  order: 0
+---
+
+全局的 [setTimeout()](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout) 方法设置一个定时器，一旦定时器到期，就会执行一个函数或指定的代码片段。
+
+## 语法说明
+
+```js
+setTimeout(functionRef)
+setTimeout(functionRef, delay)
+```
+
+### 参数
+
+- **functionRef**：计时器到期后要执行的函数。
+- **delay**：计时器在执行指定函数或代码之前应等待的时间（以毫秒为单位）。如果省略此参数，则使用 0 值，表示“立即”执行，或更准确地说，下一个事件周期执行。请注意，无论哪种情况，实际延迟都可能比预期的要长。
+
+### 返回值
+
+返回的 `timeoutID` 是一个正整数值，它标识了调用 创建的计时器 `setTimeout()`。可以将此值传递给 [clearTimeout()](https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout) 以取消先前建立的超时 `setTimeout()`。
+
+## 回调使用
+
+BlueOS 应用开发强烈推荐，每次使用 `setTimeout` / `setInterval`，须要在页面消毁时，清除与其相匹配的调用（通过 `clearTimeout` / `clearInterval` ），以防止可能会导致的持续内存泄露。下面是官方文档给出的示例：
+
+```js
+let timerId
+
+export default {
+	onInit() {
+		timerId = setTimeout(() => {
+			// todo something
+		}, 1000)
+	},
+
+	onDestroy() {
+		// 解除内存占用
+		clearTimeout(timerId)
+	},
+}
+```
+
+## 异步调用
+
+使用 `setTimeout` 的回调形式不被现代 ESM（ECMAScript Modules）规范所推荐。在追求更优雅的异步编程实践中，开发者通常会将其封装在一个基于 Promise 的 sleep 函数中（参见以下示例代码），并通过 async / await 语法进行调用，从而实现更加清晰和直观的延时操作。这种做法不仅符合现代 JavaScript 开发的趋势，还能提高代码的可读性和维护性。
+
+```js
+// helper/util.js
+export const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+```
+
+但这种封装，没有将 setTimeout 调用及时清除，在 BlueOS 应用开发中，不被推荐（底层引擎也会报 Error 级别错误，来予以提醒）；这就需要对 `sleep` 加以修改，返回 timerId，从而在页面销毁时（ `onDestroy` 回调），调用 `clearTimeout` 函数来清理。
+
+```js
+// helper/utils.js
+export const sleep = (ms) => {
+	let timerId
+	return new Promise((resolve) => {
+		timerId = setTimeout(() => {
+			resolve(timerId)
+		}, ms)
+	}).finally(() => {
+		clearTimeout(timerId)
+	})
+}
+```
+
+```html
+/* Index.ux */
+<script>
+	import { sleep } from './../../helper/utils.js'
+
+	let timerId
+
+	export default {
+		async onInit() {
+			timerId = await sleep(3000)
+			console.log(`Current timerId: ${timerId}`)
+		},
+
+		onDestroy() {
+			clearTimeout(timerId)
+		},
+	}
+</script>
+```
+
+--- 
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)

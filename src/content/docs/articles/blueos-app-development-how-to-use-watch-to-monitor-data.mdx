@@ -1,0 +1,114 @@
+---
+title: BlueOS 应用开发，如何通过 $watch 监听数据？
+description: BlueOS Studio 是用于开发 BlueOS 应用的官方集成开发环境 (IDE)，基于 Visual Studio Code 构建，功能强大、使用简单。本文旨在介绍“侦听器（$watch）使用及注意事项”。
+sidebar:
+  order: 1
+---
+
+## `$watch` 使用示例
+
+在 BlueOS（蓝河操作系统）的应用开发中，`$watch` 是一种用来监控数据变化的方法。当你需要在数据发生变化时执行某些操作，就可以使用 `$watch` 来实现。下面是如何在 BlueOS 的应用中使用 `$watch` 的基础步骤：
+
+1.  在你的 `.ux` 文件的 `<script>` 标签内，确定你想监控的数据属性。
+2.  调用 `this.$watch` 方法来创建一个监控器。
+3.  `this.$watch` 方法接受两个参数：第一个参数是要监控的数据属性名，第二个参数是一个回调函数（或回调函数名称）。
+4.  当指定的数据属性发生变化时，回调函数将被执行。回调函数可以接受两个参数：`newValue` 和 `oldValue`，分别代表变化后的新值和变化前的旧值。
+
+这里是一个简单的 `$watch` 使用示例：
+
+```html
+<template>
+  <div>
+    <text>{{ count }}</text>
+    <input type="button" value="递增" @click="onBtnClick" />
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      count: 0,
+    }
+  },
+
+  onInit() {
+    this.$watch('count', (newValue, oldValue) => {
+      console.log(`count 值从 ${oldValue} 变为了 ${newValue}`)
+    })
+  },
+
+  onBtnClick() {
+    this.count += 1
+  },
+}
+</script>
+```
+
+在这个示例中，创建了一个名为 `count` 的数据属性，并在 `onInit` 生命周期钩子中设置了一个 `$watch` 监控器。每当 `count` 的值发生变化时，就会打印出一条包含新旧值的信息。
+
+## `$watch` 方法说明
+
+### **参数**
+
+- `key`（`String` 格式）：需要侦听对象的属性名称，除了一个根级属性，键名也可以是一个简单的由点分隔的路径，例如 `a.b.c`。不支持数组索引。
+- `handler`：（`String` 或  `Function` 格式） 事件句柄函数（函数名），函数的第一个参数为新的属性值，第二个参数为旧的属性值；
+第二个参数 `handler` 可以接收字符串或匿名函数，因此上述示例可以改成如下写法：
+
+```html
+<template>
+  <div>
+    <text>{{ count }}</text>
+    <input type="button" value="递增" @click="onBtnClick" />
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      count: 0,
+    }
+  },
+
+  onInit() {
+    this.$watch('count', 'watchCountChange')
+  },
+
+  watchCountChange(newValue, oldValue) {
+    console.log(`count 值从 ${oldValue} 变为了 ${newValue}`)
+  },
+
+  onBtnClick() {
+    this.count += 1
+  },
+}
+</script>
+```
+
+### 描述
+
+用于声明在数据更改时调用的侦听回调，当属性值发生变化时事件才被触发用法；类似于 Vue 框架中的侦听器（`watch`）；不同的是，BlueOS 中的 `$watch` 尚不支持深层侦听、一次性侦听、同步侦听器、停止侦听器。
+
+## `$watch` 注意事项
+
+- 需要侦听的属性，须在 `data` 或 `props` 中定义；
+- `$watch` 不支持深层侦听整个数组或对象；
+
+---
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)

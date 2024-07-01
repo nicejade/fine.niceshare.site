@@ -1,0 +1,181 @@
+---
+title: BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？
+description: BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多屏幕适配。同样，Tailwind CSS ── 这个以实用性为核心的 CSS 框架，也是借助媒体查询来定制不同屏幕尺寸下的用户界面。本文旨在探讨 BlueOS CSS 与标准 CSS 在处理媒体查询方面的异同，并指导如何通过调整 Tailwind CSS 的配置来实现对 BlueOS 的兼容。这样不仅能够进一步提高开发效率，还能为最终用户带来更加流畅和适应各种屏幕需求的界面体验。
+sidebar:
+  order: 2
+---
+
+BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多屏幕适配。同样，Tailwind CSS ── 这个以实用性为核心的 CSS 框架，也是借助媒体查询来定制不同屏幕尺寸下的用户界面。本文旨在探讨 BlueOS CSS 与标准 CSS 在处理媒体查询方面的异同，并指导如何通过调整 Tailwind CSS 的配置来实现对 BlueOS 的兼容。这样不仅能够进一步提高开发效率，还能为最终用户带来更加流畅和适应各种屏幕需求的界面体验。
+
+[媒体查询（Media Query）](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_media_queries/Using_media_queries) 非常实用，应用十分广泛；开发者经常需要根据设备的大致类型或者特定的特征和设备参数（例如屏幕分辨率）来修改应用的样式。为此媒体查询提供了如下功能：
+
+1.  针对设备和应用的属性信息，可以设计出相匹配的布局样式。
+2.  当屏幕发生动态改变时（比如分屏、横竖屏切换），应用页面布局同步更新。
+
+## BlueOS CSS 语法规则
+
+使用 `@media` 来引入查询语句，具体规则如下：
+
+```css
+@media [media-type] [and|not|only] [(media-feature)] {
+  CSS-Code;
+}
+```
+
+**使用示例**：
+
+```css
+/* 表示：宽度小于 30dp 时生效 */
+@media (max-width: 30) {  .box {
+    background-color: red;
+  }
+}
+/* 表示：宽度小于30dp时生效 */
+@media (width <= 30) {  .box {
+    background-color: red;
+  }
+}
+
+/* 表示：宽度大于 400dp 且小于 700dp 时生效 */
+@media screen and (min-width: 400) and (max-width: 700) {  
+  .box {
+    background-color: red;
+  }
+}
+/* 表示：宽度大于 400dp 且小于 700dp 时生效  */
+@media (400 <= width <= 700) {  
+  .box {
+    background-color: red;
+  }
+}
+
+/* 多条件写法，表示：方表和手机上生效 */
+@media screen and (device: watch-square) or screen and (device: phone) {  .box {
+    background-color: red;
+  }
+}
+```
+
+**注意📢**：BlueOS CSS 屏幕分割断点使用的单位是 `dp`，而不是 `px`。
+
+## Tailwind CSS 自定义屏幕
+
+Tailwind CSS [自定义屏幕](https://tailwindcss.com/docs/screens) 章节中，详细说明如何对屏幕进行“分类”配置；您可以随意拥有任意数量的屏幕，并以您喜欢的项目方式命名它们。下面是其默认配置：
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  theme: {
+    screens: {
+      'sm': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '768px',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1280px',
+      // => @media (min-width: 1280px) { ... }
+  }
+}
+```
+
+如果您想实现在小屏幕用小字体，大屏幕用大字体，即可像这样写：
+
+```html
+<span class="text-sm md:text-base lg:text-lg">Tailwind CSS</span>
+```
+
+如上 class 会被 Tailwind CSS 翻译成如下内容：
+
+```css
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .md\:text-base {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg\:text-lg {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
+}
+```
+
+可以看到，本质上也是用媒体查询。只不过与 BlueOS 不同，Tailwind CSS  屏幕分割断点使用的单位，更加灵活，可以是 `px`、`em` 等；而且相对能创建更加复杂查询。因此，Tailwind CSS 兼容 BlueOS 非常简单，只需在配置屏幕分割断点注意下即可；下面是 `tailwind.config.js` 配置参考：
+
+```json
+export default {
+  theme: {
+    screens: {
+      // 宽度大于 120 dp => @media (min-width: 120) { ... }
+      sm: '120',
+      // 宽度大于 166 dp => @media (min-width: 120) { ... }
+      md: '166',
+      // 宽度大于 640 dp => @media (min-width: 640) { ... }
+      lg: '640',
+    },
+  }
+}
+```
+
+在 BlueOS 官方文档中写到：px 会使布局产生等比缩放效果，而 dp 为绝对的屏幕尺寸。以宽度为示例，设备 dp 的计算方法如下：
+
+```text
+屏幕宽度 dp 值 = 设备屏幕分辨率的宽度 / DPR
+```
+
+在设备屏幕分辨率的宽度为 `360` 的设备，通过 device.getInfo 接口获得 `screenDensity`（设备的屏幕密度，DPR）为 `3`； 即可得到 屏幕宽度 dp 值为  120（`sm` 分段断点值的由来），其他几个依次类推；在 HTML 中，具体使用方式如下：
+
+```html
+<template>
+  <div class="flex items-center justify-center sm:bg-black md:bg-gray-600 lg:bg-white">
+    <text class="border-2 border-red-600 sm:text-white md:text-red-600 lg:text-black">{{ title }}</text>
+  </div>
+</template>
+
+<script>
+  export default {
+    data: {
+      title: 'Tailwind CSS',
+    },
+  }
+</script>
+
+<style>
+  @tailwind utilities;
+</style>
+```
+
+[响应修饰符](https://tailwindcss.com/docs/responsive-design) 配合预设类，就可以达成，根据不同设备屏幕分辨率的宽度，得到不同渲染表现；如上代码，预期效果是：
+- screenWidth <= `360px`：黑色背景，白色文字；
+- `360px`< screenWidth  <= `499px`：灰色背景，红色文字；
+- `499px`< screenWidth <= `1920px`：白色背景、黑色文字。
+
+--- 
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)
