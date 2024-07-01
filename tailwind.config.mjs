@@ -3,13 +3,13 @@ const colors = require('tailwindcss/colors')
 
 const selfCustomColors = {
 	brand: {
-		DEFAULT: '#415fff',
+		DEFAULT: '#4cd34c',
 	},
 	black: {
 		DEFAULT: '#212121',
 	},
 	gray: {
-		DEFAULT: '#bdc3c7',
+		DEFAULT: '#9b9b9b',
 	},
 	silver: {
 		DEFAULT: '#ececec',
@@ -37,7 +37,14 @@ export default {
 			tiny: { min: '768px' },
 		},
 		colors: { ...colors, ...selfCustomColors },
-		extend: {},
+		extend: {
+			boxShadow: {
+				'custom-white': '8px 8px 20px 2px #ebebeb;',
+				'custom-white-xl': '8px 8px 30px 6px #c3c3c3;',
+				'custom-dark': '8px 8px 20px 2px #212121;',
+				'custom-dark-xl': '8px 8px 20px 2px #363636;',
+      }
+		},
 	},
 	plugins: [],
 }

@@ -1,0 +1,15 @@
+---
+import { CardGrid } from '@astrojs/starlight/components';
+import LinkCard from './LinkCard.svelte';
+import configs from '../configs';
+---
+
+<h2 style="background: -webkit-linear-gradient(#212121, #00695C);-webkit-background-clip: text;-webkit-text-fill-color: transparent;">{configs.title}</h2>
+<CardGrid stagger>
+  {
+    // @ts-ignore
+    configs.list.map(({ title, link, desc }) => (
+      <LinkCard client:only='svelte' title={title} link={link} desc={desc}  />
+    ))
+  }
+</CardGrid>
