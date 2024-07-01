@@ -1,0 +1,160 @@
+---
+title: BlueOS 应用开发，如何使用全局变量？
+description: 全局变量在不同的应用环境中有着重要的作用，它们提供了一种在整个应用程序中共享数据和状态的机制。本文旨在探讨：BlueOS 应用开发，有哪些使用全局变量的方式，及优缺点。
+sidebar:
+  order: 5
+---
+
+全局变量在不同的应用环境中有着重要的作用，它们提供了一种在整个应用程序中共享数据和状态的机制。本文旨在探讨：BlueOS 应用开发，有哪些使用全局变量的方式，及优缺点。
+
+## 公共对象 `$app`
+
+`$app` 是一个全局对象（应用对象），用于获取当前应用的信息和状态。它的作用主要包括以下几个方面：
+
+1.  **获取应用实例**： 使用 `$app` 可以获取当前应用的实例对象，通过这个实例对象可以访问应用的各种属性和方法。
+
+2.  **应用信息**： `$app` 对象包含了一些关于当前应用的基本信息，如应用的名称、版本号、包名等。
+
+3.  **事件处理**： `$app` 可以用来注册和处理应用级别的事件，例如应用的启动事件、退出事件（`$app.exit()`）等。
+
+4.  **全局变量和状态管理**： 在 `$app` 对象中可以定义和管理一些全局变量，这些变量可以在整个应用中共享和使用。
+
+5.  **应用生命周期管理**： `$app` 对象允许开发者监听和响应应用的生命周期事件，如应用启动、前台进入、后台切换等。
+
+具体来说，如果需要在快应用中获取应用的全局信息、管理应用的状态或监听应用的生命周期事件，可以通过 `$app` 对象来实现。这使得开发者可以更方便地操作和管理整个应用的行为和状态。具体使用示例如下：
+
+在 `app.ux` 导出 `sleep` 方法：
+```js
+// app.ux 
+<script>
+const sleep = (ms) => {
+  let timerId
+  return new Promise((resolve) => {
+    timerId = setTimeout(() => {
+      resolve(timerId)
+    }, ms)
+  }).finally(() => {
+    clearTimeout(timerId)
+  })
+}
+
+export default {
+  appStartTime: Date.now(),
+
+  sleep,
+
+  onCreate() {},
+}
+</script>
+```
+
+在 BlueOS 页面或组件生命周期内容，通过 `$app` 调用全局 `sleep` 方法：
+
+```html
+<script>
+export default {
+    async onInit() {
+        // 无法获取到 appStartTime
+        // console.log(this.$app.appStartTime)
+        console.log(this.$app.$def.appStartTime)
+        
+        await this.$app.sleep(3000)
+        await this.$app.$def.sleep(3000)
+    },
+}
+</script>
+```
+
+您也可以通过 `$app.$def` 对象来调用暴露至全局的 `sleep` 函数，对比来看，无论从编写效率、运行性能等角度，显然都没有必要；但通过上述示例会发现 ，`$app` 无法直接获取函数以外的对象，`$app.$def` 可以获取。BlueOS 对于这一设计，颇感奇怪。
+
+基于 `$app` 来使用全局变量优缺点：
+- **优点**：暴露、使用全局变量，比较简单，无需其他额外处理；
+- **缺点**：`$app` 和 `$app.$def` 这个功能设计，令人颇感意外；为何不将暴露至全局的所有内容，都挂载在 `$app` 之下（同名覆盖），舍弃 `$app.$def` 这一层。
+
+## 全局对象 `global`
+
+BlueOS 提供全局对象 `global`，它类似浏览器环境中的 `window` 对象，或者 Node.js 环境中 `global` 对象。它的使用非常简单，直接挂载即可使用，如：
+
+```js
+import prompt from '@blueos.window.prompt'
+global.router = router
+```
+
+在页面或组件中，您可以通过 `global.router` 或 `router` 来调用 BlueOS 路由 相关 API：
+
+```js
+global.router.back()
+# OR
+router.back()
+```
+
+### 注意事项
+
+BlueOS Studio 内置应用模版，增加了 `tsconfig.json` 配置，以启用或禁用各种类型检查和语法检查，帮助开发者提早发现潜在的类型错误和代码质量问题；推荐使用。
+
+```json
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "checkJs": true,
+    "lib": ["ES2022"],
+    "outDir": "./build"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+```
+
+这份配置导致一个副作用，当直接调用全局变量（`global` 或 `router`），因为没有对应声明，虽然不影响编译运行，但编辑器则会报警告提示；您可以在 `src` 目录新建声明文件（如：`app.d.ts`），填充必要声明，以解决 Studio 警告提示，示例如下：
+
+```ts
+/// <reference types="@blueos" />
+type Router = typeof import('@blueos.app.appmanager.router');
+type Prompt = typeof import('@blueos.window.prompt');
+
+declare const global: {
+  router: Router;
+  prompt: Prompt;
+}
+
+declare const router: Router
+
+declare const Promise: typeof Promise
+```
+
+基于 `global` 来使用全局变量优缺点：
+- **优点**：相比 `$app` 这种方案，暴露与使用全局变量都更加简单；
+- **缺点**：项目如果配备了 `tsconfig.json` ，则额外需要声明，以消除警告提醒；
+
+本文详细探讨了在 BlueOS 应用开发中使用全局变量的两种主要途径：通过 `$app` 对象和 `global` 对象。每种方法都有其独特的优势和局限性。对于简单的全局数据共享，`$app` 提供了一种直接且便捷的方式。然而，由于 BlueOS 的设计限制，某些情况下需要通过 `$app.$def` 才能访问到特定的全局变量。而使用 `global` 对象则提供了更接近传统 Web 开发的体验，但对于配置了 `tsconfig.json` 项目，需要额外的类型声明。
+
+无论选择哪种方法，理解和合理运用全局变量可以有效提升应用的开发效率和代码管理水平。希望本文的介绍能为您在 BlueOS 开发中提供实用的参考和帮助。
+
+--- 
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://fine.niceshare.site/articles/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)
+
