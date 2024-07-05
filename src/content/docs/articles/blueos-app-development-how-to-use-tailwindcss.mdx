@@ -1,0 +1,577 @@
+---
+title: BlueOS 应用开发，如何使用 Tailwind CSS？
+description: BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多屏幕适配。同样，Tailwind CSS ── 这个以实用性为核心的 CSS 框架，也是借助媒体查询来定制不同屏幕尺寸下的用户界面。本文旨在探讨 BlueOS CSS 与标准 CSS 在处理媒体查询方面的异同，并指导如何通过调整 Tailwind CSS 的配置来实现对 BlueOS 的兼容。这样不仅能够进一步提高开发效率，还能为最终用户带来更加流畅和适应各种屏幕需求的界面体验。
+---
+
+[Tailwind CSS](https://tailwindcss.com/) 是一个实用为先的 CSS 框架，旨在快速创建定制化的用户界面。通过使用直观的类名，如 flex、pt-4、text-center 和 rotate-90，可以轻松地将样式直接应用于标记元素。借助 Tailwind，您可以轻松创建美观且现代化的界面，无需复杂的 CSS 技巧和设计相关知识，且全程在 HTML 环境中操作。此外，Tailwind 的原子化 CSS 方法有助于减小最终生成的 CSS 文件大小。
+
+在 BlueOS Studio 中，我们提供了一个基于 Tailwind CSS 的项目模板，您可以直接新建并使用。下面将简单介绍如何安装，并在应用开发中使用 Tailwind CSS（想要深入了解，请参阅文章：[如何在应用开发中使用 Tailwind CSS 提升开发效率？](https://quickapp.lovejade.cn/how-to-use-tailwind-css-in-quickapp-development/) ）。
+
+Tailwind CSS 的工作原理是扫描所有 HTML 文件、JavaScript 组件和任何其他模板的类名，生成相应的样式，然后将它们写入静态 CSS 文件。它快速、灵活、可靠，且运行时间为零。官方支持多种使用方式，BlueOS 目前支持使用 [Tailwind CLI](https://tailwindcss.com/docs/installation) 和 [Using PostCSS](https://tailwindcss.com/docs/installation/using-postcss) 这两种方式。将 Tailwind CSS 安装为 PostCSS 插件是将其与 Webpack、Rollup 和 Vite 等构建工具集成的最无缝方式。推荐您使用这种方式进行安装。
+
+## 基于 PostCSS 使用 Tailwind CSS
+
+> 基于 PostCSS 使用 Tailwind CSS，将在 BlueOS Studio 下个版本（`v1.2.0`） 提供，敬请期待。
+
+基于 PostCSS 插件使用 Tailwind CSS，主要有以下步骤：
+
+### 安装相关依赖
+
+通过 [pnpm](https://pnpm.io/) 或 npm 安装 [TailwindCSS](https://tailwindcss.com/) 及其对等依赖项：
+
+```bash
+# 安装依赖
+pnpm install -D tailwindcss postcss autoprefixer
+```
+
+### 配置和自定义 Tailwind
+
+```bash
+# 创建配置文件
+npx tailwindcss init
+```
+
+执行上述命令后，将生成一个  `tailwind.config.js` 文件，即 Tailwind CSS 的配置文件。需要指出的是，尽管 BlueOS 应用开发在技术上和 Web 应用开发相似，都采用了 HTML、JavaScript 和 CSS 这一前端技术栈，但它们存在诸多差异，尤其是 CSS 部分。为了让 Tailwind CSS 适应 BlueOS 应用开发的特殊要求，必须利用 Tailwind CSS 的高度可定制性进行特定的配置调整。详细的自定义配置步骤，请参考下文中的 [自定义 Tailwind CSS 配置](#自定义-tailwind-css-配置)。
+
+### 将 Tailwind 添加至 PostCSS 配置
+
+将 `tailwindcss` 和添加 `autoprefixer` 到配置文件中（`postcss.config.js`）：
+
+```js
+import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
+import tailwindcssconfig from './tailwind.config.js'
+
+export default {
+	plugins: [autoprefixer, tailwindcss(tailwindcssconfig)],
+}
+```
+
+### 将 PostCSS 配置告知 BlueOS 编译系统
+
+在项目根目录新建配置文件 `build.config.js`，增加如下配置：
+
+```js
+export default {
+	css: {
+		postcss: './postcss.config.js',
+	},
+}
+```
+
+### 将 Tailwind 指令添加 UX style
+
+在每个 `.ux` 文件 `style` 标签中，按需添加 `@tailwind` 指令；详情参见 [Tailwind CSS 功能和指令](https://tailwindcss.com/docs/functions-and-directives#tailwind)。
+
+```css
+<style>
+@tailwind components;
+@tailwind utilities;
+</style>
+```
+
+执行以上步骤，即完成了 Tailwind CSS 配置； 编写 UI 代码时，可直接在元组件使用 Tailwind 预设提供的 Class（如：`bg-red`），而无需自定义；预计可覆盖 `95%` 以上场景；BlueOS Studio 有内置 `Tailwind CSS` 模版，您可以基于此模版新建应用，从而快速开启基于 Tailwind CSS 开发 BlueOS 应用之旅。
+
+## 自定义 Tailwind CSS 配置
+
+因为 Tailwind 是一个用于构建定制用户界面的框架，所以它的设计从一开始就考虑到了定制。默认情况下，Tailwind 会在项目的根目录下寻找一个可选的 `tailwind.config.js` 文件，在那里你可以定义任何自定义。详情可参见 [TailwindCSS Configuration](https://tailwindcss.com/docs/configuration)。
+
+BlueOS CSS 是 [W3C 规范](https://www.w3.org/Style/CSS/) 的子集，较多属性尚不支持；可通过 `corePlugins` 对象将其禁用，从而使得代码提示给于的提示，都是 BlueOS 支持的属性；BlueOS 默认使用 `px` 作为单位，而 Tailwind CSS 默认是 `rem`，需要做下转换.....这些需要额外处理的部分，都可以在 `tailwind.config.js` 中完成；下面是一个适用于 BlueOS 应用开发的 Tailwind CSS 配置示例（您可以根据项目需要进行修改、扩充或删减）：
+
+```js
+import colors from 'tailwindcss/colors.js'
+
+const selfCustomColors = {
+	brand: {
+		DEFAULT: '#1e293b',
+	},
+	warn: {
+		DEFAULT: '#f59e0b',
+	},
+	link: {
+		DEFAULT: '#0ea5e9',
+	},
+	mark: {
+		DEFAULT: '#ff4582',
+	},
+	'custom-black': {
+		DEFAULT: '#262626',
+	},
+	'custom-white': {
+		DEFAULT: '#F2F2F2',
+	},
+	'custom-grey': {
+		DEFAULT: '#828282',
+	},
+}
+
+export default {
+	mode: 'jit',
+	content: ['./src/**/*.{ux,html,js,ts}'],
+	purge: {
+		enabled: true,
+		content: ['./src/**/*.{ux,html,js,ts}'],
+	},
+	// https://tailwindcss.com/docs/configuration#core-plugins
+	corePlugins: {
+		preflight: false, // disable base/reset styles
+		container: false, // disable container component
+		content: false, // disable `content` utility
+		accentColor: false, // disable `accent-color` utility
+		accessibility: false, // disable `appearance` utility
+		appearance: false, // disable `appearance` utility
+		aspectRatio: false, // disable `aspect-ratio` utility
+		backgroundOpacity: false, // disable `background-opacity` utility
+		backdropBlur: false, // disable `backdrop-blur` utility
+		backdropBrightness: false, // disable `backdrop-brightness` utility
+		backdropContrast: false, // disable `backdrop-contrast` utility
+		backdropGrayscale: false, // disable `backdrop-grayscale` utility
+		backdropHueRotate: false, // disable `backdrop-hue-rotate` utility
+		backdropInvert: false, // disable `backdrop-invert` utility
+		backdropOpacity: false, // disable `backdrop-opacity` utility
+		backdropSaturate: false, // disable `backdrop-saturate` utility
+		backdropSepia: false, // disable `backdrop-sepia` utility
+		blur: false, // disable `blur` utility
+		borderCollapse: false, // disable `border-collapse` utility
+		borderOpacity: false, // disable `border-opacity` utility
+		borderSpacing: false, // disable `border-spacing` utility
+		boxShadow: false, // disable `box-shadow` utility
+		boxShadowColor: false, // disable `box-shadow-color` utility
+		boxDecorationBreak: false, // disable `box-decoration-break` utility
+		boxSizing: false, // disable `box-sizing` utility
+		breakAfter: false, // disable `break-after` utility
+		breakBefore: false, // disable `break-before` utility
+		breakInside: false, // disable `break-inside` utility
+		brightness: false, // disable `brightness` utility
+		captionSide: false, // disable `caption-side` utility
+		caretColor: false, // disable `caret-color` utility
+		clear: false, // disable `clear` utility
+		contrast: false, // disable `contrast` utility
+		divideColor: false, // disable `divide-color` utility
+		divideOpacity: false, // disable `divide-opacity` utility
+		divideStyle: false, // disable `divide-style` utility
+		divideWidth: false, // disable `divide-width` utility
+		float: false, // disable `float` utility
+		filter: false, // disable `filter` utility
+		fontVariantNumeric: false, // disable `font-variant-numeric` utility
+		hyphens: false, // disable `hyphens` utility
+		isolation: false, // disable `isolation` utility
+		lineClamp: false, // disable `line-clamp` utility
+		mixBlendMode: false, // diable `mix-blend-mode` utility
+		listStyleImage: false, // disable `list-style-image` utility
+		listStylePosition: false, // disable `list-style-position` utility
+		listStyleType: false, // disable `list-style-type` utility
+		objectPosition: false, // disable `object-position` utility
+		outlineColor: false, // disable `outline-color` utility
+		outlineOffset: false, // disable `outline-offset` utility
+		outlineStyle: false, // disable `outline-style` utility
+		outlineWidth: false, // disable `outline-width` utility
+		overscrollBehavior: false, // disable `overscroll-behavior` utility
+		placeContent: false, // disable `place-content` utility
+		placeItems: false, // disable `place-items` utility
+		placeSelf: false, // disable `place-self` utility
+		placeholderOpacity: false, // disable `placeholder-opacity` utility
+		resize: false, // disable `resize` utility
+		ringColor: false, // disable `ring-color` utility
+		ringOffsetColor: false, // disable `ring-offset-color` utility
+		ringOffsetWidth: false, // disable `ring-offset-width` utility
+		ringOpacity: false, // disable `ring-opacity` utility
+		space: false, // disable `space-between` utility
+		textDecorationThickness: false, // disable `text-decoration-thickness` utility
+		textOpacity: false, // disable `text-opacity` utility
+		textTransform: false, // disable `text-transform` utility
+		textUnderlineOffset: false, // disable `text-underline-offset` utility
+		touchAction: false, // disable `touch-action` utility
+		transform: false, // disable `transform` utility
+		userSelect: false, // disable `user-select` utility
+		verticalAlign: false, // disable `vertical-align` utility
+		whitespace: false, // disable `whitespace` utility
+		wordBreak: false, // disable `word-break` utility
+		willChange: false, // disable `will-change` utility
+	},
+	darkMode: false,
+	theme: {
+		colors: { ...colors, ...selfCustomColors },
+		extend: {
+			width: ({ theme }) => ({
+				auto: 'auto',
+				...theme('spacing'),
+			}),
+			height: ({ theme }) => ({
+				auto: 'auto',
+				...theme('spacing'),
+			}),
+			spacing: {
+				1: '4px',
+				2: '8px',
+				3: '12px',
+				4: '16px',
+				5: '20px',
+				6: '24px',
+				7: '28px',
+				8: '32px',
+				9: '36px',
+				10: '40px',
+				11: '44px',
+				12: '48px',
+				14: '56px',
+				16: '64px',
+				18: '72px',
+				20: '80px',
+				24: '96px',
+				28: '112px',
+				32: '128px',
+				36: '144px',
+				40: '160px',
+				44: '176px',
+				48: '192px',
+				52: '208px',
+				56: '224px',
+				60: '240px',
+				64: '256px',
+				72: '288px',
+				80: '320px',
+				84: '336px',
+				96: '384px',
+				100: '400px',
+				112: '448px',
+				120: '480px',
+			},
+			borderWidth: {
+				DEFAULT: '1px',
+				0: '0px',
+				2: '2px',
+				4: '4px',
+				8: '8px',
+			},
+			borderRadius: {
+				none: '0',
+				'': '1px',
+				sm: '2px',
+				DEFAULT: '4px',
+				md: '6px',
+				lg: '8px',
+				xl: '12px',
+				'2xl': '16px',
+				'3xl': '24px',
+				'4xl': '36px',
+				'5xl': '48px',
+			},
+			fontSize: {
+				xs: ['12px', { lineHeight: '16px' }],
+				sm: ['15px', { lineHeight: '20px' }],
+				base: ['16px', { lineHeight: '26px' }],
+				lg: ['18px', { lineHeight: '28px' }],
+				xl: ['20px', { lineHeight: '28px' }],
+				'2xl': ['26px', { lineHeight: '32px' }],
+				'3xl': ['30px', { lineHeight: '36px' }],
+				'4xl': ['36px', { lineHeight: '40px' }],
+				'5xl': ['48px', { lineHeight: '60px' }],
+				'6xl': ['60px', { lineHeight: '60px' }],
+				'7xl': ['72px', { lineHeight: '60px' }],
+				'8xl': ['96px', { lineHeight: '60px' }],
+				'9xl': ['128px', { lineHeight: '60px' }],
+			},
+			maxWidth: {
+				sm: '384px',
+				md: '448px',
+				lg: '512px',
+				xl: '576px',
+				'2xl': '672px',
+				'3xl': '768px',
+				'4xl': '896px',
+				'5xl': '1024px',
+				'6xl': '1152px',
+				'7xl': '1280px',
+				'8xl': '1440px',
+				'9xl': '1600px',
+			},
+			flex: {
+				1: '1',
+			},
+		},
+	},
+	variants: {
+		extend: {},
+	},
+	plugins: [
+		function ({ addUtilities }) {
+			const newUtilities = {
+				'.text-line-through': {
+					textDecoration: 'line-through',
+				},
+			}
+			addUtilities(newUtilities, ['responsive', 'hover'])
+		},
+	],
+}
+```
+
+BlueOS CSS 支持多种标准 CSS 特性，但其使用的语法可能与通用标准有所不同。为确保在 BlueOS 中的顺畅体验，某些 Tailwind CSS 类（如  `flex-1`  和  `line-through`）可能需要进行调整。如果您在使用过程中遇到更多类似情况，您可以通过修改  `theme`、`variants`  和  `plugins`  等配置来解决。以下是部分已知的差异性，供您参考：
+
+```css
+/* 标准 CSS */
+.flex-1 {
+	flex: 1 1 0%;
+}
+.line-through {
+	text-decoration-line: line-through;
+}
+
+/* BlueOS CSS */
+.flex-1 {
+	flex: 1;
+}
+.line-through {
+	text-decoration: line-through;
+}
+```
+
+## Tailwind CSS 使用技巧
+
+使用 Tailwind CSS 的时候，掌握一些技巧可以提高工作效率，确保你的样式代码既整洁又高效。下面是一些使用 Tailwind CSS 的技巧：
+
+- **使用官方文档**: [Tailwind CSS 文档](https://tailwindcss.com/docs/installation)，详尽并且易于理解，是学习和参考的宝贵资源。
+- **安装 Tailwind CSS IntelliSense 扩展**：提供自动完成、语法突出显示和 linting 等高级功能来增强 Tailwind 开发体验；
+- **使用类名排序插件**: 基于 Prettier、[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) 插件，这样可以自动化地对 Tailwind 类名按照一定的顺序进行排序。
+- **组件化**: 尽可能将重复的类名组合成可复用的组件，这样可以避免在多处地方复制和粘贴相同的类名集合。
+- **使用 @apply 指令**: 在你的 CSS 文件里，可以用 `@apply` 指令来应用 Tailwind 的工具类于 CSS 选择器上，这有助于保持样式的一致性。
+- **定制配置**: 如果你需要的某个样式在 Tailwind 中不存在，你可以在 `tailwind.config.js` 文件中进行定制。
+- **理解响应式设计原则**: Tailwind CSS 使用前缀来创建响应式的设计，如 `sm: `, `md: `, `lg: `, 以及 `xl: ` 前缀。
+- **状态变体**: 利用 Tailwind CSS 的状态变体，比如 `hover: `, `focus: `, `active: `, `disabled: ` 等来控制不同状态下的样式。
+- **减少冗余**: 当你发现有多个地方使用相同的类名组合时，考虑是否可以将它们重构成单一的组件或使用 `@apply`。
+- **使用预构建组件**: 可以使用一些开源项目或 UI 组件库，这些库已经使用 Tailwind CSS 构建，并可以直接在你的项目中使用。
+- **了解插件系统**: Tailwind CSS 的插件系统可以帮助你添加新的工具类，或者在现有的工具类上添加变体。
+- **利用工具类制作原型**: 使用 Tailwind 的工具类快速做出一个页面的原型，然后再优化代码。
+- **清理未使用的 CSS**: 利用 Tailwind CSS 内置的 PurgeCSS 功能来减小生产环境下的样式表的体积，清除未使用的样式。
+- **参考基于 Tailwind CSS 组件的开源库**：借助 Tailwind 超乎想象的繁荣生态，如 [Flowbite](https://flowbite.com/) 来提升页面搭建效率；
+- **利用 AI 能力**：基于 AI，利用 [screenshot-to-code](https://github.com/abi/screenshot-to-code) 工具，将截图、设计稿快速转化为 HTML + Tailwind；
+
+默认情况下，编辑“字符串”内容时，开发工具中不会自动触发完成，需要触发[空格]来激发。更新设置： `editor.quickSuggestions`（控制键入时是否应自动显示建议）和 Format On Save（在保存时格式化），可以进一步改善您的编码体验：
+
+```json
+"editor.formatOnSave": true,
+"editor.quickSuggestions": {
+  "strings": "on"
+}
+```
+
+### 使用 Tailwind CSS 的 Prettier 插件
+
+使用 [Tailwind CSS 的 Prettier 插件](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)，可根据推荐的类顺序自动对类进行排序，可以使得您的代码看起来更优雅；在 BlueOS Studio 内置的 `tailwind-template` 已内置；如果您要自行配置，请参考以下步骤：
+
+- 安装 prettier、prettier-plugin-tailwindcss 开发依赖：
+
+```bash
+pnpm i prettier prettier-plugin-tailwindcss -D
+```
+
+- 将 `prettier-plugin-tailwindcss` 插件添加到 Prettier 配置中，新建文件 `.prettierrc`，填充以下内容：
+
+```json
+// .prettierrc
+{
+	"plugins": ["prettier-plugin-tailwindcss"],
+	"singleQuote": true,
+	"semi": false,
+	"printWidth": 80,
+	"proseWrap": "never",
+	"tabWidth": 2,
+	"bracketSameLine": true,
+	"htmlWhitespaceSensitivity": "ignore",
+	"vueIndentScriptAndStyle": true,
+	"trailingComma": "es5"
+}
+```
+
+需要说明的是，配置 prettier，有多种方式；按照 [prettier 配置规则](https://prettier.io/docs/en/configuration.html)，配置在 `package.json` 文件中，拥有最高优先权；如果您在 `package.json` 文件中配置了 `prettier`，需要予以移除，如此 `.prettierrc` 文件中的内容才能生效。
+
+这些技巧有助于你更加高效地利用 Tailwind CSS，并且保持你的代码库干净、有序。随着你对 Tailwind CSS 相关概念和用法的深入了解，你会发现更多针对你具体情况的使用技巧。
+
+---
+
+## 如何基于 CLI 使用 Tailwind CSS？
+
+从头开始使用 Tailwind CSS 最简单、最快的方法是使用 [Tailwind CLI](https://tailwindcss.com/docs/installation) 工具；其安装使用方式非常简单，主要步骤如下：
+
+### 安装 Tailwind CSS
+
+```bash
+pnpm install -D tailwindcss
+```
+
+### 配置和自定义 Tailwind
+
+无论是基于 CLI 还是使用 PostCSS，配置和自定义 Tailwind CSS，是完全一致；详情可参见上文 [配置和自定义 Tailwind](#配置和自定义-tailwind)。
+
+### 添加 Tailwind 指令
+
+在您的主 CSS 文件中使用 `@tailwind` 指令来添加 Tailwind CSS 层：
+
+```css
+/* input.css */
+
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+```
+
+### 运行 Tailwind CLI 构建过程
+
+使用 Tailwind CLI 工具构建 CSS，示例如下：
+
+```shell
+npx tailwindcss -i ./src/assets/styles/input.css -o ./src/assets/styles/output.css --watch
+```
+
+您可以根据项目需要自定义 `input.css` 和 `output.css` 的命名及路径。例如，可以统一存放于 `src/assets/styles` 目录下（这不是必须，您可以按照团队约定风格来组织）。
+
+```json
+"scripts": {
+  "tailwindcss": "npx tailwindcss -i ./src/assets/styles/input.css -o ./src/assets/styles/output.css --watch",
+},
+```
+
+### 在 UX 文件中应用 Tailwind CSS
+
+将编译好的 CSS 文件通过 `@import` 语句在 `.ux`（除了 `app.ux`）文件的样式中引入：
+
+```html
+<style>
+	@import './../../output.css';
+</style>
+```
+
+然后，在 `.ux` 文件的 `template` 标签中使用 Tailwind CSS 的类来设置样式，例如：
+
+```html
+<template>
+	<div class="bg-blue-300 w-full flex flex-col justify-center items-center">
+		<text class="text-red-600">TailwindCSS Area</text>
+		<text class="text-red-600">Awesome TailwindCSS</text>
+	</div>
+</template>
+```
+
+当您写完保存之后，打开 output.css 即可如下的 CSS 代码：
+
+```css
+/* @tailwind base; */
+
+.flex {
+	display: flex;
+}
+
+.w-full {
+	width: 100%;
+}
+
+.flex-col {
+	flex-direction: column;
+}
+
+.items-center {
+	align-items: center;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.bg-blue-300 {
+	background-color: #93c5fd;
+}
+
+.text-red-600 {
+	color: #dc2626;
+}
+```
+
+经过这些步骤，您已经准备好在应用开发中使用 Tailwind CSS 了。假如您对 Tailwind CSS 尚不熟悉，可查阅 [Tailwind CSS 文档](https://tailwindcss.com/) ，或尝试[Tailwind Playground](https://play.tailwindcss.com/)。
+
+---
+
+## 常见问题及说明
+
+如果您已经熟悉 Web 开发，可能会对上述步骤产生疑问。以下是一些澄清点：
+
+- **为什么不能在 `<script>` 标签中引入 CSS 文件？**
+
+按照 Web 开发的常规做法，您可能想在 `app.ux` 文件中直接引入 CSS 文件，例如：
+
+```html
+<script>
+	import './output.css'
+</script>
+```
+
+但这将导致以下错误：缺少合适的 loader 来处理 CSS 文件。
+
+```bash
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+
+| /* @tailwind base; */
+```
+
+尽管理论上可以使用 css-loader 和 style-loader 来处理 CSS 文件（详见 <a href="https://memo.lovejade.cn/m/271" target="_blank">ChatGPT | You may need an appropriate loader....</a>），但在应用开发中，这种方法不起作用。因为 style-loader 的作用是将 CSS 注入 DOM，它依赖于浏览器特有的 API（例如：window、document），仅在 v8 环境下可用。而蓝河应用是由 BlueOS 底层框架渲染的，并非浏览器环境，因此 style-loader 无法工作。在构建工具优化和兼容之前，通过 `<style>` 标签引入 CSS 成了主要选择。
+
+- **为什么在 `tailwind.config.js` 中禁用了许多样式？**
+
+在 Tailwind CSS 中，可以通过配置 corePlugins 来禁用默认生成的类，尤其是当您的项目不需要这些类时，这是十分必要的。在上述示例中，我们禁用了 `text-opacity` 等样式，是出于以下两个原因：
+
+其一：应用标准虽然基于 Web 技术栈，但只是 Web 标准子集，并非所有的 CSS 属性都得到了很好的支持；
+
+其二：默认情况下，TailwindCSS 会将样式属性的值存储为 CSS 变量（例如 --tw-text-opacity），以便进行动态计算和响应式设计。然而，在 `<template>` 中用 `text-red-300` 类，输出的是如下 CSS 代码，这种写法在应用中无法正确解析。因此，在底层框架尚不支持 CSS 变量的情况下，我们选择先禁用这些特性。
+
+```css
+.text-red-300 {
+	--tw-text-opacity: 1;
+	color: rgb(252 165 165 / var(--tw-text-opacity));
+}
+```
+
+- **为什么要在 `input.css` 中移除 `@tailwind base;` 指令？**
+
+```css
+/* input.css */
+
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+```
+
+在一般的 Web 开发过程中，我们通常会将 base、components、utilities 等指令全部包含在 CSS 文件中。然而，在应用开发中这是不必要的，这些指令会导致 output.css 生成大量无关的内容（如下所示），所以我们选择移除这些指令，这与通过 corePlugins 禁用基础样式（比如 preflight）和容器组件（container）是同样的原理。
+
+```css
+*,
+::before,
+::after {
+	--tw-border-spacing-x: 0;
+	......;
+}
+::backdrop {
+	--tw-border-spacing-x: 0;
+	......;
+}
+```
+
+以上，就是在应用开发过程中，引入 Tailwind CSS 所需的操作、以及常见问题说明。
+
+--- 
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用全局变量？](https://fine.niceshare.site/articles/blueos-app-development-how-to-use-global/)
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://fine.niceshare.site/articles/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)
