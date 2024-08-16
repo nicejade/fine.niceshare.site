@@ -7,6 +7,8 @@ sidebar:
 
 BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多屏幕适配。同样，Tailwind CSS ── 这个以实用性为核心的 CSS 框架，也是借助媒体查询来定制不同屏幕尺寸下的用户界面。本文旨在探讨 BlueOS CSS 与标准 CSS 在处理媒体查询方面的异同，并指导如何通过调整 Tailwind CSS 的配置来实现对 BlueOS 的兼容。这样不仅能够进一步提高开发效率，还能为最终用户带来更加流畅和适应各种屏幕需求的界面体验。
 
+![BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://lovejade.oss-cn-shenzhen.aliyuncs.com/blueos-tailwindcss-adapt-to-multiple-screens.png)
+
 [媒体查询（Media Query）](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_media_queries/Using_media_queries) 非常实用，应用十分广泛；开发者经常需要根据设备的大致类型或者特定的特征和设备参数（例如屏幕分辨率）来修改应用的样式。为此媒体查询提供了如下功能：
 
 1.  针对设备和应用的属性信息，可以设计出相匹配的布局样式。
@@ -26,12 +28,14 @@ BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多�
 
 ```css
 /* 表示：宽度小于 30dp 时生效 */
-@media (max-width: 30) {  .box {
+@media (max-width: 30) {  
+  .box {
     background-color: red;
   }
 }
 /* 表示：宽度小于30dp时生效 */
-@media (width <= 30) {  .box {
+@media (width <= 30) {  
+  .box {
     background-color: red;
   }
 }
@@ -42,6 +46,7 @@ BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多�
     background-color: red;
   }
 }
+
 /* 表示：宽度大于 400dp 且小于 700dp 时生效  */
 @media (400 <= width <= 700) {  
   .box {
@@ -50,13 +55,14 @@ BlueOS 提供了对媒体查询的支持，使得开发者能够轻松实现多�
 }
 
 /* 多条件写法，表示：方表和手机上生效 */
-@media screen and (device: watch-square) or screen and (device: phone) {  .box {
+@media screen and (device: watch-square) or screen and (device: phone) {  
+  .box {
     background-color: red;
   }
 }
 ```
 
-**注意📢**：BlueOS CSS 屏幕分割断点使用的单位是 `dp`，而不是 `px`。
+**注意📢**：BlueOS CSS 屏幕分割断点，截止 2024 年 8 月，仅支持使用的单位是 `dp`，尚不支持 `px` 等单位。
 
 ## Tailwind CSS 自定义屏幕
 
@@ -159,7 +165,7 @@ export default {
 [响应修饰符](https://tailwindcss.com/docs/responsive-design) 配合预设类，就可以达成，根据不同设备屏幕分辨率的宽度，得到不同渲染表现；如上代码，预期效果是：
 - screenWidth 小于等于 `360px`：黑色背景，白色文字；
 - `360px` 大于 screenWidth  小于等于 `499px`：灰色背景，红色文字；
-- `499px` 大于 screenWidth 小于等于 `1920px`：白色背景、黑色文字。
+- `499px` 大于 screenWidth 小于等于 `1020px`：白色背景、黑色文字。
 
 --- 
 
