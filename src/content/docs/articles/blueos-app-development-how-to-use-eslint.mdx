@@ -1,0 +1,140 @@
+---
+title: BlueOS 应用开发，如何借助 ESlint 提升效率？
+description: ESLint 是一个用于识别和报告 JavaScript 代码中的模式和问题的工具，本文旨在介绍：BlueOS 应用开发，借助 eslint 提前发现代码可能存在的问题，从而提升效率。
+sidebar:
+  order: 6
+---
+
+ESLint 是一个用于识别和报告 JavaScript 代码中的模式和问题的工具，本文旨在介绍：BlueOS 应用开发，借助 eslint 提前发现代码可能存在的问题，从而提升效率。它被广泛用于：
+
+1.  **代码质量**：检测代码中的语法错误和潜在问题。
+2.  **一致性**：确保代码风格一致，方便团队协作。
+3.  **最佳实践**：帮助开发者遵循 JavaScript 的最佳实践。
+4.  **可定制性**：通过插件和配置文件自定义规则。
+
+![BlueOS 应用开发，如何借助 ESlint 提升效率？](https://lovejade.oss-cn-shenzhen.aliyuncs.com/eslint-for-blueos-develop.webp)
+## 安装依赖
+
+```bash
+pnpm i eslint@7.32.0 eslint-plugin-json eslint-plugin-vue -D
+```
+
+## 配置 ESLint
+
+在项目根目录新建 `.eslintrc` 文件，其中包含 ESLint 的配置。你可以根据需要修改它：
+
+```json
+{
+  "env": {
+    "commonjs": true,
+    "node": true,
+    "es6": true
+  },
+  "plugins": ["json"],
+  "extends": ["eslint:recommended", "plugin:vue/base"],
+  "globals": {
+    "requireModule": false,
+    "requireM": false,
+    "console": true,
+    "setTimeout": false,
+    "clearTimeout": false,
+    "setInterval": false,
+    "clearInterval": false
+  },
+  "rules": {
+    "vue/html-end-tags": "warn",
+    "vue/html-quotes": "warn",
+    "vue/comment-directive": "off",
+    "no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "prompt",
+        "args": "after-used"
+      }
+    ],
+    "quotes": [
+      "warn",
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
+    "no-console": "error",
+    "semi": [1, "never"]
+  }
+}
+```
+
+## 设置忽视
+
+`.eslintignore` 文件用于指定 ESLint 在运行时应忽略的文件和目录。其作用包括：
+
+1.  **排除特定文件**：防止 ESLint 检查不需要 lint 的文件，如打包后的文件、第三方库等。
+2.  **提高性能**：通过忽略不相关的文件，可以加快 lint 的速度。
+3.  **简化配置**：保持 `.eslintrc` 配置文件的简洁，将忽略规则放在 `.eslintignore` 中。
+
+在项目根目录下创建 `.eslintignore` 文件，并添加需要忽略的路径：
+```
+node_modules/ 
+dist/ 
+build/ 
+*.min.js
+```
+
+## 配置命令
+
+在  `package.json` 中增加 `lint` 命令，从而快速运行 ESLint。
+```json
+"scripts": {
+  "lint": "eslint --ext .ux,.js src/"
+}
+```
+
+## 运行命令
+
+使用以下命令检查项目中的 JavaScript、ux 等文件：
+
+```bash
+npm run lint
+```
+
+## 自动修复问题
+
+ESLint 可以自动修复一些简单的问题。使用 `--fix` 选项：
+
+```bash
+npx eslint . --fix
+```
+
+## 集成到开发环境
+
+- **编辑器集成**：大多数现代编辑器（如 BlueOS Studio、VSCode）都支持 ESLint 插件，可以实时显示和修复问题。
+- **CI/CD 集成**：在持续集成中运行 ESLint，确保代码提交符合标准。
+
+## 注意事项
+
+截止 2024 年 08 月 17 日， [ESLint](https://www.npmjs.com/package/eslint) 已更新至 `9.9.0`，它部分功能用法没有向前兼容；上面提及的使用方式适用于 `7.32.0`版本；如果使用最新版本，需要自行研究下，望知悉。
+
+通过 ESLint，你可以有效地提高代码质量，保持代码的一致性和可维护性。如果您不习惯使用 ESLint，可以考虑使用 [Prettier](https://github.com/prettier/prettier) 来美化代码，它也能帮助发现部分代码问题，详情可参见 [代码美化 | BlueOS Studio](https://studio.blueos.com.cn/write/code-prettier/) ；如果您愿意，也可以将二者结合起来使用。
+
+2024 年 08 月 17 日写于〔深圳福田〕
+
+--- 
+
+[BlueOS](https://www.blueos.com.cn/) （中文名“蓝河操作系统”）是 vivo 自主研发的一款面向通用人工智能时代的智慧操作系统。它以智慧特性、性能优化、安全性、系统架构、AI 服务引擎、兼容性、流畅体验、开放智联等为核心特点，代表了 vivo 在操作系统领域的创新能力和研发实力。BlueOS 的目标是为用户提供一个更加智能、流畅且安全的使用体验。 [BlueOS](https://www.blueos.com.cn/) 支持 [快应用](https://doc.quickapp.cn/) 标准，推荐使用 [BlueOS Studio](https://studio.blueos.com.cn/install) 进行应用开发。
+
+[BlueOS Studio](https://studio.blueos.com.cn/) 是针对蓝河操作系统（BlueOS）应用开发的官方集成开发环境（IDE），它基于强大的代码编辑器 Visual Studio Code 构建，因此具备 VS Code 的全部功能，包括代码编辑、插件集成、主题定制及个性化设置等。除了继承 VS Code 的特性外，BlueOS Studio 专为 BlueOS 应用开发引入了一系列增强功能，比如智能编码补全、实时编译预览、全方位应用调试以及 UI 自动化测试等。
+
+为了支持蓝河应用的开发，BlueOS Studio 还提供了项目管理的便捷性，如推荐的项目结构指引、依赖管理工具以及代码构建系统 BlueOS Toolkit，该工具可将源代码打包为 `.rpk` 格式的应用程序文件。此外，BlueOS Studio 也整合了 DevTools 模拟调试工具，类似于 Chrome DevTools，提供了丰富的调试面板以助于代码调试和性能优化。
+
+在蓝河应用开发上， [BlueOS Studio](https://studio.blueos.com.cn/) 适用于开发包括手机、手表、Pad 在内的多种应用形态，并为开发者提供丰富的开发、调试、测试和打包工具，以及项目开发的指导和文档支持，以确保开发者可以高效且方便地进行蓝河应用的开发工作。发布完成后的应用则可以供蓝河操作系统的用户使用。
+
+## 您可能感兴趣的文章
+
+- [BlueOS 应用开发，如何使用 Tailwind CSS？](https://fine.niceshare.site/articles/blueos-app-development-how-to-use-tailwindcss/)
+- [BlueOS 应用开发，如何使用 npm 第三方工具库？](https://fine.niceshare.site/articles/blueos-app-development-how-to-use-npm/)
+- [BlueOS 应用开发，如何使用 Zustand 进行状态管理？](https://quickapp.lovejade.cn/blueos-app-how-to-use-zustand-for-state-management/)
+- [BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？](https://quickapp.lovejade.cn/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/)
+- [BlueOS 应用开发，定时器需要注意些什么？](https://quickapp.lovejade.cn/blueos-app-development-what-to-consider-with-timers/)
+- [BlueOS  应用开发，如何通过 $watch 监听数据？](https://quickapp.lovejade.cn/blueos-app-development-how-to-use-watch-to-monitor-data/)
