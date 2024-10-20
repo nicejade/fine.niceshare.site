@@ -19,7 +19,7 @@ export default defineConfig({
 			social: {
 				github: 'https://github.com/nicejade/fine.niceshare.site',
 				mastodon: 'https://mastodon.social/@nicejade',
-				'x.com': 'https://x.com/nicejadeyang',
+				'x.com': 'https://x.com/MarshalXuan',
 			},
 			components: {
         // Override the default `MarkdownContent` component.

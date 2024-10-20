@@ -69,17 +69,52 @@ docker run -d -p 8888:8888 -v "$(pwd)/data:/app/data" nicejade/wealth-tracker
 
 如果您在本地部署，只需打开网址——[http://localhost:8888](http://localhost:8888/) 即可访问。如果在服务器运行，可通过 http://[Server-IP]:8888 来访问，您也可以指定其他端口。
 
-### 使用 Node.js
+### 采用 [pm2](https://pm2.keymetrics.io/) 部署
+
+PM2 是一个强大的生产环境进程管理器，它不仅支持通过命令行启动应用，还可以使用配置文件（通常名为 `ecosystem.config.js`）来管理复杂的部署场景。为了简化部署流程并确保一致性，本项目已将所有必要的 PM2 配置和启动命令封装到了 npm 脚本中：
 
 ```bash
 # clone project
 git clone https://github.com/nicejade/wealth-tracker.git
 
+cd wealth-tracker
+
+# globally install pm2 pnpm & lerna
+npm i pm2 pnpm lerna  -g
+
+# install dependencies(client & server)
+pnpm i
+
+# start your service
+npm run deploy
+```
+
+除了 `deploy` 命令，项目还提供了其他几个常用的 `npm` 脚本：
+
+- `npm run start`: 使用 PM2 启动应用；
+- `npm run stop`: 停止 PM2 管理的应用；
+- `npm run restart`: 重启应用；
+- `npm run logs`: 查看应用日志。
+
+## 如何开发？
+
+```bash
+# clone project
+git clone https://github.com/nicejade/wealth-tracker.git
+
+cd wealth-tracker
+
+# globally install pm2 pnpm & lerna
+npm i pm2 pnpm lerna  -g
+
+# install dependencies(client & server)
+pnpm i
+
 # install & run for client
-cd client && pnpm i && pnpm start
+cd client && pnpm start
 
 # install & run for srever
-cd server && pnpm i && pnpm start
+cd server && pnpm start
 ```
 
 本项目客户端采用 [Svelte](https://svelte.dev/) 框架，基于 [Vite](https://vitejs.dev/) 所构建，默认 `5173` 端口，只需打开网址—— [http://localhost:5173](http://localhost:5173) 即可访问。
