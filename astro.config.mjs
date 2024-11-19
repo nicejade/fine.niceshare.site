@@ -119,6 +119,10 @@ export default defineConfig({
 					autogenerate: { directory: 'projects' },
 				},
 				{
+					label: '好思维',
+					autogenerate: { directory: 'thinking' },
+				},
+				{
 					label: '新文章',
 					autogenerate: { directory: 'articles' },
 				},
