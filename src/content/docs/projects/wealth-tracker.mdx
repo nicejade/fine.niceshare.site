@@ -82,15 +82,16 @@ npm i pm2 pnpm lerna  -g
 pnpm i
 
 # start your service
-npm run deploy
+npm run build
+npm run start
 ```
 
-除了 `deploy` 命令，项目还提供了其他几个常用的 `npm` 脚本：
+项目除了提供 `start` 命令外，还包含其他与 `pm2` 相关的命令：
 
 - `npm run start`: 使用 PM2 启动应用；
 - `npm run stop`: 停止 PM2 管理的应用；
 - `npm run restart`: 重启应用；
-- `npm run logs`: 查看应用日志。
+- `npm run logs`: 查看应用日志；
 
 ## 如何开发？
 
@@ -171,11 +172,11 @@ cd server && pnpm start
 
 传统记账应用主要关注日常收支明细，适合学生等收入有限人群；而「生财有迹」专注于已形成的资产存量，帮助用户了解"现在拥有什么"（现状与未来），而非过往的支出记录（历史）。这种设计更符合在职人士的理财需求，让用户把精力集中在资产的整体规划和增长上。
 
-### 汇率 API KEY
+### 如何获取汇率 API KEY？
 
-为了获取实时汇率数据，本项目接入了 [ExchangeRate-API](https://www.exchangerate-api.com/) 服务。您可以：
+为了获取实时汇率数据，本项目接入了 `ExchangeRate-API` 服务。您可以：
 
-1. 访问 ExchangeRate-API 官网注册免费账号；
+1. 访问 [ExchangeRate-API 官网](https://www.exchangerate-api.com/) 注册免费账号；
 2. 获取 `API KEY` 并在服务的「设置」中填写；
 
 ExchangeRate-API 支持免费使用，其版特点是：
