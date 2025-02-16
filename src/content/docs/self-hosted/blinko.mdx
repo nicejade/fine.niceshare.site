@@ -1,0 +1,111 @@
+---
+title: Blinko | 优先考虑隐私的个人 AI 笔记工具
+description: Blinko 是一个创新的开源项目，专为想要快速捕捉和整理瞬间想法的个人而设计。Blinko 让用户可以在灵感迸发的瞬间无缝记录想法，确保创意的火花不会白白流逝。
+---
+
+[Blinko](https://github.com/blinko-space/blinko) 是一个创新的开源项目，专为想要快速捕捉和整理瞬间想法的个人而设计。
+
+## **详细介绍**
+
+[Blinko](https://blinko.mintlify.app/) 是一个注重隐私的个人 AI 笔记工具，基于 [Next.js](https://site.lovejade.cn/post/61c928af5be6454b4e3d5146)、[TypeScript](https://site.lovejade.cn/post/6278fdeaac00ce3f9b11a8ef)、[Tailwind CSS](https://site.lovejade.cn/post/5fd20cb4c06d6302c1907ec7) 等技术栈开发。它具有以下特点：
+
+- 🤖 人工智能增强笔记检索：借助 Blinko 先进的人工智能 RAG（检索增强生成），您可以使用自然语言查询快速搜索和访问您的笔记，轻松找到您需要的内容。
+- 🔒 数据所有权：您的隐私至关重要。您的所有笔记和数据都安全地存储在您的自托管环境中，确保您完全控制您的信息。
+- 🚀 高效快捷：即时捕捉想法并将其存储为纯文本以便于访问，并完全支持 Markdown 以实现快速格式化和无缝共享。
+- 💡 轻量级架构，功能强大：Blinko 基于 Next.js 构建，提供时尚、轻量的架构，可在不牺牲速度或效率的情况下提供强大的性能。
+- 🔓 开放协作：作为一个开源项目，Blinko 诚邀社区贡献力量。所有代码都是透明的，可在 GitHub 上获取，培养协作和不断改进的精神。
+
+Blinko 的设计理念是"让记录想法变得简单而智能"。它不仅仅是一个普通的笔记工具，更是一个集成了 AI 能力的个人思维助手。通过 Blinko，用户可以：
+
+1. **快速记录**：随时随地记录灵感和想法
+2. **AI 对话**：与内置 AI 助手进行对话，获取建议和反馈
+3. **知识整理**：使用标签和文件夹组织笔记
+4. **隐私保护**：所有数据存储在本地，确保隐私安全
+
+## 效果截图
+
+![Blinko 效果图](./../../../assets/images/self-hosted/blinko.png)
+
+## 在线体验
+
+您可以访问 [Blinko 在线演示](https://blinko-demo.vercel.app/) 来体验其功能。
+
+## 快捷部署
+
+**📦 几秒钟内即可开始使用 Docker Compose**：
+
+```bash
+curl -s https://raw.githubusercontent.com/blinko-space/blinko/main/install.sh | bash
+```
+
+或者通过新建 `docker-compose.yaml` 文件，并作如下配置：
+
+```docker
+networks:
+    blinko-network:
+      driver: bridge
+
+  services:
+    blinko-website:
+      image: blinkospace/blinko:latest
+      container_name: blinko-website
+      environment:
+        NODE_ENV: production
+        # NEXTAUTH_URL: http://localhost:1111
+        # IMPORTANT: If you want to use sso, you must set NEXTAUTH_URL to your own domain
+        # NEXT_PUBLIC_BASE_URL: http://localhost:1111
+        # IMPORTANT: Replace this with your own secure secret key!
+        NEXTAUTH_SECRET: my_ultra_secure_nextauth_secret
+        DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/postgres
+      depends_on:
+        postgres:
+          condition: service_healthy
+      # Make sure you have enough permissions.
+      # volumes:
+        # - ~/your-name/.blinko:/app/.blinko 
+      restart: always
+      logging:
+        options:
+          max-size: "10m"
+          max-file: "3"
+      ports:
+        - 1111:1111
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://blinko-website:1111/"]
+        interval: 30s 
+        timeout: 10s   
+        retries: 5     
+        start_period: 30s 
+      networks:
+        - blinko-network
+
+    postgres:
+      image: postgres:14
+      container_name: blinko-postgres
+      restart: always
+      ports:
+        - 5435:5432
+      environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: mysecretpassword
+        TZ: Asia/Shanghai
+      # Persisting container data
+      # Make sure you have enough permissions.
+      # volumes:
+        # - ~/your-name/.db:/var/lib/postgresql/data
+      healthcheck:
+        test:
+          ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
+        interval: 5s
+        timeout: 10s
+        retries: 5
+      networks:
+        - blinko-network
+```
+
+在终端执行 `docker-compose up -d` 命令即可部署；如果您想升级至更高版本，可运行如下命令：
+
+```bash
+docker-compose down && docker image rm blinkospace/blinko:latest && docker-compose up -d
+```
