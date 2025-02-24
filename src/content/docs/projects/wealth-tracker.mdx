@@ -211,6 +211,30 @@ pnpm i --registry=https://registry.npmmirror.com
 
 [SQLite3](https://www.sqlite.org/index.html) 是一款轻量级数据库，无需额外配置，简单易用且高效。由于本项目不需要存储大量数据，SQLite3 非常适合。此外，它支持快速的数据同步和迁移，能够满足项目的灵活性和性能需求。
 
+### [tsx](https://www.npmjs.com/package/tsx) 和 [tsc](https://www.npmjs.com/package/typescript) 有什么区别？
+
+`tsx` 和 `tsc` 是两个不同用途的工具：
+
+- **tsx**（TypeScript Execute）：
+
+  - 这是一个用于直接运行 TypeScript 和 ESM 的工具；
+  - 结合了 `esbuild` 的编译能力和 Node.js 的运行环境；
+  - 可以直接运行 `.ts` 、 `.tsx` 、 `.jsx` 文件，无需预编译；
+  - 适合`开发环境`使用，支持热重载；
+
+- **tsc** （TypeScript Compiler）：
+
+  - 这是 TypeScript 的官方编译器；
+  - 主要功能是将 TypeScript 代码编译成 JavaScript 代码；
+  - 只负责编译，不负责运行代码；
+  - 通常用于生产环境构建，生成可部署的 JS 文件；
+  - 在您的项目中用于构建命令： "build": "npx tsc"；
+
+- **tsx 和 tsc 使用场景对比**：
+
+  - 开发环境：使用 tsx ，因为它能够直接运行 TS 文件，开发体验更好，支持热重载；
+  - 生产环境：使用 tsc 编译代码，生成优化后的 JS 文件，然后使用 Node.js 运行。
+
 ## 特别鸣谢
 
 本项目的开发过程中，依赖并受益于以下优秀的开源技术和工具（未包含全部）。它们不仅提供了强大的功能，还促进了项目的高效开发和稳定运行。
