@@ -10,5 +10,11 @@
 	onMount(async () => {
 		await tick()
 		mediumZoom('.sl-markdown-content img')
+
+		window.onresize = function() {
+    	const video = document.querySelector(".bili-video");
+			video.style.height = video.scrollWidth * 0.76 + "px";
+		};
+		window.onresize();
 	})
 </script>

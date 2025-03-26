@@ -119,6 +119,10 @@ export default defineConfig({
 					autogenerate: { directory: 'projects' },
 				},
 				{
+					label: '爱音乐',
+					autogenerate: { directory: 'music' },
+				},
+				{
 					label: '好思维',
 					autogenerate: { directory: 'thinking' },
 				},

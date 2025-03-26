@@ -8,6 +8,8 @@
   --sl-color-accent: #4cd34c !important;
 }
 
+.bili-video { width: 100%; border: none; }
+
 .link-title {
   font-size: var(--sl-text-base);
 }
