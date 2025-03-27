@@ -31,7 +31,7 @@
   <a href="{link + '?ref=niceshare.site'}" target="_blank" rel="noopener"
     class="text-xl font-medium no-underline hover:cursor-pointer">
     <h3 class="text-base text-black hover:text-brand">{title}</h3>
-		<p class="text-sm font-normal no-underline text-gray">
+		<p class="text-sm font-medium no-underline text-gray">
     	{desc}
   	</p>
   </a>
