@@ -1,0 +1,27 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import fs from 'node:fs/promises';
+
+const { labels, lang, lastUpdated } = Astro.props;
+
+// Get current page's source file path
+const cleanPath = Astro.url.pathname.replace(/^\/|\/$/g, '');
+let lastUpdatedDate = new Date();
+if (cleanPath && cleanPath != '/') {
+    const filePath = new URL(`../content/docs/${cleanPath}.mdx`, import.meta.url);
+    // Get file modification time
+    const stats = await fs.stat(filePath);
+    lastUpdatedDate = stats.mtime;   
+}
+---
+
+{
+ lastUpdatedDate && lastUpdated && (
+  <p>
+   {labels['page.lastUpdated']}{' '}
+   <time datetime={lastUpdated.toISOString()}>
+    {lastUpdated.toLocaleDateString(lang, { dateStyle: 'medium', timeZone: 'UTC' })}
+   </time>
+  </p >
+ )
+}

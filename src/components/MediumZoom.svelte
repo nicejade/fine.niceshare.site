@@ -13,6 +13,7 @@
 
 		window.onresize = function() {
     	const video = document.querySelector(".bili-video");
+			if (!video) return;
 			video.style.height = video.scrollWidth * 0.76 + "px";
 		};
 		window.onresize();
