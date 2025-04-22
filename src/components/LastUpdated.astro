@@ -1,16 +1,23 @@
 ---
 import fs from 'node:fs/promises';
-
+import path from 'node:path';
 const { labels, lang, lastUpdated } = Astro.props;
 
 // Get current page's source file path
 const cleanPath = Astro.url.pathname.replace(/^\/|\/$/g, '');
 let lastUpdatedDate = new Date();
-if (cleanPath && cleanPath != '/') {
-    const filePath = new URL(`../content/docs/${cleanPath}.mdx`, import.meta.url);
-    // Get file modification time
-    const stats = await fs.stat(filePath);
-    lastUpdatedDate = stats.mtime;   
+if (cleanPath && cleanPath !== '/' && cleanPath !== '404') {
+    try {
+        const rootDir = path.resolve(import.meta.url.replace('file://', ''), '../../../');
+        const decodedPath = decodeURIComponent(cleanPath);
+        const filePath = path.join(rootDir, 'src/content/docs', `${decodedPath}.mdx`);
+        
+        // Get file modification time
+        const stats = await fs.stat(filePath);
+        lastUpdatedDate = stats.mtime;
+    } catch (error) {
+        console.warn(`无法获取文件 ${cleanPath}.mdx 的修改时间:`, cleanPath, error.message);
+    }
 }
 ---
 
