@@ -11,12 +11,11 @@ if (cleanPath && cleanPath !== '/' && cleanPath !== '404') {
         const rootDir = path.resolve(import.meta.url.replace('file://', ''), '../../../');
         const decodedPath = decodeURIComponent(cleanPath);
         const filePath = path.join(rootDir, 'src/content/docs', `${decodedPath}.mdx`);
-        
         // Get file modification time
         const stats = await fs.stat(filePath);
         lastUpdatedDate = stats.mtime;
     } catch (error) {
-        console.warn(`无法获取文件 ${cleanPath}.mdx 的修改时间:`, cleanPath, error.message);
+        console.warn(`Failed to get modification time for file ${cleanPath}.mdx:`, error.message);
     }
 }
 ---
@@ -25,8 +24,8 @@ if (cleanPath && cleanPath !== '/' && cleanPath !== '404') {
  lastUpdatedDate && lastUpdated && (
   <p>
    {labels['page.lastUpdated']}{' '}
-   <time datetime={lastUpdated.toISOString()}>
-    {lastUpdated.toLocaleDateString(lang, { dateStyle: 'medium', timeZone: 'UTC' })}
+   <time datetime={lastUpdatedDate.toISOString()}>
+    {lastUpdatedDate.toLocaleDateString(lang, { dateStyle: 'medium', timeZone: 'UTC' })}
    </time>
   </p >
  )
