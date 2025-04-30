@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
-    "deploy": "bash ./deploy.sh",
+    "build": "astro build",
+    "deploy": "npm run build && bash ./deploy.sh",
+    "check": "astro check",
     "preview": "astro preview",
     "astro": "astro"
   },
