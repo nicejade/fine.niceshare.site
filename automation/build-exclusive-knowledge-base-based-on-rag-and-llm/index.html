@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="zh-CN" dir="ltr" data-has-toc data-has-sidebar data-theme="dark" class="astro-nzck5nx4"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>基于 RAG、LLM 构建专属知识库 | 缘知随心庭</title><link rel="canonical" href="https://fine.niceshare.site/automation/build-exclusive-knowledge-base-based-on-rag-and-llm/"/><link rel="sitemap" href="/sitemap-index.xml"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" sizes="32x32" href="/favicon-32x32.png"/><link rel="icon" sizes="16x16" href="/favicon-16x16.png"/><link manifest="/site.webmanifest" re="manifest"/><script src="https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE" id="G-7NRFYFR8BE" defer></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-7NRFYFR8BE');</script><script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758" defer></script><link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v4.16.18"/><meta name="generator" content="Starlight v0.20.1"/><meta property="og:title" content="基于 RAG、LLM 构建专属知识库"/><meta property="og:type" content="article"/><meta property="og:url" content="https://fine.niceshare.site/automation/build-exclusive-knowledge-base-based-on-rag-and-llm/"/><meta property="og:locale" content="zh-CN"/><meta property="og:description" content="随着人工智能技术的迅猛发展，尤其是大型语言模型的卓越表现，人们得以目睹信息检索和知识管理领域的革命性进步。本文将深入探讨如何通过应用 Retrieval-Augmented Generation（RAG）技术，结合向量数据库和 LangChain 框架，来打造一个高效、先进的专属知识库系统。"/><meta property="og:site_name" content="缘知随心庭"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="基于 RAG、LLM 构建专属知识库"/><meta name="twitter:description" content="随着人工智能技术的迅猛发展，尤其是大型语言模型的卓越表现，人们得以目睹信息检索和知识管理领域的革命性进步。本文将深入探讨如何通过应用 Retrieval-Augmented Generation（RAG）技术，结合向量数据库和 LangChain 框架，来打造一个高效、先进的专属知识库系统。"/><meta name="description" content="随着人工智能技术的迅猛发展，尤其是大型语言模型的卓越表现，人们得以目睹信息检索和知识管理领域的革命性进步。本文将深入探讨如何通过应用 Retrieval-Augmented Generation（RAG）技术，结合向量数据库和 LangChain 框架，来打造一个高效、先进的专属知识库系统。"/><meta name="theme-color" content="#ffffff"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg> <svg aria-hidden="true" class="dark astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg> <svg aria-hidden="true" class="auto astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> </template><link rel="stylesheet" href="/_astro/index.DOf8JzZ6.css">
+<style>svg:where(.astro-5ik4roku){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1em;height:1em}
+</style><script type="module" src="/_astro/hoisted.CxJuEq3L.js"></script>
+<script type="module" src="/_astro/page.7qqag-5g.js"></script></head> <body class="astro-nzck5nx4"> <a href="#_top" class="astro-pz3yc6qm">跳转到内容</a>  <div class="page sl-flex astro-cvqmds7i"> <header class="header astro-cvqmds7i"><div class="header sl-flex astro-j2zbjij7"> <div class="title-wrapper sl-flex astro-j2zbjij7"> <a href="/" class="site-title sl-flex astro-snnubt7e">  <img class="astro-snnubt7e" alt="" src="/_astro/logo.DVW4ZX1n.svg" width="512" height="512">  <span class="astro-snnubt7e"> 缘知随心庭 </span> </a>  </div> <div class="sl-flex astro-j2zbjij7"> <site-search data-translations="{&#34;placeholder&#34;:&#34;搜索&#34;}" class="astro-iorrx2jm"> <button data-open-modal disabled class="astro-iorrx2jm">  <svg aria-label="搜索" class="astro-iorrx2jm astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg>  <span class="sl-hidden md:sl-block astro-iorrx2jm" aria-hidden="true">搜索</span> <svg aria-label="（按 / 进行搜索）" class="sl-hidden md:sl-block astro-iorrx2jm astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5Zm3 15a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10Z"/><path d="M15.293 6.707a1 1 0 1 1 1.414 1.414l-8.485 8.486a1 1 0 0 1-1.414-1.415l8.485-8.485Z"/></svg>  </button> <dialog style="padding:0" aria-label="搜索" class="astro-iorrx2jm"> <div class="dialog-frame sl-flex astro-iorrx2jm">  <button data-close-modal class="sl-flex md:sl-hidden astro-iorrx2jm"> 取消 </button> <div class="search-container astro-iorrx2jm"> <div id="starlight__search" class="astro-iorrx2jm"></div> </div> </div> </dialog> </site-search>    </div> <div class="sl-hidden md:sl-flex right-group astro-j2zbjij7"> <div class="sl-flex social-icons astro-j2zbjij7"> <a href="https://github.com/nicejade/fine.niceshare.site" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">GitHub</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg> </a><a href="https://mastodon.social/@nicejade" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">Mastodon</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M16.45 17.77c2.77-.33 5.18-2.03 5.49-3.58.47-2.45.44-5.97.44-5.97 0-4.77-3.15-6.17-3.15-6.17-1.58-.72-4.3-1.03-7.13-1.05h-.07c-2.83.02-5.55.33-7.13 1.05 0 0-3.14 1.4-3.14 6.17v.91c-.01.88-.02 1.86 0 2.88.12 4.67.87 9.27 5.2 10.4 2 .53 3.72.64 5.1.57 2.51-.14 3.92-.9 3.92-.9l-.08-1.8s-1.8.56-3.8.5c-2-.08-4.1-.22-4.43-2.66a4.97 4.97 0 0 1-.04-.68s1.96.48 4.44.59c1.51.07 2.94-.09 4.38-.26Zm2.22-3.4h-2.3v-5.6c0-1.19-.5-1.79-1.5-1.79-1.1 0-1.66.71-1.66 2.12v3.07h-2.3V9.1c0-1.4-.55-2.12-1.65-2.12-1 0-1.5.6-1.5 1.78v5.61h-2.3V8.6c0-1.18.3-2.12.9-2.81a3.17 3.17 0 0 1 2.47-1.05c1.18 0 2.07.45 2.66 1.35l.57.96.58-.96a2.97 2.97 0 0 1 2.66-1.35c1.01 0 1.83.36 2.46 1.05.6.7.9 1.63.9 2.81v5.78Z"/></svg> </a><a href="https://x.com/MarshalXuan" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">X</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M 18.242188 2.25 L 21.554688 2.25 L 14.324219 10.507812 L 22.828125 21.75 L 16.171875 21.75 L 10.953125 14.933594 L 4.992188 21.75 L 1.679688 21.75 L 9.40625 12.914062 L 1.257812 2.25 L 8.082031 2.25 L 12.792969 8.480469 Z M 17.082031 19.773438 L 18.914062 19.773438 L 7.082031 4.125 L 5.113281 4.125 Z M 17.082031 19.773438 "/></svg> </a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-oxltjn3s"> <span class="sr-only astro-oxltjn3s">选择主题</span> <svg aria-hidden="true" class="icon label-icon astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>  <select value="auto" class="astro-oxltjn3s"> <option value="dark" class="astro-oxltjn3s">深色</option><option value="light" class="astro-oxltjn3s">浅色</option><option value="auto" selected class="astro-oxltjn3s">自动</option> </select> <svg aria-hidden="true" class="icon caret astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div> </div> </header> <nav class="sidebar astro-cvqmds7i" aria-label="主要"> <starlight-menu-button class="astro-n3kakehk"> <button aria-expanded="false" aria-label="菜单" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-n3kakehk"> <svg aria-hidden="true" class="astro-n3kakehk astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg>  </button> </starlight-menu-button>    <div id="starlight__sidebar" class="sidebar-pane astro-cvqmds7i"> <div class="sidebar-content sl-flex astro-cvqmds7i"> <ul class="top-level astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">自探索</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/explore/tao-and-virtue/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">何谓老子所倡导「道德」之学？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/explore/know-a-lot-of-principles-why-not-live-well/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">懂诸多道理为何过不好这一生？</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">自部署</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/self-hosted/blinko/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Blinko | 优先考虑隐私的个人 AI 笔记工具</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/cobalt/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Cobalt | 保存你喜爱的东西的最佳方式</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/memos/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Memos | 隐私优先的轻量级笔记服务</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/paperless-ngx/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Paperless-ngx | 开源文档管理系统</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/screenshot-to-code/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Screenshot To Code | 将屏幕截图转换为干净的代码</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/sink/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Sink | 简单、快速、安全的链接缩短器</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/wealth-tracker/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">生财有迹 | 您专属的资产跟踪与分析工具</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">自动化</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/automation/ai-agents-ollama-crewai/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">基于 CrewAI、Ollama 构建本地 AI 代理</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/automation/build-exclusive-knowledge-base-based-on-rag-and-llm/" aria-current="page" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">基于 RAG、LLM 构建专属知识库</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">作品集</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/projects/wealth-tracker/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">生财有迹 | 您专属的资产跟踪与分析工具</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">爱音乐</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/music/500-miles/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">500 Miles- 漂泊时代的离散诗篇</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/黄昏/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">黄昏 - 诗意盎然的经典之作，歌词如画，旋律似水</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/勇敢的心/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">For the Love of a Princess - 自由与爱的史诗回响</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/渔舟唱晚/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">渔舟唱晚 - 暮色归舟处，时光落成永恒的水墨</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/empire-of-angels/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Empire of Angels：在光暗熔炉中锻打青铜史诗</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/never-an-absolution/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Never an Absolution - 风笛与爱穿透时空</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/nightingale/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Nightingale 夜莺 - 月光织就的永恒诗篇</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/traveling-light/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Traveling Light - 卸下岁月的羽毛</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/故郷の原风景/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">故郷の原风景 - 在埙孔中流转的乡愁经纬</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/牧马城市/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">牧马城市 - 玻璃幕墙内，野草漫过荒原</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/柔情似水/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">柔情似水 - 涟漪深处的永恒诗章</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/谢谢你/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">谢谢你：一首触动心灵的深情之作</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/becoming-a-legend/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Becoming A Legend ｜一阕响彻星穹的觉醒赋格</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/victory/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Victory - 无字战歌中的史诗狂想</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/愛似流星/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">愛似流星 - 弦上流星，烬中永恒</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/穿越时空的思念/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">穿越时空的思念 - 刀刃与琴弦的千年共鸣，宿命花雨中的时空诗章</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/风居住的街道/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">风居住的街道 - 风栖音尘处，巷语未言时</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/喀什噶尔胡杨/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">喀什噶尔胡杨 - 沙砾中的永恒篇章</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/莫失莫忘/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">莫失莫忘 - 弦外月光，别离的永恒褶皱</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/小仙女/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">小仙女 - 麦振鸿以笛弦筝琴织就江湖不凋春</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/笑看风云/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">笑看风云 - 烟雨淬银光，明月照肝胆</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/game-of-thrones/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Game of Thrones：权谋史诗在音符中裂变与重生</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/journey/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Journey - 在琴弦之尽头皈依微光</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/大田後生仔/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">大田後生仔 - 血脉里的原野，方言诗性与时代青年的精神共振</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/今天/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">今天 - 时光琥珀中的候鸟迁徙——于洋翻唱版</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/莲有秀兮/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">莲有秀兮 - 水墨音漪涤尘境，素心照月听禅香</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/珍惜/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">珍惜 - 时光褶皱里生长的诗</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/hall-om-mig/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Hall Om Mig - 权杖裂帛：叶卡捷琳娜的冰火咏叹</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/手心的温柔/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">手心的温柔 - 荒漠情书，掌纹里流淌的时光诗</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/我这一生/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">我这一生 - 荒原自白书 ｜暗夜独行者的盐与光</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/windy-hill/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Windy Hill - 风拂心谷：在旋律的褶皱里与永恒对望</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/大海/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">大海 - 潮汐带不走的那片蔚蓝哀愁</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">好思维</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/thinking/brain-hacking-wealth-multiplication/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">大脑驯化法则：如何用&quot;认知欺骗&quot;开启财富裂变之路</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/thinking/first-principles-thinking/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">如何像 Elon Musk 一样思考？第一性原理的应用</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/thinking/the-almanack-of-naval-ravikant-wealth-happiness-guide/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">《纳瓦尔宝典》读书笔记：致富和幸福的良言</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/thinking/the-tao-of-wealth/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">财富之道：哈里·布朗的 17 条财务安全黄金法则</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">新文章</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/articles/ai-transformer-rag-agent-concepts/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">通俗易懂解读 AI、Transformer、RAG、Agent 等概念</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-watch-to-monitor-data/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何通过 $watch 监听数据？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-what-to-consider-with-timers/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，定时器需要注意些什么？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-how-to-use-zustand-for-state-management/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用 Zustand 进行状态管理？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-npm/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用 npm 第三方工具库？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-global/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用全局变量？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-eslint/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何借助 ESlint 提升效率？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-component-communication/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，组件之间如何通信？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-tailwindcss/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用 Tailwind CSS？</span>  </a> </li> </ul>  </details> </li> </ul>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-olbjblup"> <div class="sl-flex social-icons astro-olbjblup"> <a href="https://github.com/nicejade/fine.niceshare.site" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">GitHub</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg> </a><a href="https://mastodon.social/@nicejade" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">Mastodon</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M16.45 17.77c2.77-.33 5.18-2.03 5.49-3.58.47-2.45.44-5.97.44-5.97 0-4.77-3.15-6.17-3.15-6.17-1.58-.72-4.3-1.03-7.13-1.05h-.07c-2.83.02-5.55.33-7.13 1.05 0 0-3.14 1.4-3.14 6.17v.91c-.01.88-.02 1.86 0 2.88.12 4.67.87 9.27 5.2 10.4 2 .53 3.72.64 5.1.57 2.51-.14 3.92-.9 3.92-.9l-.08-1.8s-1.8.56-3.8.5c-2-.08-4.1-.22-4.43-2.66a4.97 4.97 0 0 1-.04-.68s1.96.48 4.44.59c1.51.07 2.94-.09 4.38-.26Zm2.22-3.4h-2.3v-5.6c0-1.19-.5-1.79-1.5-1.79-1.1 0-1.66.71-1.66 2.12v3.07h-2.3V9.1c0-1.4-.55-2.12-1.65-2.12-1 0-1.5.6-1.5 1.78v5.61h-2.3V8.6c0-1.18.3-2.12.9-2.81a3.17 3.17 0 0 1 2.47-1.05c1.18 0 2.07.45 2.66 1.35l.57.96.58-.96a2.97 2.97 0 0 1 2.66-1.35c1.01 0 1.83.36 2.46 1.05.6.7.9 1.63.9 2.81v5.78Z"/></svg> </a><a href="https://x.com/MarshalXuan" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">X</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M 18.242188 2.25 L 21.554688 2.25 L 14.324219 10.507812 L 22.828125 21.75 L 16.171875 21.75 L 10.953125 14.933594 L 4.992188 21.75 L 1.679688 21.75 L 9.40625 12.914062 L 1.257812 2.25 L 8.082031 2.25 L 12.792969 8.480469 Z M 17.082031 19.773438 L 18.914062 19.773438 L 7.082031 4.125 L 5.113281 4.125 Z M 17.082031 19.773438 "/></svg> </a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-oxltjn3s"> <span class="sr-only astro-oxltjn3s">选择主题</span> <svg aria-hidden="true" class="icon label-icon astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>  <select value="auto" class="astro-oxltjn3s"> <option value="dark" class="astro-oxltjn3s">深色</option><option value="light" class="astro-oxltjn3s">浅色</option><option value="auto" selected class="astro-oxltjn3s">自动</option> </select> <svg aria-hidden="true" class="icon caret astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-cvqmds7i">  <div class="lg:sl-flex astro-oflwwx6x"> <aside class="right-sidebar-container astro-oflwwx6x"> <div class="right-sidebar astro-oflwwx6x"> <div class="lg:sl-hidden astro-clevrbjf"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-am6rtrlv"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-am6rtrlv"><details id="starlight__mobile-toc" class="astro-am6rtrlv"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-am6rtrlv"><div class="toggle sl-flex astro-am6rtrlv">本页内容<svg aria-hidden="true" class="caret astro-am6rtrlv astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </div><span class="display-current astro-am6rtrlv"></span></summary><div class="dropdown astro-am6rtrlv"><ul class="isMobile astro-vulwxqhg" style="--depth: 0;"> <li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#_top" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">概述</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#为何要搭建专属知识库" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">为何要搭建专属知识库？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是检索增强生成" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是检索增强生成？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成rag的历史" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成（RAG）的历史</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#为什么检索增强生成很重要" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">为什么检索增强生成很重要？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成有哪些好处" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成有哪些好处？</span> </a> <ul class="isMobile astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#经济高效的实施" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">经济高效的实施</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#当前信息" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">当前信息</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#增强用户信任度" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">增强用户信任度</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#更多开发人员控制权" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">更多开发人员控制权</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成的工作原理是什么" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成的工作原理是什么？</span> </a> <ul class="isMobile astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#创建外部数据" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">创建外部数据</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#检索相关信息" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">检索相关信息</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#增强-llm-提示" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">增强 LLM 提示</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#更新外部数据" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">更新外部数据</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成和语义搜索有什么区别" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成和语义搜索有什么区别？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成rag研究范式" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成（RAG）研究范式</span> </a> <ul class="isMobile astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#naive-rag" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">Naive RAG</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#高级-rag" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">高级 RAG</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#模块化-rag" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">模块化 RAG</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#如何构建高质量的-rag-系统" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">如何构建高质量的 RAG 系统？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#基于-ragllm-构建知识库" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">基于 RAG、LLM 构建知识库</span> </a> <ul class="isMobile astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#数据处理" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">数据处理</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#检索" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">检索</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#rag-评估" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">RAG 评估</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#生成" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">生成</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#多轮对话" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">多轮对话</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#rag-实施的最佳实践" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">RAG 实施的最佳实践</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#优质开源的-rag-项目" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">优质开源的 RAG 项目</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-clevrbjf"><div class="sl-container astro-clevrbjf"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">本页内容</h2><ul class="astro-vulwxqhg" style="--depth: 0;"> <li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#_top" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">概述</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#为何要搭建专属知识库" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">为何要搭建专属知识库？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是检索增强生成" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是检索增强生成？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成rag的历史" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成（RAG）的历史</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#为什么检索增强生成很重要" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">为什么检索增强生成很重要？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成有哪些好处" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成有哪些好处？</span> </a> <ul class="astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#经济高效的实施" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">经济高效的实施</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#当前信息" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">当前信息</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#增强用户信任度" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">增强用户信任度</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#更多开发人员控制权" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">更多开发人员控制权</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成的工作原理是什么" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成的工作原理是什么？</span> </a> <ul class="astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#创建外部数据" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">创建外部数据</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#检索相关信息" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">检索相关信息</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#增强-llm-提示" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">增强 LLM 提示</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#更新外部数据" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">更新外部数据</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成和语义搜索有什么区别" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成和语义搜索有什么区别？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#检索增强生成rag研究范式" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">检索增强生成（RAG）研究范式</span> </a> <ul class="astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#naive-rag" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">Naive RAG</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#高级-rag" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">高级 RAG</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#模块化-rag" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">模块化 RAG</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#如何构建高质量的-rag-系统" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">如何构建高质量的 RAG 系统？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#基于-ragllm-构建知识库" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">基于 RAG、LLM 构建知识库</span> </a> <ul class="astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#数据处理" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">数据处理</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#检索" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">检索</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#rag-评估" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">RAG 评估</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#生成" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">生成</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#多轮对话" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">多轮对话</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#rag-实施的最佳实践" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">RAG 实施的最佳实践</span> </a>  </li> </ul>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#优质开源的-rag-项目" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">优质开源的 RAG 项目</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-oflwwx6x">  <main data-pagefind-body lang="zh-CN" dir="ltr" class="astro-nzck5nx4">   <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();;(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script> <div class="content-panel astro-kqbqu3kl"> <div class="sl-container astro-kqbqu3kl"> <h1 id="_top" class="astro-atfavsv7">基于 RAG、LLM 构建专属知识库</h1>  </div> </div>  <div class="content-panel astro-kqbqu3kl"> <div class="sl-container astro-kqbqu3kl"> <div class="sl-markdown-content"> <astro-island uid="Z1y3Hkf" component-url="/_astro/MediumZoom.B261UxY_.js" component-export="default" renderer-url="/_astro/client.CWY0IrnN.js" props="{}" ssr="" client="only" opts="{&quot;name&quot;:&quot;MediumZoom&quot;,&quot;value&quot;:&quot;svelte&quot;}"></astro-island>  <h2 id="为何要搭建专属知识库">为何要搭建专属知识库？</h2>
+<p>搭建专属知识库的原因在于：利用大规模语言模型（LLM）来解锁存储在特定知识库中的信息。尽管 LLM 在处理一般语言和公开可用数据方面表现出色，但它们在<strong>处理组织内部知识时存在局限性</strong>。搭建专属知识库可以解决以下问题：</p>
+<ol>
+<li><strong>内部知识的价值</strong>：每个组织都拥有其独特的内部知识库，其中包含对组织非常有价值的信息。通过搭建专属知识库，人们可以利用 LLMs 来访问和利用这些宝贵的内部知识。</li>
+<li><strong>提高工作效率</strong>：专属知识库可以有效地组织和管理组织内部的知识和信息资源，使其更易于访问和利用。员工可以通过知识库快速查找和获取所需的信息，提高工作效率和准确性。</li>
+<li><strong>安全和访问控制</strong>：专属知识库可以实现对信息的访问控制，确保只有经授权的用户可以查询和获取特定的知识。这对于需要保护机密信息或限制特定用户访问的情况非常重要。</li>
+<li><strong>可验证性和可靠性</strong>：通过搭建专属知识库，可以确保 LLMs 生成的答案基于特定知识库的信息，从而使答案更具可验证性和可靠性。相比之下，仅仅通过对 LLMs 进行微调（fine-tuning）的方法可能无法提供相同的可验证性。</li>
+<li><strong>成本效益</strong>：搭建专属知识库可以在一定程度上降低成本。相比于对 LLMs 进行持续运行和维护，搭建专属知识库可能更加经济实惠。</li>
+<li><strong>及时更新</strong>：专属知识库使组织能够及时更新和管理其知识源。由于组织内部知识的不断演进和变化，通过专属知识库可以轻松更新和替换旧的知识内容，确保知识库中的信息始终是最新的。</li>
+<li><strong>多源集成</strong>：专属知识库可以集成多个知识源，包括内部知识、外部数据和第三方信息源。这意味着组织可以从多个来源获取知识，并将其整合到一个集中的知识库中。当知识源发生变化时，可以方便地更新和同步这些源，确保知识库的完整性和准确性。</li>
+<li><strong>知识审核和校对</strong>：专属知识库可以提供一个审核和校对机制，以确保更新的知识源的质量和准确性。组织可以对新的知识源进行审核和验证，并通过知识库的管理工具进行校对和修正，以确保知识的一致性和可靠性。</li>
+<li><strong>减少重复工作</strong>：通过专属知识库，组织可以收集、整理和分享已有的知识和经验，避免重复工作。员工可以在知识库中搜索和查找已有的解决方案和最佳实践，从而节省时间和精力，避免重复劳动。</li>
+<li><strong>智能化决策支持</strong>：专属知识库可以与智能化决策支持系统集成，为组织的决策制定过程提供数据和见解。通过将知识库中的信息与分析工具和算法结合起来，可以实现更准确、更有洞察力的决策支持。</li>
+<li><strong>知识共享和传承</strong>：专属知识库可以作为一个集中的平台，促进知识的共享和传承。组织成员可以将他们的专业知识和经验记录在知识库中，供其他人学习和借鉴。这有助于建立组织内部的知识共享文化，提高整体的知识水平和创新能力。</li>
+</ol>
+<p>综上所述，搭建专属知识库使人们能够更好地利用 LLM，解锁和利用存储在组织内部知识库中的信息，从而满足安全性、可验证性、可扩展性和可靠性的需求，并在一定程度上降低成本、减少重复工作、改善决策质量、促进知识共享与传承等。</p>
+<p>此外，随着 RAG 在数据应用领域不断拓展新的领域，凭借其卓越的洞察力和前期的提升，RAG 有望成为企业数据和人工智能的价值倍增器。然而，与任何先进技术一样，要取得成果，RAG 需要进行刻苦的基础工作。因此，尽早涉足 RAG 系统的探索，可以帮助企业和个人为未来竞争中占得先机。</p>
+<h2 id="什么是检索增强生成">什么是检索增强生成？</h2>
+<p>检索增强生成（RAG）是指对大型语言模型输出进行优化，使其能够在生成响应之前引用训练数据来源之外的权威知识库。大型语言模型（LLM）用海量数据进行训练，使用数十亿个参数为回答问题、翻译语言和完成句子等任务生成原始输出。在 LLM 本就强大的功能基础上，RAG 将其扩展为能访问特定领域或组织的内部知识库，所有这些都无需重新训练模型。这是一种经济高效地改进 LLM 输出的方法，让它在各种情境下都能保持相关性、准确性和实用性。</p>
+<h2 id="检索增强生成rag的历史">检索增强生成（RAG）的历史</h2>
+<p>该技术的根源至少可以追溯到 20 世纪 70 年代初。就在那时，信息检索研究人员制作了他们所谓的问答系统原型，即使用自然语言处理（NLP）来访问文本的应用程序，最初是在棒球等狭窄主题中。</p>
+<p>多年来，这种文本挖掘背后的概念一直相当稳定。但驱动它们的机器学习引擎已经显着增长，提高了它们的实用性和受欢迎程度。如今，LLM 正在将问答系统提升到一个全新的水平。</p>
+<h2 id="为什么检索增强生成很重要">为什么检索增强生成很重要？</h2>
+<p>LLM 是一项关键的人工智能（AI）技术，为智能聊天机器人和其他自然语言处理（NLP）应用程序提供支持。目标是通过交叉引用权威知识来源，创建能够在各种环境中回答用户问题的机器人。不幸的是，LLM 技术的本质在 LLM 响应中引入了不可预测性。此外，LLM 训练数据是静态的，并引入了其所掌握知识的截止日期。</p>
+<p>LLM 面临的已知挑战包括：</p>
+<ul>
+<li>在没有答案的情况下提供虚假信息。</li>
+<li>当用户需要特定的当前响应时，提供过时或通用的信息。</li>
+<li>从非权威来源创建响应。</li>
+<li>由于术语混淆，不同的培训来源使用相同的术语来谈论不同的事情，因此会产生不准确的响应。</li>
+</ul>
+<p>您可以将大型语言模型（LLM）看作是一个过于热情的新员工，他拒绝随时了解时事，但总是会绝对自信地回答每一个问题。不幸的是，这种态度会对用户的信任产生负面影响，这是您不希望聊天机器人效仿的！</p>
+<p>RAG 是解决其中一些挑战的一种方法。它会重定向 LLM，从权威的、预先确定的知识来源中检索相关信息。组织可以更好地控制生成的文本输出，并且用户可以深入了解 LLM 如何生成响应。</p>
+<h2 id="检索增强生成有哪些好处">检索增强生成有哪些好处？</h2>
+<p>RAG 技术为组织的 <a href="https://aws.amazon.com/what-is/generative-ai/">生成式人工智能</a> 工作带来了多项好处。</p>
+<h3 id="经济高效的实施"><strong>经济高效的实施</strong></h3>
+<p>聊天机器人开发通常从 <a href="https://aws.amazon.com/what-is/foundation-models/">基础模型</a> 开始。基础模型（FM）是在广泛的广义和未标记数据上训练的 API 可访问 LLM。针对组织或领域特定信息重新训练 FM 的计算和财务成本很高。RAG 是一种将新数据引入 LLM 的更加经济高效的方法。它使生成式人工智能技术更广泛地获得和使用。</p>
+<h3 id="当前信息"><strong>当前信息</strong></h3>
+<p>即使 LLM 的原始训练数据来源适合您的需求，但保持相关性也具有挑战性。RAG 允许开发人员为生成模型提供最新的研究、统计数据或新闻。他们可以使用 RAG 将 LLM 直接连接到实时社交媒体提要、新闻网站或其他经常更新的信息来源。然后，LLM 可以向用户提供最新信息。</p>
+<h3 id="增强用户信任度"><strong>增强用户信任度</strong></h3>
+<p>RAG 允许 LLM 通过来源归属来呈现准确的信息。输出可以包括对来源的引文或引用。如果需要进一步说明或更详细的信息，用户也可以自己查找源文档。这可以增加对您的生成式人工智能解决方案的信任和信心。</p>
+<h3 id="更多开发人员控制权"><strong>更多开发人员控制权</strong></h3>
+<p>借助 RAG，开发人员可以更高效地测试和改进他们的聊天应用程序。他们可以控制和更改 LLM 的信息来源，以适应不断变化的需求或跨职能使用。开发人员还可以将敏感信息的检索限制在不同的授权级别内，并确保 LLM 生成适当的响应。此外，如果 LLM 针对特定问题引用了错误的信息来源，他们还可以进行故障排除并进行修复。组织可以更自信地为更广泛的应用程序实施生成式人工智能技术。</p>
+<h2 id="检索增强生成的工作原理是什么">检索增强生成的工作原理是什么？</h2>
+<p>如果没有 RAG，LLM 会接受用户输入，并根据它所接受训练的信息或它已经知道的信息创建响应。RAG 引入了一个信息检索组件，该组件利用用户输入首先从新数据源提取信息。用户查询和相关信息都提供给 LLM。LLM 使用新知识及其训练数据来创建更好的响应。以下各部分概述了该过程。</p>
+<h3 id="创建外部数据"><strong>创建外部数据</strong></h3>
+<p>LLM 原始训练数据集之外的新数据称为_外部数据_。它可以来自多个数据来源，例如 API、数据库或文档存储库。数据可能以各种格式存在，例如文件、数据库记录或长篇文本。另一种称为_嵌入语言模型_的 AI 技术将数据转换为数字表示形式并将其存储在向量数据库中。这个过程会创建一个生成式人工智能模型可以理解的知识库。</p>
+<h3 id="检索相关信息"><strong>检索相关信息</strong></h3>
+<p>下一步是执行相关性搜索。用户查询将转换为向量表示形式，并与向量数据库匹配。例如，考虑一个可以回答组织的人力资源问题的智能聊天机器人。如果员工搜索_：“我有多少年假？”_，系统将检索年假政策文件以及员工个人过去的休假记录。这些特定文件将被退回，因为它们与员工输入的内容高度相关。相关性是使用数学向量计算和表示法计算和建立的。</p>
+<h3 id="增强-llm-提示"><strong>增强 LLM 提示</strong></h3>
+<p>接下来，RAG 模型通过在上下文中添加检索到的相关数据来增强用户输入（或提示）。此步骤使用提示工程技术与 LLM 进行有效沟通。增强提示允许大型语言模型为用户查询生成准确的答案。</p>
+<h3 id="更新外部数据"><strong>更新外部数据</strong></h3>
+<p>下一个问题可能是——如果外部数据过时了怎么办？ 要维护当前信息以供检索，请异步更新文档并更新文档的嵌入表示形式。您可以通过自动化实时流程或定期批处理来执行此操作。这是数据分析中常见的挑战——可以使用不同的数据科学方法进行变更管理。下图显示了将 RAG 与 LLM 配合使用的概念流程。</p>
+<p><img src="https://lovejade.oss-cn-shenzhen.aliyuncs.com/rag-llm-flow-chart.webp" alt="RAG 与 LLM 配合使用的概念流程"/></p>
+<h2 id="检索增强生成和语义搜索有什么区别">检索增强生成和语义搜索有什么区别？</h2>
+<p><strong>语义搜索</strong>可以提高 RAG 结果，适用于想要在其 LLM 应用程序中添加大量外部知识源的组织。现代企业在各种系统中存储大量信息，例如手册、常见问题、研究报告、客户服务指南和人力资源文档存储库等。上下文检索在规模上具有挑战性，因此会降低生成输出质量。</p>
+<p>语义搜索技术可以扫描包含不同信息的大型数据库，并更准确地检索数据。例如，他们可以回答诸如 “<em>去年在机械维修上花了多少钱</em>？”之类的问题，方法是将问题映射到相关文档并返回特定文本而不是搜索结果。然后，开发人员可以使用该答案为 LLM 提供更多上下文。</p>
+<p>RAG 中的传统或关键字搜索解决方案对知识密集型任务产生的结果有限。开发人员在手动准备数据时还必须处理单词嵌入、文档分块和其他复杂问题。相比之下，语义搜索技术可以完成知识库准备的所有工作，因此开发人员不必这样做。它们还生成语义相关的段落和按相关性排序的标记词，以最大限度地提高 RAG 有效载荷的质量。</p>
+<h2 id="检索增强生成rag研究范式">检索增强生成（RAG）研究范式</h2>
+<p>RAG 研究范式在不断发展，RAG 分为三个阶段：Naive RAG、Advanced RAG 和 Modular RAG。尽管 RAG 方法具有成本效益并且超越了本地法学硕士的性能，但它也存在一些局限性。 Advanced RAG 和 Modular RAG 的开发是 RAG 的创新，旨在克服 Naive RAG 的这些具体缺点。</p>
+<p><img src="/_astro/RAG-paradigm.DQnN75Xq_9zqDL.webp" alt="检索增强生成（RAG）研究范式" width="1420" height="944" loading="lazy" decoding="async"></p>
+<h3 id="naive-rag">Naive RAG</h3>
+<p>Naive RAG 遵循上述传统的索引、检索和生成过程。简而言之，用户输入用于查询相关文档，然后与提示相结合并传递给模型以生成最终响应。如果应用涉及多轮对话交互，则可以将对话历史集成到提示中。</p>
+<p>Naive RAG 具有精度低（检索到的块未对齐）和召回率低（无法检索所有相关块）等局限性。 LLM 也可能传递过时的信息，这是 RAG 系统最初应该解决的主要问题之一。这会导致幻觉问题以及糟糕且不准确的反应。</p>
+<p>当应用增强时，还可能存在冗余和重复的问题。当使用多个检索到的段落时，排名和协调风格/语气也是关键。另一个挑战是确保生成任务不会过度依赖增强信息，这可能导致模型只是重复检索到的内容。</p>
+<h3 id="高级-rag">高级 RAG</h3>
+<p>高级 RAG 有助于解决 Naive RAG 中存在的问题，例如提高检索质量，这可能涉及优化检索前、检索和检索后流程。</p>
+<p>预检索过程涉及优化数据索引，旨在通过增强数据粒度、优化索引结构、添加元数据、对齐优化和混合检索五个阶段来提高索引数据的质量。</p>
+<p>通过优化嵌入模型本身可以进一步改进检索阶段，这直接影响构成上下文的块的质量。这可以通过微调嵌入来优化检索相关性或采用更好地捕获上下文理解的动态嵌入（例如，OpenAI 的 embeddings-ada-02 模型）来完成。</p>
+<p>优化检索后的重点是避免上下文窗口限制并处理嘈杂或可能分散注意力的信息。解决这些问题的常见方法是重新排名，这可能涉及将相关上下文重新定位到提示边缘或重新计算查询和相关文本块之间的语义相似度等方法。及时压缩也可能有助于解决这些问题。</p>
+<h3 id="模块化-rag">模块化 RAG</h3>
+<p>顾名思义，Modular RAG 增强了功能模块，例如合并用于相似性检索的搜索模块以及在检索器中应用微调。 Naive RAG 和 Advanced RAG 都是 Modular RAG 的特例，由固定模块组成。扩展的 RAG 模块包括搜索、记忆、融合、路由、预测和任务适配器，解决不同的问题。这些模块可以重新排列以适应特定的问题环境。因此，模块化 RAG 受益于更大的多样性和灵活性，您可以根据任务要求添加或替换模块或调整模块之间的流程。</p>
+<h2 id="如何构建高质量的-rag-系统">如何构建高质量的 RAG 系统？</h2>
+<p>要构建一个高质量的 RAG 系统，可以考虑以下几个关键因素：</p>
+<ol>
+<li>数据质量和多样性：RAG 系统的性能受到底层数据的影响。确保检索到的文档质量高，涵盖广泛的领域和主题，并且具有多样性。这可以通过使用多个数据源、合理筛选和预处理数据来实现。</li>
+<li>检索模型和技术：选择适当的检索模型和技术，以提高检索的准确性和召回率。使用先进的自然语言处理和信息检索技术，例如用于语义匹配的嵌入模型、查询扩展和查询重写等方法。</li>
+<li>上下文管理：有效管理上下文对于生成准确和连贯的回复至关重要。确保正确地引入和整合上下文信息，包括对话历史、用户意图和相关文档。在处理多轮对话时，要注意上下文的传递和更新。</li>
+<li>提示设计和优化：设计合理的提示，以引导语言模型生成正确的回复。优化提示的形式和内容，确保与检索到的文档对齐并包含关键信息。可以使用技术如查询模板、关键词标记和特殊标记来增强提示的效果。</li>
+<li>模型微调和优化：通过在特定任务上微调语言模型，使其适应特定领域或任务的要求。可以使用领域特定数据进行微调，并采用合适的训练策略和技巧，如迁移学习、数据增强和模型集成等。</li>
+<li>评估和迭代：对构建的 RAG 系统进行评估，并根据评估结果进行迭代优化。使用标准的评估指标来衡量系统的性能，例如回答准确性、流畅性和一致性等。根据用户反馈和实际应用情况，不断改进和优化系统。</li>
+<li>人工监督和质量控制：在构建 RAG 系统的过程中，进行人工监督和质量控制是至关重要的。通过人工审核和验证生成的回复，纠正错误和不准确的内容。确保生成的回复符合预期的质量标准，并满足应用需求。</li>
+</ol>
+<p>总之，构建高质量的 RAG 系统需要综合考虑数据质量、检索模型、上下文管理、提示设计、模型微调、评估迭代和质量控制等多个方面。这些因素的综合优化可以提高系统的性能和效果，使其能够生成准确、连贯和有用的回复。</p>
+<h2 id="基于-ragllm-构建知识库">基于 RAG、LLM 构建知识库</h2>
+<h3 id="数据处理">数据处理</h3>
+<h4 id="数据收集和预处理">数据收集和预处理</h4>
+<p>垃圾进垃圾出。如果您的源数据质量很差，例如包含相互冲突的信息，那么无论您将 RAG 系统构建得多么好，它都无法发挥从您提供的垃圾中输出黄金的魔力。须知：高质量数据是任何运行良好的 RAG 系统的先决条件。构建高质量的 RAG 系统时，应对知识来源数据进行以下处理：</p>
+<ul>
+<li><strong>数据清洗</strong>：优化文档读取器和多模态模型，确保数据准确性和格式的正确性。对于如 CSV 等结构化数据，需要恢复并保持其原有结构。</li>
+<li><strong>基本文本清理</strong>：规范化文本格式，去除特殊字符和不相关信息，消除重复或冗余内容。</li>
+<li><strong>实体解析</strong>：消除实体和术语的歧义，实现术语的一致性和标准化。</li>
+<li><strong>文档划分</strong>：根据主题合理划分文档，便于检索系统准确找到相关信息。</li>
+<li><strong>数据增强</strong>：利用同义词、释义和其他语言翻译等方式增加语料库的多样性，提高系统的鲁棒性。</li>
+<li><strong>实时更新</strong>：定期更新知识来源数据，以保持系统的时效性。新的数据可以包括最新的研究成果、新闻报道和社区讨论等。使用自动化的流程和工具，确保数据的及时更新。</li>
+<li><strong>质量评估</strong>：建立合适的质量评估标准和指标，对知识来源数据进行评估。可以使用人工评估、自动评估和用户反馈等方法，检查数据的准确性、一致性和相关性。</li>
+<li>多样性考虑：确保知识来源数据的多样性，涵盖不同的观点、文化和语境。这有助于提高系统的鲁棒性和适应性，让系统能够处理多样的用户查询。</li>
+<li>数据标注：对收集的数据进行分类、标注，为后续的模型训练做准备（按需）。
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/self_query/">添加元数据，例如电影评分等，用于自查询</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="数据加载">数据加载</h4>
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/document_loaders/file_directory/">DirectoryLoader</a>
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/document_loaders/markdown/">UnstructuredMarkdownLoader</a></li>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/document_loaders/">TextLoader</a></li>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/document_loaders/pdf/">PyPDFLoader</a></li>
+</ul>
+</li>
+<li><a href="https://python.langchain.com/docs/integrations/document_loaders/unstructured_file/">UnstructuredFileLoader</a></li>
+</ul>
+<h4 id="文本分割">文本分割</h4>
+<ul>
+<li><a href="https://baoyu.io/translations/rag/5-levels-of-text-splitting">字符分割 - 对数据进行简单的静态字符划分</a></li>
+<li>递归字符文本分割 - 基于分隔符列表的递归式分块</li>
+<li>文档特定分割 - 针对不同类型文档（如 PDF、Python、Markdown）的特定分块方法 + 策略性处理；</li>
+<li>语义分割 - 基于嵌入式路径的分块方法</li>
+<li>智能体式分割 - 使用类似智能体的系统来分割文本的实验性方法，适用于你认为 Token 成本接近免费的情况</li>
+</ul>
+<h4 id="embedding">Embedding</h4>
+<ul>
+<li>OpenAIEmbeddings</li>
+<li>HuggingFaceEmbeddings
+<ul>
+<li><a href="https://huggingface.co/thenlper/gte-base-zh">thenlper/gte-base-zh</a></li>
+<li><a href="https://huggingface.co/moka-ai/m3e-base">moka-ai/m3e-base</a></li>
+<li><a href="https://huggingface.co/BAAI/bge-large-zh-v1.5">BAAI/bge-large-zh-v1.5</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="向量数据库存储">向量数据库存储</h4>
+<ul>
+<li><a href="https://docs.trychroma.com/getting-started">Chroma</a> : 开源嵌入数据库，用于构建带有嵌入特征的 AI 应用程序，支持自定义嵌入模型和查询，具备灵活性和易用性。</li>
+<li><a href="https://www.pinecone.io/">Pinecone</a> : 托管的向量数据库，用于实时相似度搜索和推荐系统，支持高效的向量索引和快速查询，适用于大规模数据集和快速迭代。</li>
+<li><a href="https://www.semi.technology/developers/weaviate/current/">Weaviate</a> : 开源向量数据库，用于构建语义搜索和知识图谱应用，支持结构化数据和语义向量的存储、查询和关联，提供自然语言搜索和语义相似性计算功能。</li>
+<li><a href="https://milvus.io/">Milvus</a> : 开源向量相似性搜索引擎，支持高性能的向量索引和相似度查询，适用于大规模向量数据的存储和检索。</li>
+<li><a href="https://github.com/facebookresearch/faiss">Faiss</a> : 由 Facebook 开发的开源向量检索库，提供高效的相似度搜索和聚类功能，适用于大规模向量数据的索引和查询。</li>
+<li><a href="https://www.elastic.co/">Elasticsearch</a> : 弹性搜索引擎，支持向量类型字段的索引和查询，适用于结构化和非结构化数据的全文搜索和相似性匹配。</li>
+<li><a href="https://github.com/spotify/annoy">Annoy</a> : 开源的近似最近邻搜索库，适用于高维向量的相似性搜索，支持快速的近似查询和索引构建。</li>
+</ul>
+<h3 id="检索">检索</h3>
+<h4 id="检索粒度文档段落或句子等">检索粒度（文档、段落或句子等）</h4>
+<ul>
+<li><a href="https://arxiv.org/html/2312.06648v2">命题检索粒度</a></li>
+</ul>
+<h4 id="索引结构">索引结构</h4>
+<ul>
+<li>多层检索
+<ul>
+<li><a href="https://docs.llamaindex.ai/en/stable/examples/retrievers/auto_merging_retriever/">LlamaIndex 自动合并检索</a>
+<ul>
+<li><a href="https://towardsdatascience.com/advanced-rag-01-small-to-big-retrieval-172181b396d4">文章：smalltobig</a></li>
+</ul>
+</li>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/parent_document_retriever/">Langchain 父文档</a></li>
+</ul>
+</li>
+<li>句子窗口
+<ul>
+<li><a href="https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/MetadataReplacementDemo/">LlamaIndex 句子窗口</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="长文本检索">长文本检索</h4>
+<ul>
+<li>
+<p><a href="https://medium.com/the-ai-forum/implementing-advanced-rag-in-langchain-using-raptor-258a51c503c6">RAPTOR</a></p>
+</li>
+<li>
+<blockquote>
+<p>RAPTOR（Recursive Abstractive Processing for Tree Organized Retrieval）通过聚类和总结文本片段形成层次树结构，能够捕捉文本的高层次和详细信息，对复杂主题查询和多步推理等任务特别有用。</p>
+</blockquote>
+</li>
+<li>
+<p><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/contextual_compression/">上下文压缩</a></p>
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/contextual_compression/#embeddingsfilter">EmbeddingsFilter</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="混合检索关键字向量">混合检索（关键字+向量）</h4>
+<ul>
+<li>
+<p><a href="https://towardsdatascience.com/improving-retrieval-performance-in-rag-pipelines-with-hybrid-search-c75203c2f2f5">混合检索介绍</a></p>
+</li>
+<li>
+<blockquote>
+<p>混合搜索是一种结合两种或多种搜索算法以提高搜索结果相关性的搜索技术。虽然没有定义组合哪些算法，但混合搜索最常见的是指传统的基于关键字的搜索和现代矢量搜索的组合。</p>
+<p></p>
+</blockquote>
+</li>
+<li>
+<p><a href="https://python.langchain.com/docs/integrations/retrievers/pinecone_hybrid_search/">Pinecone 混合检索</a></p>
+</li>
+<li>
+<p><a href="https://python.langchain.com/docs/integrations/retrievers/weaviate-hybrid/">Weaviate 混合检索</a></p>
+</li>
+<li>
+<p>Chroma 暂时不支持混合检索</p>
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/ensemble/">EnsembleRetriever</a>：通过利用不同算法的优势，EnsembleRetriever可以获得比任何单一算法更好的性能。最常见的模式是将稀疏检索器（如 BM25）与密集检索器（如嵌入相似性）相结合，因为它们的优势是互补的。它也被称为“混合搜索”。稀疏检索器擅长根据关键词查找相关文档，而密集检索器擅长根据语义相似度查找相关文档（效果改善：⭐️⭐️⭐️⭐️）。相关文章：<a href="https://medium.aiplanet.com/evaluating-naive-rag-and-advanced-rag-pipeline-using-langchain-v-0-1-0-and-ragas-17d24e74e5cf">Evaluating Naive RAG and Advanced RAG pipeline using langchain v.0.1.0 and RAGAS</a>。</li>
+</ul>
+</li>
+</ul>
+<h4 id="相似关键词检索">相似关键词检索</h4>
+<ul>
+<li>RAG Fusion
+<ul>
+<li><a href="https://github.com/Raudaschl/rag-fusion/blob/master/main.py">RAG Fusion</a></li>
+<li><a href="https://python.langchain.com/docs/templates/rag-fusion/">LangChain Fusion</a></li>
+<li><a href="http://www.bimant.com/blog/rag-fusion-crash-tutorial/">RAG Fusion 简介</a></li>
+<li>
+<blockquote>
+<p>RAG Fusion (Raudaschl, 2023) 提供了解决 RAG 模型局限性的最佳解决方案。 不同的限制，例如人工搜索效率低下和搜索过于简单化，会导致相关性较低的结果； 然而，借助 RAG Fusion，人们可以轻松克服这些限制。 它通过生成多个用户查询并使用倒数排名融合等策略对结果进行排名来克服挑战。 这种临时技术弥合了用户查询与其预期含义之间的差距。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="前瞻性主动检索"><a href="https://docs.datastax.com/en/ragstack/docs/examples/flare.html">前瞻性主动检索</a></h4>
+<p>FLARE 是一种高级检索技术，它结合了检索和生成。LLMs 它通过迭代预测即将到来的句子来增强响应的准确性，以便在模型遇到不确定的标记时预测未来的内容。</p>
+<h4 id="联网检索">联网检索</h4>
+<h4 id="查询">查询</h4>
+<ul>
+<li>
+<p>查询转换</p>
+</li>
+<li>
+<blockquote>
+<p>查询转换是一系列使用 LLM 作为推理引擎来修改用户输入以提高检索质量的技术。</p>
+</blockquote>
+<ul>
+<li>拆解为子查询
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/MultiQueryRetriever/?ref=blog.langchain.dev">Langchain MultiQueryRetriever</a></li>
+<li><a href="https://docs.llamaindex.ai/en/stable/examples/query_engine/sub_question_query_engine/">Llamaindex Sub Question Query Engine</a></li>
+</ul>
+</li>
+<li>转为一般性查询
+<ul>
+<li><a href="https://github.com/langchain-ai/langchain/blob/master/cookbook/stepback-qa.ipynb?ref=blog.langchain.dev">Langchain Stepback QA</a></li>
+</ul>
+</li>
+<li>查询重写
+<ul>
+<li><a href="https://github.com/langchain-ai/langchain/blob/master/cookbook/rewrite.ipynb?ref=blog.langchain.dev">Langchain Query Rewriting</a></li>
+<li><a href="https://github.com/run-llama/llama-hub/blob/main/llama_hub/llama_packs/fusion_retriever/query_rewrite/query_rewrite.ipynb">LlamaIndex Query Rewriting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>自查询</p>
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/self_query/#testing-it-out">Lanchain 自查询</a></li>
+</ul>
+</li>
+<li>
+<p>查询扩展</p>
+</li>
+</ul>
+<h4 id="长上下文重新排序">长上下文重新排序</h4>
+<ul>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/long_context_reorder/">Langchain | Long-Context Reorder</a>：研究人员分析了语言模型在需要识别输入上下文中的相关信息的两项任务上的性能：多文档问答和键值检索。他们发现，当改变相关信息的位置时，性能会显着下降，这表明当前的语言模型不能稳健地利用长输入上下文中的信息。特别是，我们观察到，当相关信息出现在输入上下文的开头或结尾时，性能通常最高，而当模型必须在长上下文中间访问相关信息时，即使对于明确的长上下文模型，性能也会显着下降。我们的分析可以更好地理解语言模型如何使用其输入上下文，并为未来的长上下文语言模型提供新的评估协议——<a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language Models Use Long Contexts</a> （效果改善：⭐️⭐️⭐️）。</li>
+</ul>
+<h3 id="rag-评估">RAG 评估</h3>
+<h4 id="ragas"><a href="https://github.com/explodinggradients/ragas">RAGAS</a></h4>
+<blockquote>
+<p>Ragas 是一个框架，可帮助您评估检索增强生成 (RAG) 管道。 RAG 表示一类使用外部数据来增强 LLM 背景的 LLM 申请。现有的工具和框架可以帮助您构建这些管道，但对其进行评估并量化管道性能可能很困难。这就是 Ragas（RAG 评估）发挥作用的地方。</p>
+<p>Ragas 为您提供基于最新研究的工具，用于评估 LLM 生成的文本，让您深入了解 RAG 管道。 Ragas 可以与您的 CI/CD 集成，以提供持续检查以确保性能。</p>
+</blockquote>
+<ul>
+<li><a href="https://medium.aiplanet.com/evaluating-naive-rag-and-advanced-rag-pipeline-using-langchain-v-0-1-0-and-ragas-17d24e74e5cf">使用 langchain v.0.1.0 和 RAGAS 评估 Naive RAG 和 Advanced RAG 管道</a></li>
+</ul>
+<h4 id="langsmith"><a href="https://docs.smith.langchain.com/">LangSmith</a></h4>
+<blockquote>
+<p><strong>LangSmith</strong>是一个用于构建生产级 LLM 应用程序的平台。它允许您密切监控和评估您的应用程序，以便您可以快速、自信地发货。不需要使用 LangChain - LangSmith 可以自行运行！</p>
+<p></p>
+</blockquote>
+<h3 id="生成">生成</h3>
+<h4 id="llm--大语言模型">LLM | 大语言模型</h4>
+<ul>
+<li><a href="https://openai.com/index/gpt-4">GPT4</a>: OpenAI 开发的多模态大型语言模型，能接受图文输入，表现出色于逻辑推理和图文分析，尽管存在一些局限性，但已在多个任务上超越人类平均水平。凭借其更广泛的常识和解决问题的能力，可以更准确地解决难题。</li>
+<li><a href="https://ollama.com/library/llama3">llama3</a>：Meta 公司推出的 Llama 3 是一款先进的大型语言模型，以其强大的语言理解和生成能力而闻名。它遵循社区许可协议，允许非排他性、全球范围内的使用，但对商业用途有额外的条款。</li>
+<li><a href="https://deepmind.google/technologies/gemini/">Gemini Pro</a>：Google 开发的先进 AI 模型，特别在 MMLU 任务上超越人类专家，具备处理文本、图像、声音和视频的多模态能力，上下文窗口远超其他模型，性能在某些测试中优于 GPT-4</li>
+</ul>
+<h3 id="多轮对话">多轮对话</h3>
+<h4 id="上下文模式"><a href="https://docs.llamaindex.ai/en/stable/examples/chat_engine/chat_engine_context/">上下文模式</a></h4>
+<h3 id="rag-实施的最佳实践">RAG 实施的最佳实践</h3>
+<ul>
+<li><strong>整理干净的数据</strong>：高质量的数据至关重要。投资于对源内容进行适当的结构化、重复数据删除和规范化。</li>
+<li><strong>战略性地评估嵌入</strong>：不同的嵌入算法具有独特的优势。评估在特定数据类型或域的相似性搜索中表现最佳的因素。</li>
+<li><strong>设计动态数据管道</strong>：规划允许持续数据刷新的工作流，以便 RAG 系统在创建新信息时保持最新状态。</li>
+<li><strong>选择合适的检索器</strong>：在 RAG 实施中，选择适合特定任务和数据集的检索器是关键。可以使用传统的信息检索方法，如 TF-IDF，或者使用更先进的技术，如 BM25 或 BART 等。</li>
+<li><strong>进行有效的篇章检索</strong>：在 RAG 框架中，篇章检索是获取与查询相关的篇章的重要步骤。使用合适的索引技术和查询扩展方法，以提高篇章检索的准确性和召回率。</li>
+<li><strong>优化模型的微调</strong>：针对特定任务和数据集，对 RAG 模型进行微调以提高性能。通过在相关领域或特定任务上进行预训练和微调，可以使模型更好地理解和生成与查询相关的内容。</li>
+<li><strong>使用适当的文本摘要方法</strong>：在生成阶段，使用适当的文本摘要方法将篇章内容进行压缩和概括，以生成简洁而信息丰富的回答。</li>
+<li><strong>持续基准测试</strong>：在手动标记的测试样本和定量指标上迭代测量 RAG 性能。监控准确性是关键。</li>
+<li><strong>评估和迭代改进</strong>：持续评估 RAG 实施的性能，并根据反馈进行改进。使用合适的评估指标和人工评估来衡量模型的质量，并根据评估结果进行调整和优化。</li>
+</ul>
+<h2 id="优质开源的-rag-项目">优质开源的 RAG 项目</h2>
+<ul>
+<li><a href="https://github.com/QuivrHQ/quivr">Quivr</a> ：您的 GenAI 第二大脑 🧠 个人生产力助手 （RAG） ⚡️🤖 与您的文档聊天 （PDF， CSV， …） &amp; 使用 Langchain、GPT 3.5 / 4 turbo、Private、Anthropic、VertexAI、Ollama、LLMsGroq 与应用程序聊天，您可以与用户分享！OpenAI GPT 和 ChatGPT 的本地和私人替代方案，由检索增强生成提供支持。</li>
+<li><a href="https://github.com/Mintplex-Labs/anything-llm">AnythingLLM</a> ：具有完整 RAG 和 AI 代理功能的一体化桌面和 Docker AI 应用程序；使您能够将任何文档、资源或内容转换为上下文，任何人都 LLM 可以在聊天期间用作参考。此应用程序允许您选择要使用的矢量数据库 LLM 或矢量数据库，并支持多用户管理和权限。</li>
+<li><a href="https://github.com/infiniflow/ragflow">RAGFlow</a> ：一个基于深度文档理解的开源 RAG（检索增强生成）引擎。它为任何规模的企业提供简化的 RAG 工作流程，结合 LLM（大型语言模型）以提供真实的问答功能，并以来自各种复杂格式数据的有根据的引用为后盾。</li>
+<li><a href="https://github.com/danswer-ai/danswer">Danswer</a> ：连接到您公司的文档、应用程序和人员的 AI 助手。 Danswer 提供聊天界面并插入您选择的任何法学硕士。 Danswer 可以部署在任何地方、任何规模 - 笔记本电脑上、本地部署或云端。由于您拥有部署，因此您的用户数据和聊天完全由您自己控制。</li>
+<li><a href="https://github.com/weaviate/Verba">Verba</a> ： The Golden RAGtriever，这是一款开源应用程序，旨在为开箱即用的检索增强生成 （RAG） 提供端到端、简化和用户友好的界面。只需几个简单的步骤，即可在本地或通过 LLM OpenAI、Cohere 和 HuggingFace 等提供商轻松探索您的数据集并提取见解。</li>
+<li><a href="https://github.com/reorproject/reor">Reor</a> ：一款 AI 驱动的桌面笔记应用程序：它会自动链接相关笔记、回答笔记上的问题、提供语义搜索并可以生成 AI 抽认卡。所有内容都存储在本地，您可以使用类似 Obsidian 的 Markdown 编辑器编辑笔记。该项目的假设是，默认情况下，用于思考的人工智能工具应该在本地运行模型。Reor站在巨头Ollama，Transformers.js和LanceDB的肩膀上，使两者LLMs和嵌入模型都能在本地运行。还支持连接到 OpenAI 或 OpenAI 兼容的 API，如 Oobabooga。</li>
+<li><a href="https://github.com/truefoundry/cognita">Cognita</a> ：RAG（Retrieval Augmented Generation）框架，用于构建模块化、开源应用程序，供 TrueFoundry 生产。</li>
+</ul>
+<p>2024 年 05 月 08 日写于〔深圳福田〕</p>  </div> <footer class="astro-g3vulqrk"> <div class="meta sl-flex astro-g3vulqrk">  <p>最近更新： <time datetime="2025-04-22T05:43:03.524Z">2025年4月22日</time></p> </div> <div class="pagination-links astro-34tgwgkv" dir="ltr"> <a href="/automation/ai-agents-ollama-crewai/" rel="prev" class="astro-34tgwgkv"> <svg aria-hidden="true" class="astro-34tgwgkv astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg>  <span class="astro-34tgwgkv"> 上一页 <br class="astro-34tgwgkv"> <span class="link-title astro-34tgwgkv">基于 CrewAI、Ollama 构建本地 AI 代理</span> </span> </a> <a href="/projects/wealth-tracker/" rel="next" class="astro-34tgwgkv"> <svg aria-hidden="true" class="astro-34tgwgkv astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg>  <span class="astro-34tgwgkv"> 下一页 <br class="astro-34tgwgkv"> <span class="link-title astro-34tgwgkv">生财有迹 | 您专属的资产跟踪与分析工具</span> </span> </a> </div>  </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
