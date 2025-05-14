@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import tailwind from '@astrojs/tailwind'
 import starlightLinksValidator from 'starlight-links-validator'
+import image from '@astrojs/image'
 
 // https://astro.build/config
 export default defineConfig({
@@ -134,5 +135,11 @@ export default defineConfig({
 			],
 		}),
 		tailwind(),
+		image({
+			serviceEntryPoint: '@astrojs/image/sharp',
+			serviceConfig: {
+				formats: ['png'], // 只生成 PNG
+			},
+		}),
 	],
 })
