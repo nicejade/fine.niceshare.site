@@ -9,7 +9,7 @@
 	 */
 	onMount(async () => {
 		await tick()
-		mediumZoom('.sl-markdown-content img')
+		mediumZoom('.sl-markdown-content img:not(.no-zoom)')
 
 		window.onresize = function() {
     	const video = document.querySelector(".bili-video");
