@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="zh-CN" dir="ltr" data-has-toc data-has-sidebar data-theme="dark" class="astro-nzck5nx4"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>通俗易懂解读 AI、Transformer、RAG、Agent 等概念 | 缘知随心庭</title><link rel="canonical" href="https://fine.niceshare.site/articles/ai-transformer-rag-agent-concepts/"/><link rel="sitemap" href="/sitemap-index.xml"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" sizes="32x32" href="/favicon-32x32.png"/><link rel="icon" sizes="16x16" href="/favicon-16x16.png"/><link manifest="/site.webmanifest" re="manifest"/><script src="https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE" id="G-7NRFYFR8BE" defer></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-7NRFYFR8BE');</script><script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758" defer></script><link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v4.16.18"/><meta name="generator" content="Starlight v0.20.1"/><meta property="og:title" content="通俗易懂解读 AI、Transformer、RAG、Agent 等概念"/><meta property="og:type" content="article"/><meta property="og:url" content="https://fine.niceshare.site/articles/ai-transformer-rag-agent-concepts/"/><meta property="og:locale" content="zh-CN"/><meta property="og:description" content="在人工智能快速发展的今天，AI、Transformer、RAG、Agent 等术语频繁出现在我们的视野中。这些概念不仅影响着技术发展方向，更与我们的日常生活息息相关。然而，大多数解释要么过于技术性难以理解，要么过于简单无法真正掌握其精髓。本文旨在用通俗易懂的语言，为读者梳理这些核心概念的来龙去脉。从 1956 年人工智能概念的提出，到当下 ChatGPT 等大语言模型的蓬勃发展，我们将沿着技术演进的时间线，帮助读者建立起对 AI 技术体系的整体认知框架，让这些看似深奥的概念变得触手可及。"/><meta property="og:site_name" content="缘知随心庭"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="通俗易懂解读 AI、Transformer、RAG、Agent 等概念"/><meta name="twitter:description" content="在人工智能快速发展的今天，AI、Transformer、RAG、Agent 等术语频繁出现在我们的视野中。这些概念不仅影响着技术发展方向，更与我们的日常生活息息相关。然而，大多数解释要么过于技术性难以理解，要么过于简单无法真正掌握其精髓。本文旨在用通俗易懂的语言，为读者梳理这些核心概念的来龙去脉。从 1956 年人工智能概念的提出，到当下 ChatGPT 等大语言模型的蓬勃发展，我们将沿着技术演进的时间线，帮助读者建立起对 AI 技术体系的整体认知框架，让这些看似深奥的概念变得触手可及。"/><meta name="description" content="在人工智能快速发展的今天，AI、Transformer、RAG、Agent 等术语频繁出现在我们的视野中。这些概念不仅影响着技术发展方向，更与我们的日常生活息息相关。然而，大多数解释要么过于技术性难以理解，要么过于简单无法真正掌握其精髓。本文旨在用通俗易懂的语言，为读者梳理这些核心概念的来龙去脉。从 1956 年人工智能概念的提出，到当下 ChatGPT 等大语言模型的蓬勃发展，我们将沿着技术演进的时间线，帮助读者建立起对 AI 技术体系的整体认知框架，让这些看似深奥的概念变得触手可及。"/><meta name="theme-color" content="#ffffff"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg> <svg aria-hidden="true" class="dark astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg> <svg aria-hidden="true" class="auto astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> </template><link rel="stylesheet" href="/_astro/index.uOE1EdEs.css">
+<style>svg:where(.astro-5ik4roku){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1em;height:1em}
+</style><script type="module" src="/_astro/hoisted.CxJuEq3L.js"></script>
+<script type="module" src="/_astro/page.7qqag-5g.js"></script></head> <body class="astro-nzck5nx4"> <a href="#_top" class="astro-pz3yc6qm">跳转到内容</a>  <div class="page sl-flex astro-cvqmds7i"> <header class="header astro-cvqmds7i"><div class="header sl-flex astro-j2zbjij7"> <div class="title-wrapper sl-flex astro-j2zbjij7"> <a href="/" class="site-title sl-flex astro-snnubt7e">  <img class="astro-snnubt7e" alt="" src="/_astro/logo.DVW4ZX1n.svg" width="512" height="512">  <span class="astro-snnubt7e"> 缘知随心庭 </span> </a>  </div> <div class="sl-flex astro-j2zbjij7"> <site-search data-translations="{&#34;placeholder&#34;:&#34;搜索&#34;}" class="astro-iorrx2jm"> <button data-open-modal disabled class="astro-iorrx2jm">  <svg aria-label="搜索" class="astro-iorrx2jm astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg>  <span class="sl-hidden md:sl-block astro-iorrx2jm" aria-hidden="true">搜索</span> <svg aria-label="（按 / 进行搜索）" class="sl-hidden md:sl-block astro-iorrx2jm astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5Zm3 15a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10Z"/><path d="M15.293 6.707a1 1 0 1 1 1.414 1.414l-8.485 8.486a1 1 0 0 1-1.414-1.415l8.485-8.485Z"/></svg>  </button> <dialog style="padding:0" aria-label="搜索" class="astro-iorrx2jm"> <div class="dialog-frame sl-flex astro-iorrx2jm">  <button data-close-modal class="sl-flex md:sl-hidden astro-iorrx2jm"> 取消 </button> <div class="search-container astro-iorrx2jm"> <div id="starlight__search" class="astro-iorrx2jm"></div> </div> </div> </dialog> </site-search>    </div> <div class="sl-hidden md:sl-flex right-group astro-j2zbjij7"> <div class="sl-flex social-icons astro-j2zbjij7"> <a href="https://github.com/nicejade/fine.niceshare.site" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">GitHub</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg> </a><a href="https://mastodon.social/@nicejade" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">Mastodon</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M16.45 17.77c2.77-.33 5.18-2.03 5.49-3.58.47-2.45.44-5.97.44-5.97 0-4.77-3.15-6.17-3.15-6.17-1.58-.72-4.3-1.03-7.13-1.05h-.07c-2.83.02-5.55.33-7.13 1.05 0 0-3.14 1.4-3.14 6.17v.91c-.01.88-.02 1.86 0 2.88.12 4.67.87 9.27 5.2 10.4 2 .53 3.72.64 5.1.57 2.51-.14 3.92-.9 3.92-.9l-.08-1.8s-1.8.56-3.8.5c-2-.08-4.1-.22-4.43-2.66a4.97 4.97 0 0 1-.04-.68s1.96.48 4.44.59c1.51.07 2.94-.09 4.38-.26Zm2.22-3.4h-2.3v-5.6c0-1.19-.5-1.79-1.5-1.79-1.1 0-1.66.71-1.66 2.12v3.07h-2.3V9.1c0-1.4-.55-2.12-1.65-2.12-1 0-1.5.6-1.5 1.78v5.61h-2.3V8.6c0-1.18.3-2.12.9-2.81a3.17 3.17 0 0 1 2.47-1.05c1.18 0 2.07.45 2.66 1.35l.57.96.58-.96a2.97 2.97 0 0 1 2.66-1.35c1.01 0 1.83.36 2.46 1.05.6.7.9 1.63.9 2.81v5.78Z"/></svg> </a><a href="https://x.com/MarshalXuan" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">X</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M 18.242188 2.25 L 21.554688 2.25 L 14.324219 10.507812 L 22.828125 21.75 L 16.171875 21.75 L 10.953125 14.933594 L 4.992188 21.75 L 1.679688 21.75 L 9.40625 12.914062 L 1.257812 2.25 L 8.082031 2.25 L 12.792969 8.480469 Z M 17.082031 19.773438 L 18.914062 19.773438 L 7.082031 4.125 L 5.113281 4.125 Z M 17.082031 19.773438 "/></svg> </a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-oxltjn3s"> <span class="sr-only astro-oxltjn3s">选择主题</span> <svg aria-hidden="true" class="icon label-icon astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>  <select value="auto" class="astro-oxltjn3s"> <option value="dark" class="astro-oxltjn3s">深色</option><option value="light" class="astro-oxltjn3s">浅色</option><option value="auto" selected class="astro-oxltjn3s">自动</option> </select> <svg aria-hidden="true" class="icon caret astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div> </div> </header> <nav class="sidebar astro-cvqmds7i" aria-label="主要"> <starlight-menu-button class="astro-n3kakehk"> <button aria-expanded="false" aria-label="菜单" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-n3kakehk"> <svg aria-hidden="true" class="astro-n3kakehk astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg>  </button> </starlight-menu-button>    <div id="starlight__sidebar" class="sidebar-pane astro-cvqmds7i"> <div class="sidebar-content sl-flex astro-cvqmds7i"> <ul class="top-level astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">自探索</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/explore/tao-and-virtue/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">何谓老子所倡导「道德」之学？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/explore/know-a-lot-of-principles-why-not-live-well/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">懂诸多道理为何过不好这一生？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/explore/how-to-make-high-quality-and-effective-decisions/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">如何做出高质量、有效的决策？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/explore/wisdom-of-flowing-with-nature/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">庄子超越“有用无用”的自在人生</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">自部署</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/self-hosted/blinko/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Blinko | 优先考虑隐私的个人 AI 笔记工具</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/cobalt/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Cobalt | 保存你喜爱的东西的最佳方式</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/memos/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Memos | 隐私优先的轻量级笔记服务</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/paperless-ngx/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Paperless-ngx | 开源文档管理系统</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/screenshot-to-code/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Screenshot To Code | 将屏幕截图转换为干净的代码</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/sink/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Sink | 简单、快速、安全的链接缩短器</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/self-hosted/wealth-tracker/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">生财有迹 | 您专属的资产跟踪与分析工具</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">自动化</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/automation/ai-agents-ollama-crewai/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">基于 CrewAI、Ollama 构建本地 AI 代理</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/automation/build-exclusive-knowledge-base-based-on-rag-and-llm/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">基于 RAG、LLM 构建专属知识库</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">作品集</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/projects/wealth-tracker/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">生财有迹 | 您专属的资产跟踪与分析工具</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">爱音乐</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/music/500-miles/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">500 Miles- 漂泊时代的离散诗篇</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/黄昏/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">黄昏 - 诗意盎然的经典之作，歌词如画，旋律似水</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/勇敢的心/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">For the Love of a Princess - 自由与爱的史诗回响</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/渔舟唱晚/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">渔舟唱晚 - 暮色归舟处，时光落成永恒的水墨</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/empire-of-angels/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Empire of Angels：在光暗熔炉中锻打青铜史诗</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/never-an-absolution/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Never an Absolution - 风笛与爱穿透时空</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/nightingale/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Nightingale 夜莺 - 月光织就的永恒诗篇</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/traveling-light/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Traveling Light - 卸下岁月的羽毛</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/故郷の原风景/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">故郷の原风景 - 在埙孔中流转的乡愁经纬</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/牧马城市/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">牧马城市 - 玻璃幕墙内，野草漫过荒原</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/柔情似水/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">柔情似水 - 涟漪深处的永恒诗章</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/谢谢你/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">谢谢你：一首触动心灵的深情之作</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/becoming-a-legend/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Becoming A Legend ｜一阕响彻星穹的觉醒赋格</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/victory/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Victory - 无字战歌中的史诗狂想</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/愛似流星/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">愛似流星 - 弦上流星，烬中永恒</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/穿越时空的思念/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">穿越时空的思念 - 刀刃与琴弦的千年共鸣，宿命花雨中的时空诗章</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/风居住的街道/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">风居住的街道 - 风栖音尘处，巷语未言时</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/喀什噶尔胡杨/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">喀什噶尔胡杨 - 沙砾中的永恒篇章</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/莫失莫忘/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">莫失莫忘 - 弦外月光，别离的永恒褶皱</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/小仙女/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">小仙女 - 麦振鸿以笛弦筝琴织就江湖不凋春</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/笑看风云/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">笑看风云 - 烟雨淬银光，明月照肝胆</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/game-of-thrones/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Game of Thrones：权谋史诗在音符中裂变与重生</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/journey/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Journey - 在琴弦之尽头皈依微光</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/大田後生仔/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">大田後生仔 - 血脉里的原野，方言诗性与时代青年的精神共振</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/今天/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">今天 - 时光琥珀中的候鸟迁徙——于洋翻唱版</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/莲有秀兮/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">莲有秀兮 - 水墨音漪涤尘境，素心照月听禅香</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/珍惜/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">珍惜 - 时光褶皱里生长的诗</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/hall-om-mig/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Hall Om Mig - 权杖裂帛：叶卡捷琳娜的冰火咏叹</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/琵琶语/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">ひとり上手 - 雨の独行譜：倔強與脆弱的和鳴</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/手心的温柔/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">手心的温柔 - 荒漠情书，掌纹里流淌的时光诗</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/我这一生/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">我这一生 - 荒原自白书 ｜暗夜独行者的盐与光</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/see-you-see-me/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">See you, See me - 星尘回响：一曲穿透心墙的永恒坦诚</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/windy-hill/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Windy Hill - 风拂心谷：在旋律的褶皱里与永恒对望</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/大海/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">大海 - 潮汐带不走的那片蔚蓝哀愁</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/always-with-me/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Always with Me - 未被命名的羽翼，如何驮起千万次重逢</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/tishri/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">Tishri - 在月光与沙粒的褶皱中、听它叩响永恒的回声</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/化风行万里/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">化风行万里 - 风骨泪墨：万里孤寻的永恒行旅</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/太多/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">太多 - 情缠江湖，宿命褶皱里的时光密语</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/the-nights/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">The Nights - 永夜金羽：艾维奇锻造不灭星火的生命箴言</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/浩然正气/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">浩然正气 - 弦上山河，无可奈何的千年回响</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/情系半生/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">情系半生 - 时光褶皱里的永恒契约 &amp; 绵长絮语</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/ひとり上手/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">琵琶语 - 弦上烟雨，琴间留白；大知闲闲，小知间间</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/转弯/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">转弯 - 在时光的褶皱里重逢，听见心的低语</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/the-promise/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">The Promise - 在琴弦与星群间打捞永恒的琥珀</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/情没有对错/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">情没有对错 - 不问归期，片刻已是永恒</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/无情的情书/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">无情的情书 - 焚爱成诗：一曲绝唱的余烬与微光</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/music/心爱/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">心爱 - 醉春风·忆江湖，江湖情长的诗意回响</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">好思维</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/thinking/brain-hacking-wealth-multiplication/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">大脑驯化法则：如何用&quot;认知欺骗&quot;开启财富裂变之路</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/thinking/first-principles-thinking/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">如何像 Elon Musk 一样思考？第一性原理的应用</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/thinking/the-almanack-of-naval-ravikant-wealth-happiness-guide/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">《纳瓦尔宝典》读书笔记：致富和幸福的良言</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/thinking/the-tao-of-wealth/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">财富之道：哈里·布朗的 17 条财务安全黄金法则</span>  </a> </li> </ul>  </details> </li><li class="astro-m3xpoh3x"> <details open class="astro-m3xpoh3x"> <summary class="astro-m3xpoh3x"> <div class="group-label astro-m3xpoh3x"> <span class="large astro-m3xpoh3x">新文章</span>  </div> <svg aria-hidden="true" class="caret astro-m3xpoh3x astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-m3xpoh3x"> <li class="astro-m3xpoh3x"> <a href="/articles/ai-transformer-rag-agent-concepts/" aria-current="page" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">通俗易懂解读 AI、Transformer、RAG、Agent 等概念</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-watch-to-monitor-data/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何通过 $watch 监听数据？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-what-to-consider-with-timers/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，定时器需要注意些什么？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-adapt-to-multiple-screens-with-tailwind-css/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何通过 Tailwind CSS 适配多屏幕？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-how-to-use-zustand-for-state-management/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用 Zustand 进行状态管理？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-npm/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用 npm 第三方工具库？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-global/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用全局变量？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-eslint/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何借助 ESlint 提升效率？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-component-communication/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，组件之间如何通信？</span>  </a> </li><li class="astro-m3xpoh3x"> <a href="/articles/blueos-app-development-how-to-use-tailwindcss/" class="astro-m3xpoh3x"> <span class="astro-m3xpoh3x">BlueOS 应用开发，如何使用 Tailwind CSS？</span>  </a> </li> </ul>  </details> </li> </ul>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-olbjblup"> <div class="sl-flex social-icons astro-olbjblup"> <a href="https://github.com/nicejade/fine.niceshare.site" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">GitHub</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg> </a><a href="https://mastodon.social/@nicejade" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">Mastodon</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M16.45 17.77c2.77-.33 5.18-2.03 5.49-3.58.47-2.45.44-5.97.44-5.97 0-4.77-3.15-6.17-3.15-6.17-1.58-.72-4.3-1.03-7.13-1.05h-.07c-2.83.02-5.55.33-7.13 1.05 0 0-3.14 1.4-3.14 6.17v.91c-.01.88-.02 1.86 0 2.88.12 4.67.87 9.27 5.2 10.4 2 .53 3.72.64 5.1.57 2.51-.14 3.92-.9 3.92-.9l-.08-1.8s-1.8.56-3.8.5c-2-.08-4.1-.22-4.43-2.66a4.97 4.97 0 0 1-.04-.68s1.96.48 4.44.59c1.51.07 2.94-.09 4.38-.26Zm2.22-3.4h-2.3v-5.6c0-1.19-.5-1.79-1.5-1.79-1.1 0-1.66.71-1.66 2.12v3.07h-2.3V9.1c0-1.4-.55-2.12-1.65-2.12-1 0-1.5.6-1.5 1.78v5.61h-2.3V8.6c0-1.18.3-2.12.9-2.81a3.17 3.17 0 0 1 2.47-1.05c1.18 0 2.07.45 2.66 1.35l.57.96.58-.96a2.97 2.97 0 0 1 2.66-1.35c1.01 0 1.83.36 2.46 1.05.6.7.9 1.63.9 2.81v5.78Z"/></svg> </a><a href="https://x.com/MarshalXuan" rel="me" class="sl-flex astro-4szz7yeq"><span class="sr-only astro-4szz7yeq">X</span><svg aria-hidden="true" class="astro-4szz7yeq astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M 18.242188 2.25 L 21.554688 2.25 L 14.324219 10.507812 L 22.828125 21.75 L 16.171875 21.75 L 10.953125 14.933594 L 4.992188 21.75 L 1.679688 21.75 L 9.40625 12.914062 L 1.257812 2.25 L 8.082031 2.25 L 12.792969 8.480469 Z M 17.082031 19.773438 L 18.914062 19.773438 L 7.082031 4.125 L 5.113281 4.125 Z M 17.082031 19.773438 "/></svg> </a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-oxltjn3s"> <span class="sr-only astro-oxltjn3s">选择主题</span> <svg aria-hidden="true" class="icon label-icon astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>  <select value="auto" class="astro-oxltjn3s"> <option value="dark" class="astro-oxltjn3s">深色</option><option value="light" class="astro-oxltjn3s">浅色</option><option value="auto" selected class="astro-oxltjn3s">自动</option> </select> <svg aria-hidden="true" class="icon caret astro-oxltjn3s astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-cvqmds7i">  <div class="lg:sl-flex astro-oflwwx6x"> <aside class="right-sidebar-container astro-oflwwx6x"> <div class="right-sidebar astro-oflwwx6x"> <div class="lg:sl-hidden astro-clevrbjf"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-am6rtrlv"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-am6rtrlv"><details id="starlight__mobile-toc" class="astro-am6rtrlv"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-am6rtrlv"><div class="toggle sl-flex astro-am6rtrlv">本页内容<svg aria-hidden="true" class="caret astro-am6rtrlv astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </div><span class="display-current astro-am6rtrlv"></span></summary><div class="dropdown astro-am6rtrlv"><ul class="isMobile astro-vulwxqhg" style="--depth: 0;"> <li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#_top" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">概述</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是人工智能" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是人工智能?</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是机器学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是机器学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是神经网络" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是神经网络？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是深度学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是深度学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#transformer-是什么" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">Transformer 是什么？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是-rag" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是 RAG？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是-ai-agent" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是 AI Agent？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是模型微调" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是模型微调？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是注意力机制" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是注意力机制？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是强化学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是强化学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是迁移学习-transfer-learning" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是迁移学习 (Transfer Learning) ？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是元学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是元学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是对抗生成网络" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是对抗生成网络？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是知识蒸馏" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是知识蒸馏？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是提示工程" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是提示工程？</span> </a> <ul class="isMobile astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的核心思想" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的核心思想</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#举例说明" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">举例说明</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#为什么提示工程很重要" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">为什么提示工程很重要？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的常见策略" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的常见策略</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的应用场景" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的应用场景</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的挑战与未来" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的挑战与未来</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#总结" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">总结</span> </a>  </li> </ul>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-clevrbjf"><div class="sl-container astro-clevrbjf"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">本页内容</h2><ul class="astro-vulwxqhg" style="--depth: 0;"> <li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#_top" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">概述</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是人工智能" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是人工智能?</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是机器学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是机器学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是神经网络" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是神经网络？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是深度学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是深度学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#transformer-是什么" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">Transformer 是什么？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是-rag" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是 RAG？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是-ai-agent" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是 AI Agent？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是模型微调" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是模型微调？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是注意力机制" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是注意力机制？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是强化学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是强化学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是迁移学习-transfer-learning" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是迁移学习 (Transfer Learning) ？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是元学习" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是元学习？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是对抗生成网络" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是对抗生成网络？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是知识蒸馏" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是知识蒸馏？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 0;"> <a href="#什么是提示工程" class="astro-vulwxqhg" style="--depth: 0;"> <span class="astro-vulwxqhg" style="--depth: 0;">什么是提示工程？</span> </a> <ul class="astro-vulwxqhg" style="--depth: 1;"> <li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的核心思想" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的核心思想</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#举例说明" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">举例说明</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#为什么提示工程很重要" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">为什么提示工程很重要？</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的常见策略" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的常见策略</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的应用场景" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的应用场景</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#提示工程的挑战与未来" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">提示工程的挑战与未来</span> </a>  </li><li class="astro-vulwxqhg" style="--depth: 1;"> <a href="#总结" class="astro-vulwxqhg" style="--depth: 1;"> <span class="astro-vulwxqhg" style="--depth: 1;">总结</span> </a>  </li> </ul>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-oflwwx6x">  <main data-pagefind-body lang="zh-CN" dir="ltr" class="astro-nzck5nx4">   <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();;(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script> <div class="content-panel astro-kqbqu3kl"> <div class="sl-container astro-kqbqu3kl"> <h1 id="_top" class="astro-atfavsv7">通俗易懂解读 AI、Transformer、RAG、Agent 等概念</h1>  </div> </div>  <div class="content-panel astro-kqbqu3kl"> <div class="sl-container astro-kqbqu3kl"> <div class="sl-markdown-content"> <astro-island uid="Z1y3Hkf" component-url="/_astro/MediumZoom.DyO7TDU3.js" component-export="default" renderer-url="/_astro/client.CWY0IrnN.js" props="{}" ssr="" client="only" opts="{&quot;name&quot;:&quot;MediumZoom&quot;,&quot;value&quot;:&quot;svelte&quot;}"></astro-island>  <p>在人工智能快速发展的今天，AI、Transformer、RAG、Agent 等术语频繁出现在我们的视野中。这些概念不仅影响着技术发展方向，更与我们的日常生活息息相关。然而，大多数解释要么过于技术性难以理解，要么过于简单无法真正掌握其精髓。</p>
+<p>本文旨在用通俗易懂的语言，为读者梳理这些核心概念的来龙去脉。从 1956 年人工智能概念的提出，到当下 ChatGPT 等大语言模型的蓬勃发展，我们将沿着技术演进的时间线，帮助读者建立起对 AI 技术体系的整体认知框架，让这些看似深奥的概念变得触手可及。</p>
+<p><img src="https://lovejade.oss-cn-shenzhen.aliyuncs.com/llm-rag-agent.png" alt="通俗解释 AI、Transformer、RAG、Agent 等概念"/></p>
+<h2 id="什么是人工智能">什么是人工智能?</h2>
+<p>1956 年夏天，计算机科学家约翰·麦卡锡（John McCarthy）首次提出”人工智能”（<code dir="auto">AI</code>）这个概念。</p>
+<p>人工智能（<code dir="auto">AI</code>）指的是：<strong>通过软件和硬件，来完成通常需要人类智能才能完成的任务</strong>。它的研究对象，就是在机器上模拟人类智能。</p>
+<h2 id="什么是机器学习">什么是机器学习？</h2>
+<p>早期，人工智能研究分成两个阵营。</p>
+<p>第一个阵营是规则式（<code dir="auto">rule-based</code>）方法，又称专家系统（<code dir="auto">expert systems</code>），指的是人类写好一系列逻辑规则，来教导计算机如何思考。</p>
+<p>可想而知，对于复杂的、大规模的现实问题，很难写出完备的、明确的规则。所以，这种方法的进展一直很有限。</p>
+<p>第二个阵营就是机器学习（<code dir="auto">machine learning</code>），指的是没有预置的规则，只是把材料提供给计算机，让机器通过自我学习，自己发现规则，给出结果。</p>
+<h2 id="什么是神经网络">什么是神经网络？</h2>
+<p>神经网络（<code dir="auto">neural network</code>）是机器学习的一种主要形式。</p>
+<p>神经网络就是在机器上模拟人脑的结构，构建类似生物神经元的计算网络来处理信息。</p>
+<p>一个计算节点就是一个神经元，大量的计算节点组成网络，进行协同计算。</p>
+<p>神经网络需要极大的算力，以及海量的训练材料。以前，这是难以做到的，所以 20 世纪 70 年代开始，就陷入了停滞，长期没有进展。</p>
+<h2 id="什么是深度学习">什么是深度学习？</h2>
+<p>深度学习（<code dir="auto">deep learning</code>）是神经网络的一种实现方法，在 20 世纪 80 年代由杰弗里·辛顿提出。它让神经网络研究重新复活。</p>
+<p>深度学习是一种<strong>让多层神经元可以进行有效计算的方法，大大提高了神经网络的性能</strong>。“深度学习”这个名字，就是比喻多层神经元的自主学习过程。</p>
+<p>多层神经元包括一个输入层和一个输出层，它们之间有很多中间层（又称隐藏层）。以前，计算机算力有限，只能支撑一两个中间层，深度学习使得我们可以构建成千上万个中间层的网络，具有极大的”深度”。</p>
+<h2 id="transformer-是什么"><strong>Transformer</strong> 是什么？</h2>
+<p>早些年，深度学习用到的方法是卷积神经网络（<code dir="auto">CNN</code>）和循环神经网络（<code dir="auto">RNN</code>）。</p>
+<p>2017 年，谷歌的研究人员发明了一种新的深度学习处理方法，叫做 <code dir="auto">Transformer</code>（转换器）。</p>
+<p>Transformer 不同于以前的方法，不再一个个处理输入的单词，而是一次性处理整个输入，对每个词分配不同的权重。</p>
+<p>这种方法直接导致了 2022 年 ChatGPT 和后来无数生成式 AI 模型的诞生，是神经网络和深度学习目前的主流方法。</p>
+<p>由于基于 Transformer 的模型需要一次性处理整个输入，所以都有”上下文大小”这个指标，指的是一次可以处理的最大输入。</p>
+<p>比如，GPT-4 Turbo 的上下文是 128k 个 Token，相当于一次性读取超过 300 页的文本。上下文越大，模型能够考虑的信息就越多，生成的回答也就越相关和连贯，相应地，所需要的算力也就越多。</p>
+<h2 id="什么是-rag">什么是 RAG？</h2>
+<p>RAG（<code dir="auto">Retrieval Augmented Generation</code>检索增强生成）是一种让 AI 模型变得更”博学”的方法。想象你在写一篇论文，除了用自己的知识，还会去查阅参考资料。RAG 就是给 AI 配备了一个”资料库”和”检索系统”。</p>
+<p>当 AI 需要回答问题时，会先从资料库中检索相关信息，再结合这些信息来生成答案。这样做有几个好处：</p>
+<ul>
+<li>可以获取最新信息，克服模型训练数据落后的问题；</li>
+<li>能提供更准确的回答，因为有具体的参考依据；</li>
+<li>可以处理特定领域的专业问题，比如公司内部知识；</li>
+</ul>
+<h2 id="什么是-ai-agent">什么是 AI Agent？</h2>
+<p>AI Agent（智能代理）可以理解为一个能自主完成任务的 AI 助手。它不只是简单地回答问题，而是能够：</p>
+<ul>
+<li>理解用户的长期目标；</li>
+<li>制定实现目标的计划；</li>
+<li>自主选择合适的工具；</li>
+<li>执行必要的操作；</li>
+<li>根据执行结果调整计划；</li>
+</ul>
+<p>打个比方：</p>
+<ul>
+<li>普通的 AI 模型就像一个知识渊博的顾问，你问什么答什么</li>
+<li>AI Agent 则像一个能干的助理，你交代一个目标，它就能规划步骤并付诸行动<br/>
+比如你说”帮我订一张下周去北京的机票”，它会自动查询航班信息、比较价格、考虑你的日程安排，最后完成订票。</li>
+</ul>
+<p>这两项技术代表了 AI 发展的重要方向：</p>
+<ul>
+<li>RAG 让 AI 变得更懂更准；</li>
+<li>Agent 让 AI 变得更能干更自主；</li>
+</ul>
+<p>这些技术正在快速发展，未来可能会让 AI 助手变得更像我们的”得力助手”，而不仅仅是一个问答工具。</p>
+<h2 id="什么是模型微调">什么是模型微调？</h2>
+<p><strong>模型微调（Fine-tuning）</strong> 是一种常用的迁移学习（Transfer Learning）技术，用于在已有预训练模型的基础上，针对特定任务进行少量的训练，以适应新的数据集或任务。通过微调，模型能够在保留大部分从预训练中学到的知识的同时，快速适应新的任务需求。</p>
+<p><strong>基本思想</strong>：模型微调的核心思想是利用在大规模数据集（如 ImageNet、COCO、BERT 等）上预训练的模型，并在新任务中对其进行再训练（即“微调”），使其在特定任务上达到最佳性能。这种方法通常不需要从零开始训练模型，可以显著减少计算资源的需求，并且由于预训练模型已经学习到很多通用的特征，它能在新任务上迅速收敛。</p>
+<p>用学习钢琴的例子来解释模型微调：想象你已经学会了弹钢琴的基本功（这就像预训练模型），会看谱、懂节奏、熟悉键盘。现在你想学一首新歌：</p>
+<p>基本功（预训练）：</p>
+<ul>
+<li>你已经掌握了音阶、和弦；</li>
+<li>手指动作很熟练；</li>
+<li>节奏感也很好；</li>
+</ul>
+<p>学新歌（微调）：</p>
+<ul>
+<li>你不需要重新学习基本功；</li>
+<li>只需要练习新歌的特殊技巧；</li>
+<li>调整你已有的演奏方式；</li>
+</ul>
+<p>这就是模型微调：</p>
+<ul>
+<li>不是从零开始学习；</li>
+<li>而是在已有知识基础上；</li>
+<li>针对特定任务进行调整；</li>
+</ul>
+<p>比如：让一个通用 AI 模型专门学习医学知识，就像让会弹古典乐的钢琴家去学习爵士乐，只需要调整已有技巧，不用重新学习基础。</p>
+<p><strong>模型微调</strong>（Fine-tuning）是一种高效的迁移学习方法，通过在已有的预训练模型基础上进行适度训练，使其适应新的任务或数据集。它能够显著减少训练时间、节省计算资源，并且在数据量较小的情况下，帮助模型更快地收敛和提高性能。微调在许多领域，如计算机视觉、自然语言处理等，得到了广泛应用。</p>
+<h2 id="什么是注意力机制">什么是注意力机制？</h2>
+<p>注意力机制（Attention Mechanism）是人工智能领域，特别是在自然语言处理（NLP）和计算机视觉等领域中，一个非常重要的概念。它的核心思想是让模型在处理数据时能够专注于最相关的部分，而不是平等地对待所有输入。这类似于人类在阅读或听取信息时，会更关注某些关键点或词语。用一个简单的例子来解释注意力机制：</p>
+<p>想象你在看一幅热闹的校园照片。这张照片里有操场上打篮球的同学、教学楼前走动的老师、花园里的花朵，还有天空中的白云。当我问你”照片里的篮球是什么颜色的？“时，你的大脑会自动把注意力集中在打篮球的那部分画面上，而暂时”忽略”其他部分。这就是人类的注意力机制。</p>
+<p><strong>AI 的注意力机制也是类似的原理</strong>：</p>
+<ol>
+<li>
+<p>就像你的眼睛会自动聚焦在重要的地方，AI 在处理信息时也会”聚焦”在最相关的部分。</p>
+</li>
+<li>
+<p>举个例子：</p>
+<ul>
+<li>当 AI 翻译”I love my mother”这句话时</li>
+<li>翻译”love”这个词的时候，AI 会特别”关注”前后的”I”和”mother”</li>
+<li>因为知道”我”和”妈妈”是主语和宾语，所以能准确翻译成”我爱我的妈妈”</li>
+<li>而不会错误地翻译成”我喜欢我的妈妈”或”我疼爱我的妈妈”</li>
+</ul>
+</li>
+<li>
+<p>再比如：</p>
+<ul>
+<li>当你问 AI “北京的天气怎么样？“</li>
+<li>AI 会特别”注意”关键词”北京”和”天气”</li>
+<li>而不会被其他无关的信息干扰</li>
+</ul>
+</li>
+</ol>
+<p>简单来说，注意力机制就是帮助 AI “抓重点”的能力，让它能够像人类一样，在处理信息时把注意力集中在最重要的部分。这样 AI 就能更好地理解和处理信息，给出更准确的回答。注意力机制极大地增强了模型处理长距离依赖关系的能力，提升了在各种任务中的表现。它的发展也推动了诸如 BERT、GPT 等模型的成功应用。</p>
+<h2 id="什么是强化学习">什么是强化学习？</h2>
+<p><strong>强化学习（Reinforcement Learning, RL）</strong> 是一种机器学习方法，它使智能体（agent）通过与环境交互并根据反馈调整其行为，以最大化累积的奖励。这种学习方式模仿了生物体在复杂环境中学习和适应的过程，通过试错和奖励机制来学习最优的决策策略。</p>
+<p><strong>强化学习</strong>的过程可以用以下的循环来描述：</p>
+<ol>
+<li><strong>初始化</strong>：智能体初始化其策略或价值函数，并开始在环境中执行操作。</li>
+<li><strong>与环境交互</strong>：智能体在环境中选择一个动作，并根据当前的状态执行该动作。</li>
+<li><strong>获取反馈</strong>：环境会根据智能体的动作返回一个奖励（或惩罚）以及新的状态。</li>
+<li><strong>更新策略</strong>：智能体通过调整其策略或价值函数，学习如何选择能带来更多奖励的动作。</li>
+<li><strong>重复</strong>：智能体继续在环境中探索，不断优化其行为，直到它学习到一个有效的策略。</li>
+</ol>
+<p><strong>举例说明</strong>：想象一下训练一只小狗，你想教小狗学会坐下。你会怎么做呢？</p>
+<ol>
+<li><strong>发出指令</strong>： 你说“坐下”。</li>
+<li><strong>观察小狗</strong>： 小狗可能会站着不动，或者做其他动作。</li>
+<li><strong>给予反馈</strong>：
+<ul>
+<li>如果小狗坐下了，你就给它一块骨头（奖励）。</li>
+<li>如果小狗没有坐下，你就什么也不做，或者轻轻纠正它（没有奖励或轻微惩罚）。</li>
+</ul>
+</li>
+</ol>
+<p>通过不断的重复这个过程，小狗就会逐渐明白，“坐下”的指令和“得到骨头”之间是有联系的。它会为了得到骨头（奖励）而学会坐下。</p>
+<p><strong>强化学习就像这样</strong>！它是一种让计算机（人们称之为“智能体”）通过与环境互动来学习的机器学习方法。就像训练小狗一样，智能体通过尝试不同的“动作”，并根据环境的“反馈”（奖励或惩罚）来学习如何做出最佳的“决策”。</p>
+<p><strong>强化学习的几个关键概念：</strong></p>
+<ul>
+<li><strong>智能体（Agent）：</strong> 就是学习的主体，比如上面例子中的小狗，或者是一个游戏中的角色，甚至是一个控制机器人的程序。</li>
+<li><strong>环境（Environment）：</strong> 智能体所处的世界，比如小狗生活的房间，或者是一个游戏的虚拟世界。</li>
+<li><strong>动作（Action）：</strong> 智能体可以做的事情，比如小狗可以坐下、站立、跑动，或者游戏角色可以跳跃、攻击、移动。</li>
+<li><strong>状态（State）：</strong> 环境当前的情况，比如小狗是站着还是坐着，或者游戏角色在地图上的位置。</li>
+<li><strong>奖励（Reward）：</strong> 智能体完成某个动作后，环境给出的反馈。好的动作会得到正向奖励（比如骨头、得分），不好的动作可能会得到负向奖励（比如惩罚、损失）。</li>
+</ul>
+<p><strong>强化学习在很多领域都有应用</strong>，比如：</p>
+<ul>
+<li><strong>游戏：</strong> 像 AlphaGo 这样的人工智能程序，通过强化学习战胜了围棋世界冠军。</li>
+<li><strong>机器人控制：</strong> 让机器人学习如何行走、抓取物体等。</li>
+<li><strong>自动驾驶：</strong> 训练汽车在复杂的道路环境中安全行驶。</li>
+<li><strong>推荐系统：</strong> 根据用户的喜好推荐商品或内容。</li>
+</ul>
+<p>总之，强化学习（RL）是一种通过与环境互动、根据奖励进行学习的机器学习方法。它的目标是让智能体能够在复杂和动态的环境中自主学习最优策略。强化学习已广泛应用于游戏、机器人、自动驾驶、金融等多个领域，并且随着技术的不断进步，未来在实际应用中的潜力仍然非常巨大。</p>
+<h2 id="什么是迁移学习-transfer-learning">什么是迁移学习 (Transfer Learning) ？</h2>
+<p><strong>迁移学习</strong> （Transfer Learning）是一种机器学习方法，旨在将一个领域或任务上学到的知识应用到另一个相关但不同的领域或任务中。与传统机器学习方法通常依赖于从零开始训练一个模型不同，迁移学习通过利用源领域（<code dir="auto">source domain</code>）上学到的知识，帮助模型在目标领域（target domain）中进行更快速和高效的学习。</p>
+<p><strong>迁移学习核心思想</strong>：迁移学习的核心思想是<strong>知识的迁移</strong>，即利用已学到的知识来加速在新任务上的学习，尤其是在目标任务数据不足时。具体来说，如果我们能从一个任务中学到一些有用的知识，这些知识可能对与之相关的其他任务有帮助，迁移学习就是试图通过这种方式减少从零开始学习的成本。</p>
+<p>**先想想我们自己是怎么学习的：**你学会了骑自行车，后来再学骑摩托车是不是就比较容易了？因为你已经掌握了平衡、控制方向等基本技巧。这就是一种“迁移”——把已有的知识应用到新的学习中。</p>
+<p><strong>迁移学习就像这样</strong>！迁移学习是机器学习中的一种方法，它把在一个任务中学到的知识“迁移”到另一个相关的任务上，从而更快、更好地完成新任务。</p>
+<p><strong>举例说明</strong>：假设你教一台电脑识别猫和狗的照片。你用大量的猫和狗的照片训练它，让它学会了区分猫和狗。</p>
+<p>现在，你想让这台电脑识别老虎和狮子的照片。如果从头开始训练，你需要收集大量的老虎和狮子的照片，这很费时费力。</p>
+<p>但是，如果你使用迁移学习，就可以利用之前学习猫和狗的知识。因为老虎和狮子都属于猫科动物，它们和猫有很多相似之处，比如都有相似的身体结构、面部特征等等。</p>
+<p>通过迁移学习，你只需要用少量的老虎和狮子照片“微调”一下之前训练好的模型，就能让电脑很快学会识别老虎和狮子。</p>
+<p><strong>迁移学习的关键点：</strong></p>
+<ul>
+<li><strong>源任务（Source Task）：</strong> 已经学会的任务，比如识别猫和狗。</li>
+<li><strong>目标任务（Target Task）：</strong> 需要学习的新任务，比如识别老虎和狮子。</li>
+<li><strong>迁移：</strong> 把源任务中学到的知识应用到目标任务上。</li>
+</ul>
+<p><strong>迁移学习的优势：</strong></p>
+<ul>
+<li><strong>节省时间和资源：</strong> 不需要从头开始训练模型，大大减少了训练所需的数据量和计算资源。</li>
+<li><strong>提高学习效率：</strong> 可以更快地达到较高的准确率。</li>
+<li><strong>解决数据不足的问题：</strong> 当目标任务的数据量很少时，迁移学习尤其有用。</li>
+</ul>
+<p><strong>再举几个生活中“迁移学习”的例子</strong>：</p>
+<ul>
+<li>你学会了弹钢琴，再去学电子琴就比较容易上手。</li>
+<li>你学会了打羽毛球，再去学网球也更容易掌握一些基本技巧。</li>
+<li>你学会了说中文，再去学习其他语言，比如日语或韩语，也会更容易一些。</li>
+</ul>
+<p>总之，迁移学习就是<strong>把已有的知识应用到新的学习中，就像我们人类学习新事物一样</strong>。在机器学习中，它是一种非常有效的方法，可以帮助我们更快、更好地解决问题。</p>
+<h2 id="什么是元学习">什么是元学习？</h2>
+<p><strong>元学习（Meta Learning）</strong>，又称为“学习如何学习”，是一种旨在让模型能够从过去的经验中快速学习并适应新任务的学习方法。其核心思想是通过在多种任务上训练模型，使其具备良好的泛化能力，从而能够在面对新的、少量样本的数据时快速学习并做出决策。</p>
+<p><strong>元学习的基本思想</strong>：传统的机器学习方法通常需要大量的标注数据和多次训练才能完成任务。然而，在实际应用中，数据可能非常有限或者任务变化较大，这时传统的机器学习方法往往无法有效应对。元学习的目标是让模型在遇到新任务时，能够迅速适应，甚至在只给定少量的训练样本后就做出合理的决策。</p>
+<p>元学习不仅仅关注如何通过给定的训练数据学习，而是关注如何通过多个任务的训练经验，设计一个能够有效“迁移学习”的模型，使其<strong>能够在新的任务上快速学习</strong>。用学习语言的例子来解释元学习：</p>
+<p>想象你已经学会了英语和法语。当你开始学习西班牙语时，你会发现：</p>
+<ul>
+<li>你已经知道”怎么学习一门语言”；</li>
+<li>你知道该先学习基本单词；</li>
+<li>知道该怎么记忆语法规则；</li>
+<li>知道该怎么练习口语；</li>
+</ul>
+<p>这就是元学习：</p>
+<ul>
+<li>不是学习具体的知识；</li>
+<li>而是学习”如何更好地学习”；</li>
+<li>掌握学习的方法和技巧；</li>
+</ul>
+<p>就像一个”学习高手”：</p>
+<ul>
+<li>面对新知识，知道最有效的学习方式；</li>
+<li>能快速找到学习重点；</li>
+<li>知道如何避免常见错误；</li>
+</ul>
+<p>对 AI 来说，元学习就是：</p>
+<ul>
+<li>训练它掌握学习新任务的方法；</li>
+<li>让它能更快地适应新情况；</li>
+<li><strong>用更少的数据学会新技能</strong>；</li>
+</ul>
+<p>总之，<strong>元学习</strong>是一种旨在让模型通过训练多个任务获得“学习如何学习”的能力，能够在面对新任务时快速适应。它在少样本学习、快速任务迁移和强化学习等领域具有广泛应用。随着元学习技术的发展，越来越多的实际问题可以通过这种方法进行高效解决。</p>
+<h2 id="什么是对抗生成网络">什么是对抗生成网络？</h2>
+<p><strong>对抗生成网络（Generative Adversarial Networks, GANs）</strong> 是一种深度学习模型，用于生成逼真的数据样本。它由两个神经网络组成：<strong>生成器（Generator）</strong> 和 <strong>判别器（Discriminator）</strong>，这两个网络通过对抗训练相互博弈，最终使生成器能够生成极为逼真的数据，能够“欺骗”判别器，使其无法分辨真实数据和生成数据之间的差异。</p>
+<p><strong>GANs 的核心思想</strong>：通过“对抗”的方式训练两个网络，一个负责生成数据（生成器），另一个负责判断数据是否真实（判别器）。生成器和判别器的目标是互相对抗，生成器力求产生足够逼真的数据以骗过判别器，而判别器则不断学习如何区分真实数据和生成数据。</p>
+<p><strong>举例说明</strong>：想象一下，你是一个画家，你想画一幅逼真的风景画。你努力地画，然后请一位美术老师来评价。</p>
+<ul>
+<li>如果你画得不够好，老师会指出你的不足之处，比如“树画得不够立体”、“颜色用得不对”等等。</li>
+<li>你会根据老师的建议修改画作，然后再请老师评价。</li>
+</ul>
+<p>通过不断地练习和老师的指导，你的画技会越来越好，最终画出非常逼真的风景画。</p>
+<p><strong>生成对抗网络（GANs）就像这样</strong>！GANs 由两个神经网络组成，它们就像画家和美术老师一样进行“对抗”：</p>
+<ul>
+<li><strong>生成器（Generator）：</strong> 就像画家一样，负责“生成”新的数据，比如图像、音乐、文章等等。它试图创造出尽可能逼真的“假”数据。</li>
+<li><strong>判别器（Discriminator）：</strong> 就像美术老师一样，负责“判别”输入的数据是“真”的（来自真实数据集）还是“假”的（由生成器生成）。</li>
+</ul>
+<p><strong>它们是如何“对抗”的呢？</strong></p>
+<ol>
+<li><strong>生成器生成“假”数据：</strong> 生成器接收一些随机的“噪声”作为输入，然后将其转换成看似真实的数据，比如一张人脸照片。</li>
+<li><strong>判别器进行判别：</strong> 判别器同时接收“真”数据（来自真实人脸照片数据集）和生成器生成的“假”数据，然后判断哪个是“真”的，哪个是“假”的。</li>
+<li><strong>反馈和改进：</strong> 判别器会将判别结果反馈给生成器，告诉生成器它生成的“假”数据哪里不够逼真。生成器根据反馈进行调整，试图生成更逼真的数据。</li>
+</ol>
+<p>这个过程不断重复进行，生成器越来越擅长生成逼真的“假”数据，而判别器也越来越擅长分辨真假。最终，当判别器无法分辨出数据是“真”的还是“假”的时，就说明生成器已经非常成功了。</p>
+<p><strong>GANs 的应用：</strong></p>
+<p>GANs 在很多领域都有应用，比如：</p>
+<ul>
+<li><strong>图像生成：</strong> 生成逼真的人脸照片、风景画、动漫人物等等。</li>
+<li><strong>图像编辑：</strong> 修改照片，比如换脸、修复老照片、图像超分辨率等等。</li>
+<li><strong>音乐生成：</strong> 生成新的音乐作品。</li>
+</ul>
+<p>总之，GANs 通过<strong>两个神经网络的“对抗”学习，使生成器能够生成逼真的数据</strong>。它是一种非常强大的深度学习模型，在很多领域都有广泛的应用前景。</p>
+<h2 id="什么是知识蒸馏">什么是知识蒸馏？</h2>
+<p><strong>知识蒸馏</strong> （<code dir="auto">Knowledge Distillation</code>）是一种在深度学习领域中，旨在将一个复杂的模型（通常称为“教师模型”）的知识转移到一个较小、更简洁的模型（通常称为“学生模型”）中的技术。通过这种方法，学生模型能够在不需要与教师模型一样庞大的参数量的情况下，达到类似的性能表现。</p>
+<p><strong>基本思想</strong>：在传统的深度学习训练中，我们通常使用大型模型（如深度神经网络）进行训练，这些模型拥有非常多的参数和计算量，导致训练和推理过程非常耗时且资源消耗大。知识蒸馏通过将一个已经训练好的大型模型（教师模型）的知识压缩到一个更小的模型（学生模型）中，目的是让学生模型尽可能模拟教师模型的行为，尤其是在输出概率分布和决策上，从而在不牺牲精度的情况下，提升推理效率。</p>
+<p><strong>举例说明</strong>：想象有一位大厨（大模型）和一位学徒（小模型）。大厨做菜非常美味，但需要昂贵的食材和复杂的设备。我们想让学徒也能做出相似的美味菜品，但用更简单的方法。知识蒸馏就是：</p>
+<ul>
+<li>让大厨展示做菜的全过程；</li>
+<li>学徒观察并学习最关键的步骤；</li>
+<li>用更简单的方法复现相似的味道；</li>
+</ul>
+<p>就像把一道复杂的米其林菜谱，简化成家常版本。虽然不是完全一样，但用更少的资源就能做出八分相似的味道。</p>
+<p>总体来说，<strong>知识蒸馏</strong>是一种高效的模型压缩技术，可以在保留高精度的同时，显著提高模型的计算效率，广泛应用于各种实际场景中。</p>
+<h2 id="什么是提示工程">什么是提示工程？</h2>
+<p><strong>提示工程（Prompt Engineering）</strong> 是指在使用语言模型（如 GPT-4、GPT-4o 等）时，通过精心设计输入提示（即“prompt”），使得模型能够产生更准确、相关和高质量的输出的过程。随着大规模语言模型（LLM）在各个领域的广泛应用，提示工程成为了利用这些模型的关键技能之一。通过调整提示的结构、内容、语气或上下文，用户可以引导模型产生不同类型的回答，优化任务的完成效果。</p>
+<h3 id="提示工程的核心思想">提示工程的核心思想</h3>
+<p>语言模型是基于大量数据和上下文进行训练的，它们在生成文本时依赖于输入的提示内容。简单来说，<strong>提示工程</strong>就是<strong>设计和优化输入的提示</strong>，以使得模型能够生成预期的、高质量的输出。</p>
+<p>例如，如果你希望模型提供某个特定领域的详细解释，如何组织提示能有效地引导模型理解任务并生成准确的信息，就是提示工程的工作之一。</p>
+<h3 id="举例说明">举例说明</h3>
+<p>**想想你平时怎么用搜索引擎：**你想在网上查找“如何制作美味的蛋糕”，你会怎么输入搜索词？</p>
+<ul>
+<li>输入“蛋糕”？</li>
+<li>输入“制作蛋糕”？</li>
+<li>输入“如何制作美味的巧克力蛋糕”？</li>
+</ul>
+<p>显然，第三种输入方式更能准确地找到你想要的信息。这就是一个简单的“提示”——你给搜索引擎的指令。</p>
+<p><strong>提示工程就像这样</strong>！提示工程是针对大型语言模型（LLMs），比如 ChatGPT、Claude 等，通过设计、实验和优化“提示词”来引导模型生成高质量、准确和有针对性的输出的技术。</p>
+<h3 id="为什么提示工程很重要">为什么提示工程很重要？</h3>
+<ol>
+<li><strong>模型能力的利用</strong>：大型语言模型具有强大的理解和生成能力，但它们并不会自动理解你需要的任务类型。通过设计合适的提示，可以更好地发挥模型的能力。</li>
+<li><strong>精确控制输出</strong>：根据提示的不同，模型可能生成完全不同风格和内容的回答。通过优化提示，你可以获得更具体、更符合需求的输出。</li>
+<li><strong>降低计算成本</strong>：对于一些复杂的任务，好的提示设计可以减少模型需要的推理步骤和计算量，从而提高效率。</li>
+<li><strong>提高响应质量</strong>：良好的提示设计可以减少不相关的信息，减少误解，提升模型输出的准确性和相关性。</li>
+</ol>
+<h3 id="提示工程的常见策略">提示工程的常见策略</h3>
+<ol>
+<li>
+<p><strong>明确任务描述</strong>：</p>
+<ul>
+<li>明确告诉模型你希望它做什么。例如，直接向模型提出任务：<strong>“请列出五个关于机器学习的常见算法。”</strong></li>
+<li>可以提供额外的上下文，明确任务要求，如限制输出格式：<strong>“请用表格列出五个机器学习算法及其优缺点。”</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>指定输出格式</strong>：</p>
+<ul>
+<li>有时，设计一个合适的格式可以使输出更清晰、结构化。例如，指定输出为一个段落、列表、代码块等，帮助模型理解你想要的结果格式。</li>
+<li>示例：<strong>“用代码块输出一个 Python 实现二分查找的函数。”</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>上下文和背景信息</strong>：</p>
+<ul>
+<li>在提示中提供相关的背景信息或上下文，能够帮助模型更好地理解你的需求。比如，提供一些先前的对话内容或简短的上下文信息，使得模型能够基于这些信息做出更合适的回答。</li>
+<li>示例：<strong>“根据以下产品描述，写一段市场推广文案。”</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>使用示例引导</strong>：</p>
+<ul>
+<li>提供一个示例或者模板，让模型跟随示例进行生成。这种方式对于复杂或多样化的任务特别有效。</li>
+<li>示例：<strong>“下面是一个好的商务邮件模板，请按照这个格式编写一封邮件邀请客户。”</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>开放性问题与限定性问题</strong>：</p>
+<ul>
+<li>对于需要详细解释或创造性输出的任务，提出开放性问题可能更合适。例如，<strong>“解释什么是量子计算？”</strong>。</li>
+<li>如果需要一个简洁的答案，使用限定性问题，例如**“量子计算的定义是什么？”**。</li>
+</ul>
+</li>
+<li>
+<p><strong>多轮对话提示</strong>：</p>
+<ul>
+<li>对话型任务通常涉及多轮交互，因此每轮交互的提示设计都应基于前一轮的结果。可以在每次提问时，引用之前的回答来引导模型继续生成。</li>
+<li>示例：<strong>“根据上面提到的三个优势，列出它们可能的缺点。”</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>避免歧义</strong>：</p>
+<ul>
+<li>尽量避免使用模糊或多义性强的语言，因为这可能导致模型生成不相关或错误的答案。明确的提示往往能更好地控制输出。</li>
+</ul>
+</li>
+</ol>
+<h3 id="提示工程的应用场景">提示工程的应用场景</h3>
+<p>提示工程广泛应用于许多实际任务中，包括但不限于：</p>
+<ol>
+<li>
+<p><strong>文本生成</strong>：</p>
+<ul>
+<li><strong>写作和内容创作</strong>：提示工程在自动生成文章、博客、广告文案等创意写作中至关重要。通过合理的提示，可以让模型生成有针对性的、符合风格要求的内容。</li>
+</ul>
+</li>
+<li>
+<p><strong>代码生成</strong>：</p>
+<ul>
+<li><strong>程序员助手</strong>：通过适当的提示，用户可以让语言模型生成特定的代码片段，甚至帮助解决编程问题。例如，要求模型写一个特定功能的 Python 函数。</li>
+</ul>
+</li>
+<li>
+<p><strong>翻译</strong>：</p>
+<ul>
+<li><strong>语言翻译</strong>：通过适当的提示，用户可以使模型在特定上下文中提供准确的翻译。例如，指定翻译风格或用词，如正式或口语化的翻译。</li>
+</ul>
+</li>
+<li>
+<p><strong>对话系统</strong>：</p>
+<ul>
+<li><strong>虚拟助手与聊天机器人</strong>：在与模型进行对话时，如何设置问题和回答的提示，决定了模型的响应质量。比如，明确要求模型回答具体问题或提供详细信息。</li>
+</ul>
+</li>
+<li>
+<p><strong>信息检索和问答系统</strong>：</p>
+<ul>
+<li>通过精心设计提示，可以让模型从大量文档或数据库中提取相关信息，快速生成高质量的问答对。例如，提出一个问题时，明确要求返回的答案应包含具体数据或案例。</li>
+</ul>
+</li>
+<li>
+<p><strong>教育和培训</strong>：</p>
+<ul>
+<li>通过提示工程，模型可以帮助生成题库、解释概念、或引导学生完成作业。这种技术在自动化教学和辅导中越来越被采用。</li>
+</ul>
+</li>
+<li>
+<p><strong>情感分析与社会情感智能</strong>：</p>
+<ul>
+<li>通过设计合适的提示，帮助模型判断文本的情感倾向，提供关于某个话题的情感反馈。</li>
+</ul>
+</li>
+</ol>
+<h3 id="提示工程的挑战与未来">提示工程的挑战与未来</h3>
+<ol>
+<li>
+<p><strong>多样性与复杂性</strong>：</p>
+<ul>
+<li>由于语言模型的输出受到提示的影响，设计有效提示需要考虑多种可能性和多样性。不同的提示可能导致完全不同的输出结果，因此设计高效、准确的提示成为一项挑战。</li>
+</ul>
+</li>
+<li>
+<p><strong>理解模型的局限性</strong>：</p>
+<ul>
+<li>虽然语言模型在许多任务中表现优秀，但它们并不总是能理解复杂的任务背景或常识。因此，提示设计时要意识到模型的局限性，尽量避免过于复杂或超出模型能力范围的提示。</li>
+</ul>
+</li>
+<li>
+<p><strong>标准化与自动化</strong>：</p>
+<ul>
+<li>随着提示工程的普及，可能会发展出一些标准化的提示模板和方法，帮助用户快速生成有效的提示。此外，自动化生成或优化提示的工具也有可能成为未来的发展方向。</li>
+</ul>
+</li>
+</ol>
+<h3 id="总结">总结</h3>
+<p><strong>提示工程</strong> 是在使用大型语言模型时，精心设计输入提示来优化模型输出的过程。它涉及任务的明确描述、上下文信息的提供、输出格式的要求等，目的是帮助模型理解用户需求并产生更符合要求的输出。随着 AI 和自然语言处理技术的发展，提示工程在各个行业中都越来越重要，并且有着广泛的应用场景。</p>  </div> <footer class="astro-g3vulqrk"> <div class="meta sl-flex astro-g3vulqrk">  <p>最近更新： <time datetime="2025-02-16T06:27:33.673Z">2025年2月16日</time></p> </div> <div class="pagination-links astro-34tgwgkv" dir="ltr"> <a href="/thinking/the-tao-of-wealth/" rel="prev" class="astro-34tgwgkv"> <svg aria-hidden="true" class="astro-34tgwgkv astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg>  <span class="astro-34tgwgkv"> 上一页 <br class="astro-34tgwgkv"> <span class="link-title astro-34tgwgkv">财富之道：哈里·布朗的 17 条财务安全黄金法则</span> </span> </a> <a href="/articles/blueos-app-development-how-to-use-watch-to-monitor-data/" rel="next" class="astro-34tgwgkv"> <svg aria-hidden="true" class="astro-34tgwgkv astro-5ik4roku" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg>  <span class="astro-34tgwgkv"> 下一页 <br class="astro-34tgwgkv"> <span class="link-title astro-34tgwgkv">BlueOS 应用开发，如何通过 $watch 监听数据？</span> </span> </a> </div>  </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
