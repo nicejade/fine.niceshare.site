@@ -10,6 +10,12 @@
 
 .bili-video { width: 100%; border: none; }
 
+.no-zoom {
+  webkit-filter: drop-shadow(0px 0px 20px lightgrey);
+  filter: drop-shadow(0px 0px 20px lightgrey);
+  margin: 20px auto;
+}
+
 .link-title {
   font-size: var(--sl-text-base);
 }
