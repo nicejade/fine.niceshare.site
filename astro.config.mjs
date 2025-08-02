@@ -1,9 +1,10 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
-import tailwind from '@astrojs/tailwind'
 import starlightLinksValidator from 'starlight-links-validator'
 import image from '@astrojs/image'
+import starlightThemeNova from 'starlight-theme-nova'
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,13 +16,16 @@ export default defineConfig({
 	integrations: [
 		svelte(),
 		starlight({
-			plugins: [starlightLinksValidator()],
+			plugins: [starlightLinksValidator(), starlightThemeNova()],
 			title: '缘知随心庭',
-			social: {
-				github: 'https://github.com/nicejade/fine.niceshare.site',
-				mastodon: 'https://mastodon.social/@nicejade',
-				'x.com': 'https://x.com/MarshalXuan',
-			},
+			social: [
+				{ icon: 'mastodon', label: 'Mastodon', href: 'https://mastodon.social/@nicejade' },
+				{ icon: 'telegram', label: 'Telegram', href: 'https://t.me/nicejade' },
+				{ icon: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/@MarshalXuan' },
+				{ icon: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/nice.jade.yang' },
+				{ icon: 'x.com', label: 'X', href: 'https://x.com/MarshalXuan' },
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/nicejade/homepage' },
+			],
 			components: {
         // Override the default `MarkdownContent` component.
 				MarkdownContent: './src/components/MarkdownContent.astro',
@@ -105,7 +109,6 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: '自探索',
-					tableOfContents: false,
 					autogenerate: { directory: 'explore' },
 				},
 				{
@@ -134,7 +137,6 @@ export default defineConfig({
 				},
 			],
 		}),
-		tailwind(),
 		image({
 			serviceEntryPoint: '@astrojs/image/sharp',
 			serviceConfig: {
@@ -142,4 +144,5 @@ export default defineConfig({
 			},
 		}),
 	],
+	vite: { plugins: [tailwindcss()] },
 })

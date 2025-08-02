@@ -1,3 +1,31 @@
-/* @tailwind base; */
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@layer base, starlight, theme, components, utilities;
+
+@import '@astrojs/starlight-tailwind';
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@layer base {
+  :root {
+    --color-brand: #f196f3; 
+    --color-primary: #1e40af;
+    --color-secondary: #1f2937;
+  }
+}
+
+@theme {
+  --color-brand: #2196f3; 
+  --color-black: #212121;
+  --color-grey: #565656;
+  --color-silver: #ececec;
+  --color-warn: #ff9800;
+  --color-error: #f44336;
+  --color-success: #4caf50;
+  --color-info: #2196f3;
+  --shadow-custom-white: 8px 8px 20px 2px #ebebeb; 
+  --shadow-custom-white-xl: 8px 8px 30px 6px #c3c3c3;
+  --shadow-custom-dark: 8px 8px 20px 2px #212121;
+  --shadow-custom-dark-xl: 8px 8px 20px 2px #363636;
+}

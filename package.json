@@ -1,7 +1,7 @@
 {
   "name": "fine-niceshare-site",
   "type": "module",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -12,18 +12,22 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.5.5",
+    "@astrojs/check": "^0.9.4",
     "@astrojs/image": "^0.18.0",
-    "@astrojs/starlight": "^0.20.1",
-    "@astrojs/svelte": "^5.1.0",
-    "@astrojs/tailwind": "^5.1.0",
-    "astro": "^4.3.5",
+    "@astrojs/starlight": "0.35.2",
+    "@astrojs/starlight-tailwind": "^4.0.1",
+    "@astrojs/svelte": "7.1.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "astro": "5.12.5",
     "hint.css": "^3.0.0",
     "medium-zoom": "^1.1.0",
-    "sharp": "^0.33.5",
     "starlight-links-validator": "^0.6.0",
-    "svelte": "^4.2.12",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3"
+    "starlight-theme-nova": "^0.9.2",
+    "svelte": "^5.20.5",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5",
+    "typescript": "^5.8.2"
   }
 }

@@ -1,11 +1,35 @@
 :root {
-  --sl-text-5xl: 1.8rem;
+  --sl-text-5xl: 2rem;
   --sl-text-4xl: 1.6rem;
   --sl-text-3xl: 1.4rem;
   --sl-text-2xl: 1.2rem;
   --sl-text-xl: 1.125rem;
   --sl-text-lg: 1rem;
-  --sl-color-accent: #2196f3 !important;
+}
+
+h1 {
+  font-size: var(--sl-text-5xl);
+  font-weight: 600;
+  font-family: cursive;
+}
+
+h2 {
+  font-size: var(--sl-text-4xl);
+}
+
+h3 {
+  font-size: var(--sl-text-3xl);
+}
+
+svg {
+  --sl-icon-size: 1.2rem !important;
+  font-size: var(--sl-icon-size) !important;
+  width: var(--sl-icon-size) !important;
+  height: var(--sl-icon-size) !important;
+}
+
+.header {
+  padding: 0 1rem;
 }
 
 .bili-video { width: 100%; border: none; }
@@ -18,6 +42,22 @@
 
 .link-title {
   font-size: var(--sl-text-base);
+}
+
+.site-title {
+  img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: cover;
+  }
+}
+
+.tagline {
+  font-weight: black;
+  background: linear-gradient(to bottom right,#aa4b6b, #6b6b83, #3b8d99);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
 }
 
 select {
