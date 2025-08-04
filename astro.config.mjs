@@ -4,7 +4,7 @@ import svelte from '@astrojs/svelte'
 import starlightLinksValidator from 'starlight-links-validator'
 import image from '@astrojs/image'
 import starlightThemeNova from 'starlight-theme-nova'
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/vite'
 
 // https://astro.build/config
 export default defineConfig({
