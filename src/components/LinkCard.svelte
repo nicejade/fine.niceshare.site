@@ -29,7 +29,7 @@
 <div class="rounded-lg p-5 transition-shadow duration-150 ease-in-out relative
   { isDarkMode ? "shadow-custom-dark hover:shadow-custom-dark-xl" : "shadow-custom-white hover:shadow-custom-white-xl" }">
   <a href="{link + '?ref=niceshare.site'}" target="_blank" rel="noopener"
-    class="text-xl font-medium no-underline hover:cursor-pointer ">
+    class="text-xl font-medium !no-underline hover:cursor-pointer">
     <h3 class="text-base text-black hover:text-brand">{title}</h3>
 		<div class="text-sm font-medium text-grey no-underline ">
     	{desc}
