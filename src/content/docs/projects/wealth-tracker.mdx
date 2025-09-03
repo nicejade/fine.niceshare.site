@@ -31,7 +31,9 @@ description: 生财有迹（Wealth Tracker）是一款专注于个人资产分�
 
 [https://fund.lovejade.cn/](https://fund.lovejade.cn/)
 
+:::caution
 请注意，这是一个公共演示环境，因此请勿在其中输入任何真实的个人财务信息。建议您在体验后，考虑按照本文档的指导，在自己的环境中部署和使用"生财有迹"，以确保您的财务数据的隐私和安全。
+:::
 
 如果您在使用过程中遇到任何问题或有反馈意见，欢迎通过项目的  [GitHub 页面](https://github.com/nicejade/wealth-tracker/)与我们联系。您的宝贵意见将帮助我们不断改进这一工具，以更好地满足用户的需求。
 
@@ -163,8 +165,8 @@ cd server && pnpm start
 - [x] 借助 AI 辅助分析；
 - [x] **支持多种主流货币**；
 - [x] [支持记录📝见解](https://github.com/nicejade/wealth-tracker/issues/20)
+- [x] [资产数据安全性](https://github.com/nicejade/wealth-tracker/issues/14)；
 - [ ] 设置阶段性目标；
-- [ ] 资产数据安全性；
 
 ## 常见问题
 
@@ -190,6 +192,72 @@ ExchangeRate-API 支持免费使用，其版特点是：
 - 支持主流货币转换；
 
 注：若未设置 API KEY，系统将使用 2025 年 2 月 15 日的默认汇率数据。
+
+### 如何开启密码保护？
+
+:::note
+为了让您的数据更加安全，您可以开启密码保护。这并非必要选项，您可以自行决定是否开启。根据不同部署方式，配置方式有所不同。您可以通过设置以下环境变量来配置应用的行为：
+:::
+
+- `ALLOW_PASSWORD`: **设置为 `true` 启用密码保护功能**；
+- `PEPPER_SECRET`: 设置它为用户密码提供更强大的保护；
+
+Docker Compose 部署方式配置文件参考如下：
+
+<details> 
+<summary>docker-compose.yaml</summary>
+```bash
+version: '3.8'
+
+services:
+  wealth-tracker:
+    image: nicejade/wealth-tracker
+    container_name: wealth-tracker
+    ports:
+      - '8888:8888'
+    volumes:
+      - ./data:/app/data
+    environment:
+      - ALLOW_PASSWORD=true
+      - PEPPER_SECRET=your-pepper-secret
+    restart: unless-stopped
+
+volumes:
+  data:
+```
+</details>
+
+PM2 部署方式配置文件参考如下：
+
+<details>
+<summary>ecosystem.config.js</summary>
+```bash
+module.exports = {
+  apps: [
+    {
+      name: 'wealth-tracker',
+      script: 'node dist/index.js',
+      args: '',
+      interpreter: 'none',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
+      env: {
+        PORT: 8888,
+        NODE_ENV: 'production',
+        ALLOW_PASSWORD: true,
+        PEPPER_SECRET: your-pepper-secret,
+      },
+    },
+  ],
+}
+```
+</details>
+
+:::caution
+本地部署应用，密码加密存储数据库，且并未提供密码找回功能。**开启密码保护并设置密码后，请务必妥善保管密码，避免遗忘。一旦忘记密码，您将无法访问您的数据**。
+:::
 
 ### 未来有哪些规划？
 
