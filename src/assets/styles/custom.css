@@ -5,8 +5,6 @@
   --sl-text-2xl: 1.2rem;
   --sl-text-xl: 1.125rem;
   --sl-text-lg: 1rem;
-  --sl-color-accent: var(--color-black);
-  --sl-color-white: var(--color-black);
 }
 
 h1 {
@@ -95,12 +93,16 @@ select {
 }
 
 #starlight__sidebar a:hover {
-  transform: scale(1.023);
+  transform: scale(1.06);
 }
 
 .sidebar-content a:hover {
   border-radius: 0.5rem;
   background-color: var(--color-silver);
+}
+
+[data-theme='dark'] .sidebar-content a:hover {
+  background-color: var(--color-black);
 }
 
 .sl-markdown-content a {
