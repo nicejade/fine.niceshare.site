@@ -7,7 +7,7 @@
   let isDarkMode = false
 
   onMount(() => {
-    isDarkMode = localStorage.getItem('starlight-theme') === 'dark'
+    isDarkMode = localStorage.getItem('starlight-theme') === 'dark' || document.documentElement.getAttribute('data-theme') === 'dark'
 
     const observer = new MutationObserver(mutationsList => {
       for (let mutation of mutationsList) {
