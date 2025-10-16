@@ -24,7 +24,7 @@ export default defineConfig({
 				{ icon: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/@MarshalXuan' },
 				{ icon: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/nice.jade.yang' },
 				{ icon: 'x.com', label: 'X', href: 'https://x.com/MarshalXuan' },
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/nicejade/homepage' },
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/nicejade/fine.niceshare.site' },
 			],
 			components: {
         // Override the default `MarkdownContent` component.
@@ -84,6 +84,14 @@ export default defineConfig({
 					attrs: {
 						name: 'theme-color',
 						content: '#ffffff',
+					},
+				},
+				{
+          tag: 'script',
+          attrs: {
+            src: 'https://www.googletagmanager.com/gtag/js?id=AW-17656588690',
+						'id': 'AW-17656588690',
+            async: true,
 					},
 				},
 				{
