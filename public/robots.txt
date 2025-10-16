@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow build artifacts
+Disallow: /_astro/
+
+Sitemap: https://fine.niceshare.site/sitemap-index.xml
+

@@ -56,6 +56,7 @@ export default defineConfig({
 						href: '/apple-touch-icon.png',
 					},
 				},
+        { tag: 'link', attrs: { rel: 'alternate', type: 'application/rss+xml', title: '缘知随心庭 RSS', href: '/feed.xml' } },
 				{
 					tag: 'link',
 					attrs: {
@@ -85,6 +86,21 @@ export default defineConfig({
 						name: 'theme-color',
 						content: '#ffffff',
 					},
+				},
+				{
+					tag: 'script',
+					attrs: { type: 'application/ld+json' },
+					content: JSON.stringify({
+						'@context': 'https://schema.org',
+						'@type': 'WebSite',
+						name: '缘知随心庭',
+						url: 'https://fine.niceshare.site/',
+						potentialAction: {
+							'@type': 'SearchAction',
+							target: 'https://fine.niceshare.site/?q={search_term_string}',
+							'query-input': 'required name=search_term_string'
+						}
+					}),
 				},
 				{
           tag: 'script',
