@@ -19,7 +19,7 @@ export default defineConfig({
 			plugins: [starlightLinksValidator(), starlightThemeNova()],
 			title: '缘知随心庭',
 			social: [
-				{ icon: 'mastodon', label: 'Mastodon', href: 'https://mastodon.social/@nicejade' },
+				{ icon: 'rss', label: 'RSS', href: 'https://fine.niceshare.site/feed.xml' },
 				{ icon: 'telegram', label: 'Telegram', href: 'https://t.me/nicejade' },
 				{ icon: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/@MarshalXuan' },
 				{ icon: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/nice.jade.yang' },
@@ -30,6 +30,8 @@ export default defineConfig({
         // Override the default `MarkdownContent` component.
 				MarkdownContent: './src/components/MarkdownContent.astro',
 				LastUpdated: './src/components/LastUpdated.astro',
+				// 添加自定义 Footer 组件
+				Footer: './src/components/CustomFooter.astro',
       },
 			logo: {
 				src: './src/assets/images/logo.svg',
@@ -112,6 +114,10 @@ export default defineConfig({
 				},
 				{
           tag: 'script',
+					content: "gtag('event', 'conversion', {'send_to': 'AW-17656588690/B_sqCMnNr68bEJLTqONB'});"
+				},
+				{
+          tag: 'script',
           attrs: {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE',
 						'id': 'G-7NRFYFR8BE',
@@ -148,12 +154,12 @@ export default defineConfig({
 					autogenerate: { directory: 'projects' },
 				},
 				{
-					label: '爱音乐',
-					autogenerate: { directory: 'music' },
-				},
-				{
 					label: '好思维',
 					autogenerate: { directory: 'thinking' },
+				},
+				{
+					label: '爱音乐',
+					autogenerate: { directory: 'music' },
 				},
 				{
 					label: '新文章',

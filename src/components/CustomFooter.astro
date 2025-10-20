@@ -1,0 +1,135 @@
+---
+import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+import FooterLinks from './FooterLinks.svelte';
+---
+
+<section>
+  <!-- 使用默认的 Footer 组件 -->
+  <DefaultFooter />
+  
+  <div class="max-w-screen-xl mx-auto px-4">
+    <FooterLinks client:only="svelte" />
+  </div>
+</section>
+
+<style>
+  .custom-footer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 3rem;
+  }
+  
+  .footer-custom-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .footer-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+  
+  .footer-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    color: #e0e0e0;
+  }
+  
+  .footer-section p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-section ul li a {
+    color: #e0e0e0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-section ul li a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .social-links a,
+  .rss-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e0e0e0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .social-links a:hover,
+  .rss-link:hover {
+    color: #fff;
+  }
+  
+  .icon {
+    font-size: 1.2rem;
+  }
+  
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1.5rem;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .footer-bottom p {
+    margin: 0.5rem 0;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+  }
+  
+  .footer-bottom a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-bottom a:hover {
+    color: #e0e0e0;
+    text-decoration: underline;
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .footer-custom-content {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .social-links {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+</style>

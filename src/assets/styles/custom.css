@@ -5,6 +5,7 @@
   --sl-text-2xl: 1.2rem;
   --sl-text-xl: 1.125rem;
   --sl-text-lg: 1rem;
+  --sl-icon-size: 1.4rem !important;
 }
 
 h1 {
@@ -21,12 +22,6 @@ h3 {
   font-size: var(--sl-text-3xl);
 }
 
-svg {
-  --sl-icon-size: 1.2rem !important;
-  font-size: var(--sl-icon-size) !important;
-  width: var(--sl-icon-size) !important;
-  height: var(--sl-icon-size) !important;
-}
 
 .header {
   padding: 0 1rem;
@@ -113,4 +108,9 @@ select {
 .sl-markdown-content a:hover {
   text-decoration: underline;
   text-decoration-thickness: 2px;
+}
+
+.nova-icon-button {
+  will-change: transform;
+  transform: scale(1.2) translateZ(0);
 }
