@@ -109,12 +109,16 @@ export default defineConfig({
           attrs: {
             src: 'https://www.googletagmanager.com/gtag/js?id=AW-17656588690',
 						'id': 'AW-17656588690',
-            async: true,
+						async: true,
 					},
 				},
 				{
           tag: 'script',
-					content: "gtag('event', 'conversion', {'send_to': 'AW-17656588690/B_sqCMnNr68bEJLTqONB'});"
+					content: "window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);};gtag('js', new Date());gtag('config', 'AW-17656588690');"
+				},
+				{
+          tag: 'script',
+					content: "gtag('event', 'conversion', {'send_to': 'AW-17656588690/nAf2CPHn0K4bEJLTqONB'});"
 				},
 				{
           tag: 'script',
