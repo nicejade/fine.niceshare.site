@@ -37,10 +37,10 @@
     {/each}
   </div>
 
-  <div class="w-full text-base flex flex-row flex-wrap justify-center items-center">
-    <span class="mx-3 text-gray-400 pr-2">Copyright © {currentYear}</span>
+  <div class="w-full text-base text-grey flex flex-row flex-wrap justify-center items-center">
+    <span class="mx-3 pr-2">Copyright © {currentYear}</span>
     <a
-      class="text-gray-400 cursor-pointer hover:text-brand transition-colors"
+      class="cursor-pointer hover:text-brand transition-colors"
       target="_blank"
       rel="external noopener"
       href={assembleExternalLink('https://www.jeffjade.com')}
