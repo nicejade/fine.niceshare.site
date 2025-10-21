@@ -1,7 +1,6 @@
 <p align="center">
   <a href="https://fine.niceshare.site/" target="_blank">
-    <img width="128"
-    src="https://github.com/nicejade/fine.niceshare.site/blob/master/public/favicon.svg?raw=true">
+    <img width="128" src="https://github.com/nicejade/fine.niceshare.site/blob/master/public/favicon.svg?raw=true">
   </a>
 </p>
 
@@ -34,6 +33,19 @@
 - [MDX](https://mdxjs.com/): 允许您在 Markdown 内容中使用 JSX。您可以导入交互式图表或警报等组件，并将它们嵌入到您的内容中。这使得使用组件编写长篇内容变得非常有趣。
 - [TailwindCSS](https://tailwindcss.com/): 一个 CSS 框架，它提供了大量的工具类，使得开发者能够快速构建出响应式和定制化的 UI 设计。
 - [TypeScript](https://www.typescriptlang.org/): JavaScript 的超集，它引入了静态类型系统，帮助开发者在开发大型应用时提高代码的质量和开发效率。
+
+## 相关链接
+
+- [清风明月轩](https://www.lovejade.cn//?ref=github.com)
+- [逍遥自在轩](https://niceshare.site/?ref=github.com)
+- [晚晴幽草轩](https://www.jeffjade.com/nicelinks?ref=github.com)
+- [玉桃文飨轩](https://share.lovejade.cn/nicelinks?ref=github.com)
+- [缘知随心庭](https://fine.niceshare.site/?ref=github.com)
+- [静轩之别苑](https://quickapp.lovejade.cn/?ref=github.com)
+- [悠然宜想亭](https://forum.lovejade.cn//?ref=github.com)
+- [SegmentFault](https://segmentfault.com/u/jeffjade)
+- [X（Twitter）](https://x.com/MarshalXuan)
+- [Facebook](https://www.facebook.com/nice.jade.yang)
 
 ## 📄 许可证
 
