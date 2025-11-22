@@ -5,6 +5,7 @@ import starlightLinksValidator from 'starlight-links-validator'
 import image from '@astrojs/image'
 import starlightThemeNova from 'starlight-theme-nova'
 import tailwindcss from '@tailwindcss/vite'
+import compress from 'astro-compress'
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,6 +14,12 @@ export default defineConfig({
 		host: true,
 	},
 	site: 'https://fine.niceshare.site/',
+	output: 'static',
+	compressHTML: true,
+	build: {
+		assets: '_astro',
+		inlineStylesheets: 'auto',
+	},
 	integrations: [
 		svelte(),
 		starlight({
@@ -50,6 +57,31 @@ export default defineConfig({
 				'./src/assets/styles/custom.css',
 			],
 			head: [
+				// 预加载关键资源
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: 'https://fine.niceshare.site/favicon.svg',
+						as: 'image',
+					},
+				},
+				// DNS 预解析
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'dns-prefetch',
+						href: 'https://www.googletagmanager.com',
+					},
+				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'dns-prefetch',
+						href: 'https://pagead2.googlesyndication.com',
+					},
+				},
+				// 图标配置
 				{
 					tag: 'link',
 					attrs: {
@@ -58,11 +90,11 @@ export default defineConfig({
 						href: '/apple-touch-icon.png',
 					},
 				},
-        { tag: 'link', attrs: { rel: 'alternate', type: 'application/rss+xml', title: '缘知随心庭 RSS', href: '/feed.xml' } },
 				{
 					tag: 'link',
 					attrs: {
 						rel: 'icon',
+						type: 'image/png',
 						sizes: '32x32',
 						href: '/favicon-32x32.png',
 					},
@@ -71,6 +103,7 @@ export default defineConfig({
 					tag: 'link',
 					attrs: {
 						rel: 'icon',
+						type: 'image/png',
 						sizes: '16x16',
 						href: '/favicon-16x16.png',
 					},
@@ -78,15 +111,91 @@ export default defineConfig({
 				{
 					tag: 'link',
 					attrs: {
-						manifest: '/site.webmanifest',
-						re: 'manifest',
+						rel: 'manifest',
+						href: '/site.webmanifest',
 					},
 				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'alternate',
+						type: 'application/rss+xml',
+						title: '缘知随心庭 RSS',
+						href: '/feed.xml',
+					},
+				},
+				// 主题颜色和视口配置
 				{
 					tag: 'meta',
 					attrs: {
 						name: 'theme-color',
 						content: '#ffffff',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'viewport',
+						content: 'width=device-width, initial-scale=1, viewport-fit=cover',
+					},
+				},
+				// SEO 元标签
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'description',
+						content: '缘知随心庭，探索技术、哲学与生活智慧的深度博客。聚焦 BlueOS 系统开发、Tailwind CSS 工程实践、高效开源工具与被动收入构建。同时，记录对哲学智慧、思维模型与认知升级的持续探索。以有涯随无涯，缘知而行，沉心以笔。在信息洪流中，尝试锚定理性与好奇，追寻技术与人文交汇的真谛。所有思考沉淀于此，愿与您共鸣。',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'keywords',
+						content: '技术博客, 音乐推荐, 思维探索, 自部署, 自动化, 作品集, 音乐鉴赏分享, BlueOS 开发, Tailwind CSS, 编程开发, 哲学智慧, 开源工具, 睡后收入构建',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'author',
+						content: 'MarshalXuan',
+					},
+				},
+				// Open Graph 标签
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:type',
+						content: 'website',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:site_name',
+						content: '缘知随心庭',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:locale',
+						content: 'zh_CN',
+					},
+				},
+				// Twitter Card 标签
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:card',
+						content: 'summary_large_image',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:creator',
+						content: '@MarshalXuan',
 					},
 				},
 				{
@@ -104,39 +213,37 @@ export default defineConfig({
 						}
 					}),
 				},
+				// Google Analytics 和 Ads 脚本优化
 				{
-          tag: 'script',
-          attrs: {
-            src: 'https://www.googletagmanager.com/gtag/js?id=AW-17656588690',
-						'id': 'AW-17656588690',
+					tag: 'script',
+					attrs: {
+						src: 'https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE',
 						async: true,
 					},
 				},
 				{
-          tag: 'script',
-					content: "window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);};gtag('js', new Date());gtag('config', 'AW-17656588690');"
-				},
-				{
-          tag: 'script',
-					content: "gtag('event', 'conversion', {'send_to': 'AW-17656588690/nAf2CPHn0K4bEJLTqONB'});"
-				},
-				{
-          tag: 'script',
-          attrs: {
-            src: 'https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE',
-						'id': 'G-7NRFYFR8BE',
-            defer: true,
+					tag: 'script',
+					attrs: {
+						src: 'https://www.googletagmanager.com/gtag/js?id=AW-17656588690',
+						async: true,
 					},
 				},
 				{
-          tag: 'script',
-					content: "window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-7NRFYFR8BE');"
+					tag: 'script',
+					content: `
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', 'G-7NRFYFR8BE');
+						gtag('config', 'AW-17656588690');
+					`,
 				},
 				{
 					tag: 'script',
 					attrs: {
-            src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758',
-            defer: true,
+						src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758',
+						async: true,
+						crossorigin: 'anonymous',
 					},
 				},
 			],
@@ -174,9 +281,40 @@ export default defineConfig({
 		image({
 			serviceEntryPoint: '@astrojs/image/sharp',
 			serviceConfig: {
-				formats: ['png'], // 只生成 PNG
+				formats: ['webp', 'avif', 'png'], // 支持现代格式
 			},
 		}),
+		compress({
+			HTML: true,
+			CSS: true,
+			JavaScript: true,
+			Image: true,
+			SVG: true,
+			Logger: 1,
+		}),
 	],
-	vite: { plugins: [tailwindcss()] },
+	vite: {
+		plugins: [tailwindcss()],
+		build: {
+			target: 'es2022',
+			cssTarget: 'chrome80',
+			minify: 'terser',
+			terserOptions: {
+				compress: {
+					drop_console: true,
+					drop_debugger: true,
+				},
+			},
+			rollupOptions: {
+				output: {
+					manualChunks: {
+						vendor: ['svelte'],
+					},
+				},
+			},
+		},
+		ssr: {
+			noExternal: ['starlight-theme-nova'],
+		},
+	},
 })

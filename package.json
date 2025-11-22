@@ -28,6 +28,7 @@
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
+    "astro-compress": "^2.3.8",
     "sharp": "^0.33.5",
     "typescript": "^5.8.2"
   }
