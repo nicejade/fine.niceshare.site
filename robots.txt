@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Disallow build artifacts and admin areas
+Disallow: /_astro/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /*?*
+
+# Allow important files
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap-index.xml
+Allow: /feed.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://fine.niceshare.site/sitemap-index.xml
+
+# Host declaration
+Host: https://fine.niceshare.site
+
