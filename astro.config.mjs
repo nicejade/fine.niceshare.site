@@ -269,6 +269,10 @@ export default defineConfig({
 					autogenerate: { directory: 'thinking' },
 				},
 				{
+					label: '读好书',
+					autogenerate: { directory: 'books' },
+				},
+				{
 					label: '爱音乐',
 					autogenerate: { directory: 'music' },
 				},
