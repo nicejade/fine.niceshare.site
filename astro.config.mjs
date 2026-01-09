@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import starlightLinksValidator from 'starlight-links-validator'
-import image from '@astrojs/image'
 import starlightThemeNova from 'starlight-theme-nova'
 import tailwindcss from '@tailwindcss/vite'
 import compress from 'astro-compress'
@@ -19,6 +18,18 @@ export default defineConfig({
 	build: {
 		assets: '_astro',
 		inlineStylesheets: 'auto',
+	},
+	prefetch: {
+		prefetchAll: true, // 启用智能预取
+		defaultStrategy: 'viewport', // 当链接进入视口时预取
+	},
+	image: {
+		// 使用 Astro 5 内置图片优化
+		service: {
+			entrypoint: 'astro/assets/services/sharp',
+		},
+		domains: ['fine.niceshare.site'],
+		remotePatterns: [{ protocol: 'https' }],
 	},
 	integrations: [
 		svelte(),
@@ -57,28 +68,36 @@ export default defineConfig({
 				'./src/assets/styles/custom.css',
 			],
 			head: [
-				// 预加载关键资源
+				// 预连接关键域名（比 dns-prefetch 更快）
 				{
 					tag: 'link',
 					attrs: {
-						rel: 'preload',
-						href: 'https://fine.niceshare.site/favicon.svg',
-						as: 'image',
-					},
-				},
-				// DNS 预解析
-				{
-					tag: 'link',
-					attrs: {
-						rel: 'dns-prefetch',
+						rel: 'preconnect',
 						href: 'https://www.googletagmanager.com',
+						crossorigin: 'anonymous',
+					},
+				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preconnect',
+						href: 'https://pagead2.googlesyndication.com',
+						crossorigin: 'anonymous',
+					},
+				},
+				// DNS 预解析作为降级方案
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'dns-prefetch',
+						href: 'https://www.google-analytics.com',
 					},
 				},
 				{
 					tag: 'link',
 					attrs: {
 						rel: 'dns-prefetch',
-						href: 'https://pagead2.googlesyndication.com',
+						href: 'https://www.googleadservices.com',
 					},
 				},
 				// 图标配置
@@ -213,38 +232,45 @@ export default defineConfig({
 						}
 					}),
 				},
-				// Google Analytics 和 Ads 脚本优化
-				{
-					tag: 'script',
-					attrs: {
-						src: 'https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE',
-						async: true,
-					},
-				},
-				{
-					tag: 'script',
-					attrs: {
-						src: 'https://www.googletagmanager.com/gtag/js?id=AW-17656588690',
-						async: true,
-					},
-				},
+				// 延迟加载 Google Analytics 和 Ads（首屏后加载）
 				{
 					tag: 'script',
 					content: `
-						window.dataLayer = window.dataLayer || [];
-						function gtag(){dataLayer.push(arguments);}
-						gtag('js', new Date());
-						gtag('config', 'G-7NRFYFR8BE');
-						gtag('config', 'AW-17656588690');
+						// 延迟加载分析脚本，提升首屏性能
+						window.addEventListener('load', function() {
+							setTimeout(function() {
+								// Google Analytics
+								const gaScript1 = document.createElement('script');
+								gaScript1.src = 'https://www.googletagmanager.com/gtag/js?id=G-7NRFYFR8BE';
+								gaScript1.async = true;
+								document.head.appendChild(gaScript1);
+								
+								const gaScript2 = document.createElement('script');
+								gaScript2.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17656588690';
+								gaScript2.async = true;
+								document.head.appendChild(gaScript2);
+								
+								// 初始化 gtag
+								window.dataLayer = window.dataLayer || [];
+								function gtag(){dataLayer.push(arguments);}
+								gtag('js', new Date());
+								gtag('config', 'G-7NRFYFR8BE', { send_page_view: false });
+								gtag('config', 'AW-17656588690');
+								
+								// 延迟发送首页浏览
+								setTimeout(() => {
+									gtag('event', 'page_view', { send_to: 'G-7NRFYFR8BE' });
+								}, 100);
+								
+								// Google Ads
+								const adsScript = document.createElement('script');
+								adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758';
+								adsScript.async = true;
+								adsScript.crossOrigin = 'anonymous';
+								document.head.appendChild(adsScript);
+							}, 1000); // 首屏后 1 秒加载
+						});
 					`,
-				},
-				{
-					tag: 'script',
-					attrs: {
-						src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8586652723015758',
-						async: true,
-						crossorigin: 'anonymous',
-					},
 				},
 			],
 			sidebar: [
@@ -282,43 +308,79 @@ export default defineConfig({
 				},
 			],
 		}),
-		image({
-			serviceEntryPoint: '@astrojs/image/sharp',
-			serviceConfig: {
-				formats: ['webp', 'avif', 'png'], // 支持现代格式
-			},
-		}),
 		compress({
-			HTML: true,
-			CSS: true,
-			JavaScript: true,
-			Image: true,
-			SVG: true,
+			HTML: {
+				removeComments: true,
+				collapseWhitespace: true,
+				removeRedundantAttributes: true,
+				removeScriptTypeAttributes: true,
+				removeStyleLinkTypeAttributes: true,
+				minifyCSS: true,
+				minifyJS: true,
+			},
+			CSS: {
+				level: 1, // 使用安全的 CSS 优化级别
+			},
+			JavaScript: {
+				compress: {
+					drop_console: true,
+					drop_debugger: true,
+					pure_funcs: ['console.log', 'console.info'],
+					passes: 2,
+				},
+				mangle: true,
+			},
+			Image: {
+				webp: {
+					quality: 85,
+				},
+				avif: {
+					quality: 80,
+				},
+				jpg: {
+					quality: 85,
+				},
+				png: {
+					quality: 85,
+				},
+			},
+			SVG: {
+				multipass: false, // 禁用多次优化避免破坏 SVG
+				plugins: [
+					'removeDoctype',
+					'removeComments',
+					'removeMetadata',
+				],
+			},
 			Logger: 1,
 		}),
 	],
 	vite: {
 		plugins: [tailwindcss()],
 		build: {
-			target: 'es2022',
-			cssTarget: 'chrome80',
-			minify: 'terser',
-			terserOptions: {
-				compress: {
-					drop_console: true,
-					drop_debugger: true,
-				},
-			},
+			cssCodeSplit: true,
+			minify: 'esbuild',
 			rollupOptions: {
 				output: {
 					manualChunks: {
-						vendor: ['svelte'],
+						'vendor': ['svelte'],
 					},
 				},
 			},
 		},
+		optimizeDeps: {
+			// 预构建优化
+			include: ['svelte', 'medium-zoom'],
+			exclude: ['@astrojs/starlight'],
+		},
 		ssr: {
 			noExternal: ['starlight-theme-nova'],
+		},
+		// 开发服务器优化
+		server: {
+			hmr: {
+				overlay: false, // 禁用错误覆盖层以提高性能
+			},
 		},
 	},
 })

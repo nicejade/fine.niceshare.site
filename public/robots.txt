@@ -22,4 +22,3 @@ Sitemap: https://fine.niceshare.site/sitemap-index.xml
 
 # Host declaration
 Host: https://fine.niceshare.site
-
