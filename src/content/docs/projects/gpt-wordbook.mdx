@@ -1,0 +1,305 @@
+---
+title: "关于 | 智析单词书"
+description: 智析单词书（GPT-Wordbook）是 AI 驱动的深度英语词汇学习平台，精选 8000+ 核心词汇，利用 GPT 模型深度解析每个单词的词义、例句、词根、词缀、文化内涵与使用场景，从理解本质出发构建长期记忆。
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+**智析单词书（GPT-Wordbook）** 是 AI 驱动的深度英语词汇学习平台，精选 **8000+ 核心词汇**，利用 GPT 模型深度解析每个单词的词义、例句、词根、词缀、文化内涵与使用场景，从理解本质出发构建长期记忆。
+
+---
+
+## 💡 为什么选择「智析单词书」？
+
+<CardGrid>
+  <Card title="🤖 AI 驱动" icon="laptop">
+    基于 **GPT** 生成高质量的词汇解析内容，专业且富有洞察力。每个单词都经过 AI
+    的深度分析，提供独特的学习视角。
+  </Card>
+  <Card title="🎯 系统化学习" icon="puzzle">
+    通过**词根词缀**逻辑梳理，帮助你建立完整的词汇网络。不是孤立地记忆单词，而是理解词汇的内在联系。
+  </Card>
+  <Card title="📚 海量词库" icon="open-book">
+    **8000+**
+    精选核心词汇，覆盖各类考试和应用场景。从日常交流到学术研究，满足不同层次的学习需求。
+  </Card>
+  <Card title="⚡ 极速体验" icon="rocket">
+    基于 **Astro**
+    构建的静态网站，页面加载速度极快。即时响应，流畅的学习体验，让你专注于知识本身。
+  </Card>
+  <Card title="🔍 SEO 友好" icon="magnifier">
+    优秀的搜索引擎优化，方便通过搜索引擎快速查找单词。随时随地，一搜即达。
+  </Card>
+  <Card title="📱 响应式设计" icon="setting">
+    完美支持桌面端、平板和移动端设备。无论何时何地，都能享受一致的学习体验。
+  </Card>
+</CardGrid>
+
+---
+
+## ✨ 核心特性
+
+### 📖 深度词汇解析
+
+每个单词都包含详细的**定义、音标、词性、例句**，让你全方位掌握单词的用法。不仅知其然，更知其所以然。
+
+### 🌳 词根词缀拆解
+
+深度解析单词构成，掌握词汇演变规律。一个词根，延伸出一族单词，让记忆效率成倍提升。
+
+### 🎭 文化背景故事
+
+了解单词背后的**历史文化内涵**。语言是文化的载体，每个单词都有它的故事，让学习变得更有趣。
+
+### 💡 AI 助记技巧
+
+利用 **GPT** 生成生动有趣的助记故事，强化感官记忆。从抽象到具象，让单词在脑海中栩栩如生。
+
+### 🔗 词汇关联网络
+
+智能关联相关词汇，构建系统化学习路径。举一反三，触类旁通，建立属于你的词汇宇宙。
+
+### ⚡ 快速搜索
+
+内置强大的搜索功能，快速定位目标词汇。即搜即学，高效便捷。
+
+---
+
+## 🎯 适用人群
+
+<CardGrid stagger>
+  <Card title="🎓 考试备考者" icon="approve-check">
+    考研、托福、雅思、GRE、四六级等各类英语考试的备考神器。系统化的词汇体系，助你轻松突破词汇关。
+  </Card>
+  <Card title="💼 职场人士" icon="suitcase">
+    需要提升专业英语能力和职场英语应用的从业者。商务词汇、专业术语，应有尽有。
+  </Card>
+  <Card title="🌟 英语爱好者" icon="star">
+    对英语语言文化感兴趣，追求深度学习的学习者。探索语言的魅力，感受文化的深度。
+  </Card>
+  <Card title="👨‍🏫 教育工作者" icon="information">
+    英语教师、培训师等需要优质教学资源的专业人士。丰富的素材库，让教学更生动。
+  </Card>
+</CardGrid>
+
+---
+
+## 🛠️ 技术栈
+
+本项目采用现代化的技术栈构建，确保最佳的性能和用户体验：
+
+- **[Astro](https://astro.build/)** - 新一代静态网站生成器，极致的性能与灵活性
+- **[Starlight](https://starlight.astro.build/)** - Astro 官方文档主题，专为内容网站设计
+- **[Svelte](https://svelte.dev/)** - 轻量级响应式框架，编译时优化，运行时高效
+- **[TailwindCSS](https://tailwindcss.com/)** - 实用优先的 CSS 框架，快速构建现代 UI
+- **[MDX](https://mdxjs.com/)** - Markdown + JSX，支持丰富的交互式内容
+- **[TypeScript](https://www.typescriptlang.org/)** - 类型安全，提升开发效率和代码质量
+- **[GPT](https://openai.com/)** - OpenAI 最先进的语言模型，生成高质量内容
+
+---
+
+## 🚀 项目结构
+
+```plaintext
+gpt-wordbook/
+├── public/              # 静态资源（图标、图片等）
+│   ├── favicon.svg      # 网站图标
+│   └── humans.txt       # 项目贡献者信息
+├── src/
+│   ├── assets/          # 项目资源文件
+│   ├── configs/         # 配置文件
+│   ├── content/
+│   │   ├── docs/        # 文档内容（MDX/MD 格式）
+│   │   │   ├── about.mdx       # 关于页面
+│   │   │   ├── index.mdx       # 首页
+│   │   │   └── words/          # 单词页面目录
+│   │   └── config.ts    # 内容集合配置
+│   └── env.d.ts         # TypeScript 类型定义
+├── scripts/             # 脚本工具
+│   └── gptwords.json    # 词汇数据源（8000+ 单词）
+├── astro.config.mjs     # Astro 配置文件
+├── tailwind.config.mjs  # Tailwind CSS 配置
+├── tsconfig.json        # TypeScript 配置
+├── package.json         # 项目依赖
+└── README.md            # 项目说明文档
+```
+
+您的单词内容位于 `src/content/docs/words/` 目录中，配置文件位于 `astro.config.mjs` 和 `src/configs/`。
+
+---
+
+## 🏹 如何使用？
+
+### 📋 前置要求
+
+- **Node.js**: >= 16.0.0
+- **包管理器**: pnpm（推荐）/ npm / yarn
+
+### 📥 克隆项目
+
+```bash
+git clone https://github.com/nicejade/gpt-wordbook.git
+cd gpt-wordbook
+```
+
+### 📦 安装依赖
+
+```bash
+# 使用 pnpm（推荐）
+pnpm install
+
+# 或使用 npm
+npm install
+
+# 或使用 yarn
+yarn install
+```
+
+### 🎮 启动开发服务器
+
+```bash
+pnpm start
+# 或 npm run start
+# 或 yarn start
+```
+
+开发服务器将在 `http://localhost:6969` 启动。在浏览器中打开即可预览。
+
+### 🔨 构建生产版本
+
+```bash
+pnpm build
+# 或 npm run build
+# 或 yarn build
+```
+
+构建完成后，静态文件将输出到 `dist/` 目录。
+
+### 👀 本地预览生产版本
+
+```bash
+pnpm preview
+# 或 npm run preview
+# 或 yarn preview
+```
+
+---
+
+## 🚢 如何部署？
+
+本项目是基于 **Astro** 构建的纯静态网站，可以轻松部署到各种平台：
+
+### 推荐平台
+
+| 平台                                                  | 特点                             | 适用场景    |
+| ----------------------------------------------------- | -------------------------------- | ----------- |
+| **[Cloudflare Pages](https://pages.cloudflare.com/)** | 免费无限流量、边缘网络、优秀性能 | 首选推荐 ⭐ |
+| **[Vercel](https://vercel.com/)**                     | 零配置部署、全球 CDN、自动 HTTPS | 快速部署    |
+| **[GitHub Pages](https://pages.github.com/)**         | 完全免费、与 GitHub 深度集成     | 个人项目    |
+| **[Netlify](https://www.netlify.com/)**               | 拖拽部署、表单处理、函数支持     | 快速原型    |
+
+### 部署步骤（以 Cloudflare Pages 为例）
+
+1. Fork 本项目到你的 GitHub 账号。
+2. 在 [Cloudflare 控制台](https://dash.cloudflare.com/) 中，进入 **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**。
+3. 选择 `gpt-wordbook` 仓库并点击 **Begin setup**。
+4. 确认构建设置：框架预设选择 **Astro**，构建命令为 `pnpm build`，输出目录为 `dist`。
+5. 点击 **Save and Deploy** 开始部署。
+6. 部署完成后，你将获得一个 `*.pages.dev` 域名。
+7. 可选：绑定自定义域名
+
+---
+
+## 🎨 自定义配置
+
+本项目基于 [Starlight](https://starlight.astro.build/) 开发，具有高度的可定制性：
+
+### 主题定制
+
+- **修改配置**：编辑 `astro.config.mjs` 文件，自定义网站标题、描述、社交链接等
+- **自定义样式**：通过 CSS 变量或 Tailwind 配置修改主题颜色和样式
+- **组件扩展**：支持自定义 Svelte/Astro 组件，扩展功能
+
+### 内容管理
+
+- **添加新词汇**：在 `src/content/docs/words/` 目录下创建 MDX 文件
+- **修改页面**：编辑对应的 MDX/MD 文件即可
+- **配置导航**：在 `astro.config.mjs` 中配置侧边栏和导航菜单
+
+---
+
+## 📊 数据来源
+
+本项目的词汇数据由 **GPT** 生成，包含：
+
+- ✅ 精准的分析词义
+- ✅ 地道的列举例句
+- ✅ 词根、词缀分析
+- ✅ 发展历史和文化背景
+- ✅ 单词变形
+- ✅ 记忆技巧和助记故事
+
+所有数据经过人工审核和优化，确保准确性和实用性。数据源位于 `scripts/gptwords.json`，包含 **8000+ 精选词汇**。
+
+---
+
+## 📚 更新日志
+
+- `v0.1.0`（**2026-01-01**）：开启构建项目，并部署初版。
+- `v0.2.0`（**2026-01-02**）：改进应用性能、优化 SEO。
+- `v0.3.0`（**2026-01-03**）：重构改写数据源、保持统一格式。
+- `v0.4.0`（**2026-01-04**）：重新设计、美化应用样式风格。
+- `v0.5.0`（**2026-01-05**）：改造 Astro 配置优化构建体积。
+- `v0.6.0`（**2026-01-05**）：单词按字母分组，并增加索引页；
+- `v0.7.0`（**2026-01-06**）：增加 Github Actions 自部署。
+- `v0.8.0`（**2026-01-07**）：基于 GPT 新增 100+ 高频词汇。
+- `v0.9.0`（**2026-01-08**）：增加主内容一键复制、导出图片；
+- `v1.0.0`（**2026-01-09**）：优化主题页面样式以及应用性能；
+
+---
+
+## 🤝 贡献指南
+
+欢迎各种形式的贡献！无论是：
+
+- 🐛 **报告 Bug** - 发现问题？告诉我们！
+- 💡 **提出新功能** - 有好想法？分享给我们！
+- 📝 **完善文档** - 让文档更清晰易懂
+- 🌍 **翻译内容** - 帮助项目走向国际化
+- ⚙️ **提交代码** - 让项目变得更好
+
+### 如何贡献
+
+1. **Fork** 本项目
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交你的改动 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启一个 **Pull Request**
+
+---
+
+## 💬 反馈与支持
+
+如果你在使用过程中遇到问题或有任何建议，欢迎通过以下方式联系：
+
+- 📧 提交 [Issue](https://github.com/nicejade/gpt-wordbook/issues)
+- 💬 参与 [Discussions](https://github.com/nicejade/gpt-wordbook/discussions)
+- 📝 访问作者博客 [晚晴幽草轩](https://www.lovejade.cn/)
+- 🌐 在线访问 [word.lovejade.cn](https://word.lovejade.cn/)
+
+---
+
+## 🙏 特别致谢
+
+本项目的开发过程中，依赖并受益于以下优秀的开源技术和工具。它们不仅提供了强大的功能，还促进了项目的高效开发和稳定运行。
+
+- **[Astro](https://astro.build/)** - 作为一个静态网站生成器，Astro 允许开发者使用各种流行的前端框架和标记语言来构建网站，同时通过其群岛架构优化了网站的加载速度和性能
+- **[Starlight](https://starlight.astro.build/)** - 作为基于 Astro 的文档主题，Starlight 提供了一系列专为文档网站设计的开箱即用功能，包括清晰的导航、主题颜色配置以及国际化支持
+- **[Svelte](https://svelte.dev/)** - 一个创新的前端框架，它在构建时将模板编译成高效的 JavaScript 代码，从而减少了运行时的体积和提高了性能
+- **[Markdown](https://www.markdownguide.org/)** - Markdown 是一种简洁的标记语言，它允许开发者使用易读易写的文本格式编写内容，并最终转换成 HTML
+- **[MDX](https://mdxjs.com/)** - 允许您在 Markdown 内容中使用 JSX。您可以导入交互式图表或警报等组件，并将它们嵌入到您的内容中
+- **[TailwindCSS](https://tailwindcss.com/)** - 一个 CSS 框架，它提供了大量的工具类，使得开发者能够快速构建出响应式和定制化的 UI 设计
+- **[TypeScript](https://www.typescriptlang.org/)** - JavaScript 的超集，它引入了静态类型系统，帮助开发者在开发大型应用时提高代码的质量和开发效率
+- **[OpenAI GPT](https://openai.com/)** - 提供高质量的 AI 内容生成能力，为本项目的词汇解析提供了核心驱动力
+
+感谢所有为开源社区做出贡献的开发者们！🙌
