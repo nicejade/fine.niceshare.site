@@ -49,7 +49,7 @@ export default defineConfig({
 				MarkdownContent: './src/components/MarkdownContent.astro',
 				LastUpdated: './src/components/LastUpdated.astro',
 				// 添加自定义 Footer 组件
-				Footer: './src/components/CustomFooter.astro',
+				Footer: './src/components/Footer.astro',
       },
 			logo: {
 				src: './src/assets/images/logo.svg',
